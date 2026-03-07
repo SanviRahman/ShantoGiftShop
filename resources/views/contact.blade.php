@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Breadcrumb -->
-<div class="container breadcrumb-container" style="margin-top: 75px;">
+<div class="container breadcrumb-container" style="margin-top: 90px;">
     <div class="breadcrumb">
         <a href="{{ route('home') }}">Home</a>
         <span class="separator">/</span>

@@ -140,7 +140,7 @@
                     </div>
                 </div>
 
-                <!-- Team Member 5 -->x
+                <!-- Team Member 5 -->
                 <div class="team-card">
                     <div class="team-image">
                         <img src="{{ asset('images/sanvi-01.jpg') }}" alt="Emma Watson">

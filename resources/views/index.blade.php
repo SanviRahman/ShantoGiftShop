@@ -561,7 +561,7 @@
             <div class="music-image">
                 <!-- Placeholder for JBL Speaker -->
                 <div class="image-glow"></div>
-                <img src="https://wallpaperaccess.com/full/874665.jpg" alt="JBL Speaker" style="object-fit: contain;">
+                <img src="{{ asset('images/Frame.png') }}" alt="JBL Speaker" style="object-fit: contain;">
             </div>
         </div>
     </div>
@@ -597,7 +597,7 @@
                         <button><i class="far fa-heart"></i></button>
                         <button><i class="far fa-eye"></i></button>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1589924691195-41432c84c161?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
                         alt="Breed Dry Dog Food">
                     <button class="add-to-cart-btn">Add To Cart</button>
                 </div>
@@ -715,7 +715,7 @@
                         <button><i class="far fa-heart"></i></button>
                         <button><i class="far fa-eye"></i></button>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1589924691195-41432c84c161?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
                         alt="Breed Dry Dog Food">
                     <button class="add-to-cart-btn">Add To Cart</button>
                 </div>
@@ -828,7 +828,7 @@
 
         <!-- View All Button -->
         <div class="view-all-container">
-            <a href="#" class="view-all-btn">View All Products</a>
+            <a href="{{ route('products') }}" class="view-all-btn">View All Products</a>
         </div>
     </div>
 </section>
