@@ -28,4 +28,9 @@ class HomeController extends Controller
     {
         return view('products');
     }
+
+    public function wishlist()
+    {
+        return view('wishlist');
+    }
 }

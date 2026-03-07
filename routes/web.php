@@ -9,7 +9,7 @@ Route::get('/',[HomeController::class,'home'])->name('home');
 Route::get('/contact',[HomeController::class,'contact'])->name('contact');
 Route::get('/about',[HomeController::class,'about'])->name('about');
 Route::get('/products',[HomeController::class,'products'])->name('products');
-
+Route::get('/wishlist',[HomeController::class,'wishlist'])->name('wishlist');
 
 
 
