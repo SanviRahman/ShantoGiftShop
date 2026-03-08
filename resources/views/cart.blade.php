@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Cart Section -->
-<section class="cart-section container">
+<section class="cart-section container" style="margin-top: 90px;">
 
     <!-- Cart Table -->
     <div class="cart-table-wrapper">
@@ -266,7 +266,7 @@ img {
     padding-top: 40px;
     padding-bottom: 16px;
     background-color: #fff;
-    position: sticky;
+    position: static;
     top: 0;
     z-index: 1000;
 }

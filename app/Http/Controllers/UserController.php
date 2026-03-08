@@ -12,4 +12,10 @@ class UserController extends Controller
     {
         return view('user.account');
     }
+
+     public function wishlist()
+    {
+        return view('user.wishlist');
+    }
+
 }

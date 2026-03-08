@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Wishlist Section -->
-<section class="wishlist-section container">
+<section class="wishlist-section container" style="margin-top: 90px;">
     <div class="breadcrumb-container" style="margin-top: 40px; margin-bottom: 40px;">
         <!-- Simple spacing or breadcrumb if needed, otherwise just margin -->
     </div>
@@ -273,7 +273,7 @@
     padding-top: 40px;
     padding-bottom: 16px;
     background-color: #fff;
-    position: sticky;
+    position: static;
     top: 0;
     z-index: 1000;
 }
@@ -650,15 +650,6 @@
    Full Updated Responsive CSS for Wishlist Page
    Put this at the END of your current CSS
    ========================================= */
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    overflow-x: hidden;
-}
 
 img {
     max-width: 100%;

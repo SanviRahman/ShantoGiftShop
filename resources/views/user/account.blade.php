@@ -36,7 +36,7 @@
                 </ul>
             </div>
             <div class="sidebar-group">
-                <h4><a href="#">My WishList</a></h4>
+                <h4><a href="{{ route('wishlist') }}">My WishList</a></h4>
             </div>
         </aside>
 
