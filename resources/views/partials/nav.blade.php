@@ -33,7 +33,7 @@
 
          <div class="icons">
              <a href="#"><i class="far fa-heart"></i></a>
-             <a href="#"><i class="fas fa-shopping-cart"></i></a>
+             <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
 
              <!-- Profile Dropdown -->
              <div class="profile-dropdown">
