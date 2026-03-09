@@ -9,6 +9,8 @@ Route::get('/',[HomeController::class,'home'])->name('home');
 Route::get('/contact',[HomeController::class,'contact'])->name('contact');
 Route::get('/about',[HomeController::class,'about'])->name('about');
 Route::get('/products',[HomeController::class,'products'])->name('products');
+Route::get('/product-details',[HomeController::class,'productDetails'])->name('productDetails');
+Route::get('/404error',[HomeController::class,'error'])->name('error');
 Route::get('/cart',[HomeController::class,'cart'])->name('cart');
 
 

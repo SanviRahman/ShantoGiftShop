@@ -1,38 +1,27 @@
 @extends('home.layout')
 
-@section('title','Login - ShantoGiftShop')
+@section('title', '404 Error - ShantoGiftShop')
 
 @section('content')
-<!-- Login Section -->
-<div class="auth-container" style="margin-top: 90px;">
-    <!-- Left Side Image -->
-    <div class="auth-image">
-        <img src="{{ asset('images/Frame-2.png') }}" alt="Side Image">
-    </div>
-
-    <!-- Right Side Form -->
-    <div class="auth-form-wrapper">
-        <h2 class="auth-heading">Login to Shanto<span style="color: #e03939;">Gift</span>Shop</h2>
-        <p class="auth-subheading">Enter your details below</p>
-
-        <form class="auth-form">
-            <div class="form-group">
-                <input type="text" placeholder="Email or Phone Number" required>
-            </div>
-            <div class="form-group">
-                <input type="password" placeholder="Password" required>
-            </div>
-
-            <div class="login-actions">
-                <button type="submit" class="btn-primary" style="padding: 16px 48px;">Log In</button>
-                <a href="#" class="forgot-password">Forget Password?</a>
-            </div>
-        </form>
+<!-- Breadcrumb -->
+<div class="container breadcrumb-container" style="margin-top: 90px;">
+    <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="separator">/</span>
+        <span class="current">404 Error</span>
     </div>
 </div>
+
+<!-- 404 Section -->
+<section class="error-page-section container" style="margin-top: 50px;">
+    <h1 class="error-heading">404 Not Found</h1>
+    <p class="error-text">Your visited page not found. You may go home page.</p>
+    <button class="btn-primary" a onclick="window.location.href='{{ route('home') }}'">Back to home page</button>
+</section>
+
 @push('styles')
 <style>
-    /* Reset and Base Styles */
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -77,20 +66,6 @@ img {
     --white: #FFFFFF;
 }
 
-.cart-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: var(--primary-red);
-    color: #fff;
-    font-size: 12px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 /* Breadcrumb */
 .breadcrumb-container {
@@ -154,116 +129,28 @@ img {
 }
 
 
+
 /* =========================================
-   Auth Pages (Signup / Login)
+   404 Page Styles
    ========================================= */
 
-.auth-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 140px;
-    gap: 129px; /* Gap between image and form per design */
-}
-
-.auth-image {
-    width: 805px; /* Large side image */
-    height: 781px;
-    background-color: #CBE4E8; /* Placeholder color from image */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.auth-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.auth-form-wrapper {
-    max-width: 371px;
-    width: 100%;
-    padding-right: 20px; /* Some padding for responsiveness */
-}
-
-.auth-heading {
-    font-size: 36px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    margin-bottom: 24px;
-}
-
-.auth-subheading {
-    font-size: 16px;
-    font-weight: 400;
-    margin-bottom: 48px;
-}
-
-.auth-form .form-group {
-    margin-bottom: 40px;
-    position: relative;
-}
-
-.auth-form input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.5);
-    padding: 8px 0;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.auth-form input:focus {
-    border-bottom-color: #000;
-}
-
-.auth-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.auth-actions .btn-primary {
-    width: 100%;
-}
-
-.auth-actions .btn-outline {
-    width: 100%;
-}
-
-.auth-footer {
-    margin-top: 32px;
+.error-page-section {
+    padding: 140px 0;
     text-align: center;
-    color: rgba(0,0,0,0.7);
 }
 
-.auth-footer a {
+.error-heading {
+    font-size: 110px;
     font-weight: 500;
-    color: #000;
-    border-bottom: 1px solid #000;
-    margin-left: 4px;
+    line-height: 115px;
+    letter-spacing: 0.03em;
+    margin-bottom: 40px;
 }
 
-.login-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 40px;
-}
-
-.forgot-password {
-    color: var(--primary-red);
+.error-text {
     font-size: 16px;
+    margin-bottom: 80px;
 }
-
-
-
-
 
 /* Responsive Styles */
 @media (max-width: 1024px) {

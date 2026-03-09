@@ -26,9 +26,7 @@
              <li><a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : ''}}">Home</a></li>
              <li><a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'active' : ''}}">Contact</a></li>
              <li><a href="{{ route('about') }}" class="{{ request()->is('about') ? 'active' : ''}}">About</a></li>
-             @if(!Auth::check())
              <li><a href="{{ route('signup') }}" class="{{ request()->is('signup') ? 'active' : ''}}">Sign Up</a></li>
-             @endif
          </ul>
 
          <div class="icons">
@@ -36,7 +34,6 @@
              <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
 
              <!-- Profile Dropdown -->
-             @if(Auth::check())
              <div class="profile-dropdown">
                  <a href="#" class="profile-toggle"><i class="fas fa-user"></i></a>
                  <div class="dropdown-menu">
@@ -59,7 +56,6 @@
                      </a>
                  </div>
              </div>
-             @endif
          </div>
      </div>
  </nav>

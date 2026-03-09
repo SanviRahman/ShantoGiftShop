@@ -7,7 +7,7 @@
 <div class="auth-container" style="margin-top: 90px; ">
     <!-- Left Side Image -->
     <div class="auth-image">
-        <img src="{{ asset('images/Frame.png') }}" alt="Side Image">
+        <img src="{{ asset('images/Frame-2.png') }}" alt="Side Image">
     </div>
 
     <!-- Right Side Form -->

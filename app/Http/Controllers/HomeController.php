@@ -28,8 +28,18 @@ class HomeController extends Controller
     {
         return view('products');
     }
+
+    public function productDetails()
+    {
+        return view('products-details');
+    }
     public function cart()
     {
         return view('cart');
+    }
+
+    public function error()
+    {
+        return view('error');
     }
 }

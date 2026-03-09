@@ -561,7 +561,7 @@
             <div class="music-image">
                 <!-- Placeholder for JBL Speaker -->
                 <div class="image-glow"></div>
-                <img src="{{ asset('images/Frame.png') }}" alt="JBL Speaker" style="object-fit: contain;">
+                <img src="{{ asset('images/jbl.png') }}" alt="JBL Speaker" style="object-fit: contain;">
             </div>
         </div>
     </div>

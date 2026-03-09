@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Wishlist Section -->
-<section class="wishlist-section container" style="margin-top: 90px;">
+<section class="wishlist-section container" style="margin-top: 50px;">
     <div class="breadcrumb-container" style="margin-top: 40px; margin-bottom: 40px;">
         <!-- Simple spacing or breadcrumb if needed, otherwise just margin -->
     </div>

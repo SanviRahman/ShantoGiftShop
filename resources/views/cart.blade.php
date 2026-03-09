@@ -3,8 +3,16 @@
 @section('title', 'Cart - ShantoGiftShop')
 
 @section('content')
+<!-- Breadcrumb -->
+<div class="container breadcrumb-container" style="margin-top: 90px;">
+    <div class="breadcrumb">
+        <a href="{{ route('home') }}">Account</a>
+        <span class="separator">/</span>
+        <span class="current">cart</span>
+    </div>
+</div>
 <!-- Cart Section -->
-<section class="cart-section container" style="margin-top: 90px;">
+<section class="cart-section container" style="margin-top: 50px;">
 
     <!-- Cart Table -->
     <div class="cart-table-wrapper">
