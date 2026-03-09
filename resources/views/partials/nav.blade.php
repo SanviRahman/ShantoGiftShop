@@ -36,6 +36,7 @@
              <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
 
              <!-- Profile Dropdown -->
+             @if(Auth::check())
              <div class="profile-dropdown">
                  <a href="#" class="profile-toggle"><i class="fas fa-user"></i></a>
                  <div class="dropdown-menu">
@@ -58,6 +59,7 @@
                      </a>
                  </div>
              </div>
+             @endif
          </div>
      </div>
  </nav>
@@ -106,8 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-</script>
-<script>
+ </script>
+ <script>
 (function() {
     // Language Selector Logic
     const langSelector = document.querySelector('.language-selector');
@@ -122,8 +124,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 })();
-</script>
-<style>
+ </script>
+ <style>
 /* Reset and Base Styles */
 * {
     margin: 0;
