@@ -27,7 +27,7 @@
              <li><a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'active' : ''}}">Contact</a></li>
              <li><a href="{{ route('about') }}" class="{{ request()->is('about') ? 'active' : ''}}">About</a></li>
              @if(!Auth::check())
-             <li><a href="#" class="{{ request()->is('login') ? 'active' : ''}}">Sign Up</a></li>
+             <li><a href="{{ route('signup') }}" class="{{ request()->is('signup') ? 'active' : ''}}">Sign Up</a></li>
              @endif
          </ul>
 

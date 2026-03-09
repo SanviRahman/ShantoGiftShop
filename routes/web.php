@@ -15,3 +15,5 @@ Route::get('/cart',[HomeController::class,'cart'])->name('cart');
 //User Routes
 Route::get('/user/account',[UserController::class,'account'])->name('account');
 Route::get('/user/wishlist',[UserController::class,'wishlist'])->name('wishlist');
+Route::get('/user/signup',[UserController::class,'signup'])->name('signup');
+Route::get('/user/login',[UserController::class,'login'])->name('login');
