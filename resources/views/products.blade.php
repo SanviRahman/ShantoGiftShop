@@ -3,342 +3,74 @@
 @section('title','Products - ShantoGiftShop')
 
 @section('content')
-
-<!-- Product Listing Section -->
 <div class="container products-page-layout" style="margin-top: 90px;">
-
-    <!-- Sidebar Filters -->
     <aside class="sidebar">
-        <!-- Categories -->
-        <div class="sidebar-section">
-            <h3 class="sidebar-title">Category</h3>
-            <ul class="category-list">
-                <li><a href="#">Woman's Fashion</a></li>
-                <li><a href="#">Men's Fashion</a></li>
-                <li><a href="#">Electronics</a></li>
-                <li><a href="#">Home & Lifestyle</a></li>
-                <li><a href="#">Medicine</a></li>
-                <li><a href="#">Sports & Outdoor</a></li>
-                <li><a href="#">Baby's & Toys</a></li>
-                <li><a href="#">Groceries & Pets</a></li>
-                <li><a href="#">Health & Beauty</a></li>
-            </ul>
-        </div>
-
-        <!-- Price Range -->
-        <div class="sidebar-section">
-            <h3 class="sidebar-title">Price Range</h3>
-            <div class="price-inputs">
-                <input type="number" placeholder="Min" min="0">
-                <input type="number" placeholder="Max" min="0">
+        <form method="GET" action="{{ route('products.index') }}">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Category</h3>
+                <ul class="category-list">
+                    @foreach($categories as $category)
+                        <li>
+                            <a href="{{ route('products.index', ['category' => $category->slug]) }}">
+                                {{ $category->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
-            <button class="apply-price-btn">Apply</button>
-        </div>
 
-        <!-- Color Filter -->
-        <div class="sidebar-section">
-            <h3 class="sidebar-title">Color</h3>
-            <div class="color-options">
-                <div class="color-option selected" style="background-color: #DB4444;"></div> <!-- Red -->
-                <div class="color-option" style="background-color: #000000;"></div> <!-- Black -->
-                <div class="color-option" style="background-color: #FFFFFF;"></div> <!-- White -->
-                <div class="color-option" style="background-color: #00FF66;"></div> <!-- Green -->
-                <div class="color-option" style="background-color: #0000FF;"></div> <!-- Blue -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Price Range</h3>
+                <div class="price-inputs">
+                    <input type="number" name="min" placeholder="Min" min="0" value="{{ request('min') }}">
+                    <input type="number" name="max" placeholder="Max" min="0" value="{{ request('max') }}">
+                </div>
+                <button class="apply-price-btn" type="submit">Apply</button>
             </div>
-        </div>
+        </form>
     </aside>
 
-    <!-- Product Grid Area -->
     <main class="products-content">
-        <!-- Top Bar -->
-        <div class="products-top-bar">
+        <form method="GET" action="{{ route('products.index') }}" class="products-top-bar">
             <div class="results-count">
-                Showing <span>1-9</span> of 100 results
+                Showing <span>{{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }}</span> of {{ $products->total() }} results
             </div>
+
             <div class="sort-wrapper">
+                <input type="text" name="search" placeholder="Search products..." value="{{ request('search') }}" class="sort-select">
                 <span>Sort By:</span>
-                <select class="sort-select">
-                    <option value="featured">Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="newest">Newest Arrivals</option>
+                <select class="sort-select" name="sort" onchange="this.form.submit()">
+                    <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>Featured</option>
+                    <option value="price-low" {{ request('sort') == 'price-low' ? 'selected' : '' }}>Price: Low to High</option>
+                    <option value="price-high" {{ request('sort') == 'price-high' ? 'selected' : '' }}>Price: High to Low</option>
+                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Arrivals</option>
                 </select>
             </div>
-        </div>
+        </form>
 
-        <!-- Grid -->
         <div class="product-grid">
-
-            <!-- Product 1 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+1" alt="Product 1">
-                    <span class="discount-badge">-40%</span>
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>HAVIT HV-G92 Gamepad</h3>
-                    <div class="product-price">
-                        $120 <span class="old-price">$160</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span>(88)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 2 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+2" alt="Product 2">
-                    <span class="discount-badge">-35%</span>
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>AK-900 Wired Keyboard</h3>
-                    <div class="product-price">
-                        $960 <span class="old-price">$1160</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span>(75)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+3" alt="Product 3">
-                    <span class="discount-badge">-30%</span>
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>IPS LCD Gaming Monitor</h3>
-                    <div class="product-price">
-                        $370 <span class="old-price">$400</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span>(99)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+4" alt="Product 4">
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>RGB Liquid CPU Cooler</h3>
-                    <div class="product-price">
-                        $160 <span class="old-price">$170</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <span>(65)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 5 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+5" alt="Product 5">
-                    <span class="new-badge">NEW</span>
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>ASUS FHD Gaming Laptop</h3>
-                    <div class="product-price">
-                        $700
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span>(325)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 6 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+6" alt="Product 6">
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>Jr. Zoom Soccer Cleats</h3>
-                    <div class="product-price">
-                        $1160
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span>(35)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 7 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+7" alt="Product 7">
-                    <span class="new-badge">NEW</span>
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>GP11 Shooter USB Gamepad</h3>
-                    <div class="product-price">
-                        $660
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <span>(55)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 8 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+8" alt="Product 8">
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>Quilted Satin Jacket</h3>
-                    <div class="product-price">
-                        $660
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span>(55)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 9 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+9" alt="Product 9">
-                    <div class="card-actions">
-                        <div class="action-btn"><i class="far fa-heart"></i></div>
-                        <div class="action-btn"><i class="far fa-eye"></i></div>
-                    </div>
-                    <div class="add-to-cart-btn">Add To Cart</div>
-                </div>
-                <div class="product-info">
-                    <h3>Breed Dry Dog Food</h3>
-                    <div class="product-price">
-                        $100
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <span>(35)</span>
-                    </div>
-                </div>
-            </div>
-
+            @foreach($products as $product)
+                @include('partials.product-card', ['product' => $product, 'showDiscount' => true])
+            @endforeach
         </div>
 
-        <!-- Pagination -->
         <div class="pagination">
-            <div class="page-item active">1</div>
-            <div class="page-item">2</div>
-            <div class="page-item">3</div>
-            <div class="page-item next">Next ></div>
-        </div>
+            @if($products->currentPage() > 1)
+                <a class="page-item next" href="{{ $products->previousPageUrl() }}">< Prev</a>
+            @endif
 
+            @foreach($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                <a class="page-item {{ $page == $products->currentPage() ? 'active' : '' }}" href="{{ $url }}">
+                    {{ $page }}
+                </a>
+            @endforeach
+
+            @if($products->hasMorePages())
+                <a class="page-item next" href="{{ $products->nextPageUrl() }}">Next ></a>
+            @endif
+        </div>
     </main>
 </div>
-
 <script>
 // Simple Interaction Logic
 document.addEventListener('DOMContentLoaded', function() {

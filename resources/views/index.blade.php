@@ -3,25 +3,23 @@
 @section('title', 'Home - ShantoGiftShop')
 
 @section('content')
-<!-- Hero Section -->
 <section class="hero-section">
     <div class="container hero-container">
-        <!-- Sidebar Categories -->
         <aside class="sidebar">
             <ul>
-                <li><a href="#">Woman's Fashion <i class="fas fa-chevron-right"></i></a></li>
-                <li><a href="#">Men's Fashion <i class="fas fa-chevron-right"></i></a></li>
-                <li><a href="#">Electronics</a></li>
-                <li><a href="#">Home & Lifestyle</a></li>
-                <li><a href="#">Medicine</a></li>
-                <li><a href="#">Sports & Outdoor</a></li>
-                <li><a href="#">Baby's & Toys</a></li>
-                <li><a href="#">Groceries & Pets</a></li>
-                <li><a href="#">Health & Beauty</a></li>
+                @foreach($sidebarCategories as $category)
+                    <li>
+                        <a href="{{ route('products.index', ['category' => $category->slug]) }}">
+                            {{ $category->name }}
+                            @if($category->children->count())
+                                <i class="fas fa-chevron-right"></i>
+                            @endif
+                        </a>
+                    </li>
+                @endforeach
             </ul>
         </aside>
 
-        <!-- Hero Banner -->
         <div class="hero-banner">
             <div class="banner-content">
                 <div class="brand-row">
@@ -29,24 +27,18 @@
                     <span>iPhone 14 Series</span>
                 </div>
                 <h2>Up to 10% <br> off Voucher</h2>
-                <a href="#" class="shop-now-btn">Shop Now <i class="fas fa-arrow-right"></i></a>
+                <a href="{{ route('products.index') }}" class="shop-now-btn">Shop Now <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="banner-image">
                 <div class="slider-track">
-                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                        alt="iPhone 14 - 1">
-                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                        alt="iPhone 14 - 2">
-                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                        alt="iPhone 14 - 3">
-                    <img src="https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                        alt="iPhone 14 - 4">
-                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                        alt="iPhone 14 - 5">
+                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 1">
+                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 2">
+                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 3">
+                    <img src="https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 4">
+                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 5">
                 </div>
             </div>
 
-            <!-- Pagination Dots -->
             <div class="pagination-dots">
                 <span class="dot active"></span>
                 <span class="dot"></span>
@@ -58,11 +50,8 @@
     </div>
 </section>
 
-
-<!-- Flash Sales Section -->
 <section class="flash-sales-section">
     <div class="container">
-        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -72,25 +61,13 @@
                 <div class="title-timer">
                     <h2>Flash Sales</h2>
                     <div class="countdown">
-                        <div class="time-unit">
-                            <span class="label">Days</span>
-                            <span class="value">03</span>
-                        </div>
+                        <div class="time-unit"><span class="label">Days</span><span class="value">03</span></div>
                         <span class="separator">:</span>
-                        <div class="time-unit">
-                            <span class="label">Hours</span>
-                            <span class="value">23</span>
-                        </div>
+                        <div class="time-unit"><span class="label">Hours</span><span class="value">23</span></div>
                         <span class="separator">:</span>
-                        <div class="time-unit">
-                            <span class="label">Minutes</span>
-                            <span class="value">19</span>
-                        </div>
+                        <div class="time-unit"><span class="label">Minutes</span><span class="value">19</span></div>
                         <span class="separator">:</span>
-                        <div class="time-unit">
-                            <span class="label">Seconds</span>
-                            <span class="value">56</span>
-                        </div>
+                        <div class="time-unit"><span class="label">Seconds</span><span class="value">56</span></div>
                     </div>
                 </div>
 
@@ -101,239 +78,22 @@
             </div>
         </div>
 
-        <!-- Product List -->
         <div class="product-list">
-            <!-- Product Card 1 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <span class="discount-badge">-40%</span>
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Gamepad">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">HAVIT HV-G92 Gamepad</h3>
-                    <div class="price">
-                        <span class="current-price">$120</span>
-                        <span class="original-price">$160</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(88)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <span class="discount-badge">-35%</span>
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Keyboard">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">AK-900 Wired Keyboard</h3>
-                    <div class="price">
-                        <span class="current-price">$960</span>
-                        <span class="original-price">$1160</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(75)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <span class="discount-badge">-30%</span>
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Monitor">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">IPS LCD Gaming Monitor</h3>
-                    <div class="price">
-                        <span class="current-price">$370</span>
-                        <span class="original-price">$400</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(99)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <span class="discount-badge">-25%</span>
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Chair">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">S-Series Comfort Chair</h3>
-                    <div class="price">
-                        <span class="current-price">$375</span>
-                        <span class="original-price">$400</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(99)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <span class="discount-badge">-25%</span>
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Chair">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">S-Series Comfort Chair</h3>
-                    <div class="price">
-                        <span class="current-price">$375</span>
-                        <span class="original-price">$400</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(99)</span>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Product Card 3 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <span class="discount-badge">-30%</span>
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Monitor">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">IPS LCD Gaming Monitor</h3>
-                    <div class="price">
-                        <span class="current-price">$370</span>
-                        <span class="original-price">$400</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(99)</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Product Card 4 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <span class="discount-badge">-25%</span>
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Chair">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">S-Series Comfort Chair</h3>
-                    <div class="price">
-                        <span class="current-price">$375</span>
-                        <span class="original-price">$400</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(99)</span>
-                    </div>
-                </div>
-            </div>
+            @foreach($flashSales as $product)
+                @include('partials.product-card', ['product' => $product, 'showDiscount' => true])
+            @endforeach
         </div>
 
-        <!-- View All Button -->
         <div class="view-all-container">
-            <a href="#" class="view-all-btn">View All Products</a>
+            <a href="{{ route('products.index') }}" class="view-all-btn">View All Products</a>
         </div>
 
         <hr class="section-divider">
     </div>
 </section>
 
-<!-- Categories Section -->
 <section class="categories-section">
     <div class="container">
-        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -344,54 +104,21 @@
             </div>
         </div>
 
-        <!-- Categories Grid -->
         <div class="categories-grid">
-            <!-- Category Item 1: Phones -->
-            <div class="category-card">
-                <i class="fas fa-mobile-screen-button"></i>
-                <span>Phones</span>
-            </div>
-
-            <!-- Category Item 2: Computers -->
-            <div class="category-card">
-                <i class="fas fa-computer"></i>
-                <span>Computers</span>
-            </div>
-
-            <!-- Category Item 3: SmartWatch -->
-            <div class="category-card">
-                <i class="far fa-clock"></i>
-                <span>SmartWatch</span>
-            </div>
-
-            <!-- Category Item 4: Camera -->
-            <div class="category-card">
-                <i class="fas fa-camera"></i>
-                <span>Camera</span>
-            </div>
-
-            <!-- Category Item 5: HeadPhones -->
-            <div class="category-card">
-                <i class="fas fa-headphones"></i>
-                <span>HeadPhones</span>
-            </div>
-
-            <!-- Category Item 6: Gaming -->
-            <div class="category-card">
-                <i class="fas fa-gamepad"></i>
-                <span>Gaming</span>
-            </div>
+            @foreach($homeCategories as $category)
+                <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="category-card">
+                    <i class="{{ $category->icon_class ?? 'fas fa-tag' }}"></i>
+                    <span>{{ $category->name }}</span>
+                </a>
+            @endforeach
         </div>
 
         <hr class="section-divider">
     </div>
 </section>
 
-
-<!-- Best Selling Products Section -->
 <section class="best-selling-section">
     <div class="container">
-        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -399,136 +126,18 @@
             </div>
             <div class="best-selling-row">
                 <h2>Best Selling Products</h2>
-                <a href="#" class="view-all-btn-small">View All</a>
+                <a href="{{ route('products.index') }}" class="view-all-btn-small">View All</a>
             </div>
         </div>
 
-        <!-- Product List -->
         <div class="product-list">
-            <!-- Product Card 1 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="The north coat">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">The north coat</h3>
-                    <div class="price">
-                        <span class="current-price">$260</span>
-                        <span class="original-price">$360</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(65)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1559563458-527698bf5295?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Gucci duffle bag">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">Gucci duffle bag</h3>
-                    <div class="price">
-                        <span class="current-price">$960</span>
-                        <span class="original-price">$1160</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(65)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="RGB liquid CPU Cooler">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">RGB liquid CPU Cooler</h3>
-                    <div class="price">
-                        <span class="current-price">$160</span>
-                        <span class="original-price">$170</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(65)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1594620302200-9a762244a156?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Small BookSelf">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">Small BookSelf</h3>
-                    <div class="price">
-                        <span class="current-price">$360</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(65)</span>
-                    </div>
-                </div>
-            </div>
+            @foreach($bestSellers as $product)
+                @include('partials.product-card', ['product' => $product, 'showDiscount' => false])
+            @endforeach
         </div>
     </div>
 </section>
 
-
-<!-- Music Experience Banner Section -->
 <section class="music-banner-section">
     <div class="container">
         <div class="music-banner">
@@ -537,29 +146,16 @@
                 <h2>Enhance Your <br> Music Experience</h2>
 
                 <div class="music-countdown">
-                    <div class="circle-timer">
-                        <span class="number">05</span>
-                        <span class="unit">Days</span>
-                    </div>
-                    <div class="circle-timer">
-                        <span class="number">23</span>
-                        <span class="unit">Hours</span>
-                    </div>
-                    <div class="circle-timer">
-                        <span class="number">59</span>
-                        <span class="unit">Minutes</span>
-                    </div>
-                    <div class="circle-timer">
-                        <span class="number">35</span>
-                        <span class="unit">Seconds</span>
-                    </div>
+                    <div class="circle-timer"><span class="number">05</span><span class="unit">Days</span></div>
+                    <div class="circle-timer"><span class="number">23</span><span class="unit">Hours</span></div>
+                    <div class="circle-timer"><span class="number">59</span><span class="unit">Minutes</span></div>
+                    <div class="circle-timer"><span class="number">35</span><span class="unit">Seconds</span></div>
                 </div>
 
-                <a href="#" class="buy-now-btn-green">Buy Now!</a>
+                <a href="{{ route('products.index') }}" class="buy-now-btn-green">Buy Now!</a>
             </div>
 
             <div class="music-image">
-                <!-- Placeholder for JBL Speaker -->
                 <div class="image-glow"></div>
                 <img src="{{ asset('images/jbl.png') }}" alt="JBL Speaker" style="object-fit: contain;">
             </div>
@@ -567,12 +163,8 @@
     </div>
 </section>
 
-
-
-<!-- Explore Our Products Section -->
 <section class="explore-products-section">
     <div class="container">
-        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -587,258 +179,20 @@
             </div>
         </div>
 
-        <!-- Product Grid -->
         <div class="product-grid-explore">
-            <!-- Row 1 -->
-            <!-- Product 1: Breed Dry Dog Food -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Breed Dry Dog Food">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">Breed Dry Dog Food</h3>
-                    <div class="price">
-                        <span class="current-price">$100</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i> <!-- Assuming 4 stars? -->
-                            <i class="fas fa-star" style="color: #D9D9D9;"></i> <!-- Empty star for variation -->
-                        </div>
-                        <span class="review-count">(35)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 2: CANON EOS DSLR Camera -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="CANON EOS DSLR Camera">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                    <!-- Always visible as per design -->
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">CANON EOS DSLR Camera</h3>
-                    <div class="price">
-                        <span class="current-price">$360</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(95)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 3: ASUS FHD Gaming Laptop -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="ASUS FHD Gaming Laptop">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">ASUS FHD Gaming Laptop</h3>
-                    <div class="price">
-                        <span class="current-price">$700</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(325)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 4: Curology Product Set -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Curology Product Set">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">Curology Product Set</h3>
-                    <div class="price">
-                        <span class="current-price">$500</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(145)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Row 2 (Repeating same products as per design request "hubuhu") -->
-            <!-- Product 5: Breed Dry Dog Food -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Breed Dry Dog Food">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">Breed Dry Dog Food</h3>
-                    <div class="price">
-                        <span class="current-price">$100</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i> <!-- Assuming 4 stars? -->
-                            <i class="fas fa-star" style="color: #D9D9D9;"></i> <!-- Empty star for variation -->
-                        </div>
-                        <span class="review-count">(35)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 6: CANON EOS DSLR Camera -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="CANON EOS DSLR Camera">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                    <!-- Always visible as per design -->
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">CANON EOS DSLR Camera</h3>
-                    <div class="price">
-                        <span class="current-price">$360</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(95)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 7: ASUS FHD Gaming Laptop -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="ASUS FHD Gaming Laptop">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">ASUS FHD Gaming Laptop</h3>
-                    <div class="price">
-                        <span class="current-price">$700</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="review-count">(325)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 8: Curology Product Set -->
-            <div class="product-card">
-                <div class="card-header">
-                    <div class="card-icons">
-                        <button><i class="far fa-heart"></i></button>
-                        <button><i class="far fa-eye"></i></button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
-                        alt="Curology Product Set">
-                    <button class="add-to-cart-btn">Add To Cart</button>
-                </div>
-                <div class="card-details">
-                    <h3 class="product-name">Curology Product Set</h3>
-                    <div class="price">
-                        <span class="current-price">$500</span>
-                    </div>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="review-count">(145)</span>
-                    </div>
-                </div>
-            </div>
+            @foreach($exploreProducts as $product)
+                @include('partials.product-card', ['product' => $product, 'showDiscount' => false])
+            @endforeach
         </div>
 
-        <!-- View All Button -->
         <div class="view-all-container">
-            <a href="{{ route('products') }}" class="view-all-btn">View All Products</a>
+            <a href="{{ route('products.index') }}" class="view-all-btn">View All Products</a>
         </div>
     </div>
 </section>
 
-
-
-<!-- New Arrival Section -->
 <section class="new-arrival-section">
     <div class="container">
-        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -847,91 +201,47 @@
             <h2>New Arrival</h2>
         </div>
 
-        <!-- Bento Grid -->
         <div class="new-arrival-grid">
-            <!-- Large Item (PlayStation 5) -->
             <div class="grid-item item-large">
-                <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                    alt="PlayStation 5">
+                <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="PlayStation 5">
                 <div class="item-content">
                     <h3>PlayStation 5</h3>
                     <p>Black and White version of the PS5 coming out on sale.</p>
-                    <a href="#" class="shop-now-link">Shop Now</a>
+                    <a href="{{ route('products.index') }}" class="shop-now-link">Shop Now</a>
                 </div>
             </div>
 
-            <!-- Right Column -->
             <div class="grid-column-right">
-                <!-- Top Item (Women's Collections) -->
-                <div class="grid-item item-wide">
-                    <img src="https://th.bing.com/th/id/OIP.-X5DU77JEHas2yRU9fhr_AHaEJ?w=328&h=184&c=7&r=0&o=7&pid=1.7&rm=3"
-                        alt="Women's Collections">
-                    <div class="item-content">
-                        <h3>Women's Collections</h3>
-                        <p>Featured woman collections that give you another vibe.</p>
-                        <a href="#" class="shop-now-link">Shop Now</a>
-                    </div>
-                </div>
-
-                <!-- Bottom Row (Speakers & Perfume) -->
-                <div class="grid-row-bottom">
-                    <!-- Speakers -->
-                    <div class="grid-item item-small">
-                        <img src="https://th.bing.com/th/id/OIP.IRCBveEF2SGHYxg3xPNzVwHaEJ?w=300&h=180&c=7&r=0&o=7&pid=1.7&rm=3"
-                            alt="Speakers">
+                @foreach($featuredProducts->take(3) as $featured)
+                    <div class="grid-item {{ $loop->first ? 'item-wide' : 'item-small' }}">
+                        <img src="{{ $featured->image_url }}" alt="{{ $featured->title }}">
                         <div class="item-content">
-                            <h3>Speakers</h3>
-                            <p>Amazon wireless speakers</p>
-                            <a href="#" class="shop-now-link">Shop Now</a>
+                            <h3>{{ $featured->title }}</h3>
+                            <p>{{ $featured->short_description }}</p>
+                            <a href="{{ route('products.show', $featured) }}" class="shop-now-link">Shop Now</a>
                         </div>
                     </div>
-                    <!-- Perfume -->
-                    <div class="grid-item item-small">
-                        <img src="https://www.bing.com/th/id/OIP.w0WGZ3C9cFKis0ANZHJc-wHaFc?w=240&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                            alt="Perfume">
-                        <div class="item-content">
-                            <h3>Perfume</h3>
-                            <p>GUCCI INTENSE OUD EDP</p>
-                            <a href="#" class="shop-now-link">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
 </section>
 
-<!-- Services Section -->
 <section class="services-section">
     <div class="container">
         <div class="services-grid">
-            <!-- Service 1 -->
             <div class="service-item">
-                <div class="service-icon-outer">
-                    <div class="service-icon-inner">
-                        <i class="fas fa-truck-fast"></i>
-                    </div>
-                </div>
+                <div class="service-icon-outer"><div class="service-icon-inner"><i class="fas fa-truck-fast"></i></div></div>
                 <h3>FREE AND FAST DELIVERY</h3>
                 <p>Free delivery for all orders over $140</p>
             </div>
-            <!-- Service 2 -->
             <div class="service-item">
-                <div class="service-icon-outer">
-                    <div class="service-icon-inner">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                </div>
+                <div class="service-icon-outer"><div class="service-icon-inner"><i class="fas fa-headset"></i></div></div>
                 <h3>24/7 CUSTOMER SERVICE</h3>
                 <p>Friendly 24/7 customer support</p>
             </div>
-            <!-- Service 3 -->
             <div class="service-item">
-                <div class="service-icon-outer">
-                    <div class="service-icon-inner">
-                        <i class="fas fa-shield-halved"></i>
-                    </div>
-                </div>
+                <div class="service-icon-outer"><div class="service-icon-inner"><i class="fas fa-shield-halved"></i></div></div>
                 <h3>MONEY BACK GUARANTEE</h3>
                 <p>We return money within 30 days</p>
             </div>
@@ -939,17 +249,11 @@
     </div>
 </section>
 
-
-
-
-
-<!-- Scroll to Top Button -->
 <a href="#" class="scroll-to-top">
     <i class="fas fa-arrow-up"></i>
 </a>
 
 <script>
-// JS for Banner Slider
 (function() {
     const track = document.querySelector('.banner-image .slider-track');
     const slides = track ? Array.from(track.querySelectorAll('img')) : [];
@@ -957,10 +261,7 @@
     const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll('.dot')) : [];
     if (!track || slides.length === 0) return;
 
-    let index = 0,
-        count = slides.length,
-        timer = null,
-        interval = 2600;
+    let index = 0, count = slides.length, timer = null, interval = 2600;
 
     if (dots.length !== count && dotsContainer) {
         dotsContainer.innerHTML = '';
@@ -979,7 +280,7 @@
 
     function goTo(i) {
         index = (i + count) % count;
-        track.style.transform = `translateX(-${index*100}%)`;
+        track.style.transform = `translateX(-${index * 100}%)`;
         updateActiveDot();
     }
 
@@ -989,19 +290,9 @@
         start();
     }));
 
-    function next() {
-        goTo(index + 1);
-    }
-
-    function start() {
-        stop();
-        timer = setInterval(next, interval);
-    }
-
-    function stop() {
-        if (timer) clearInterval(timer);
-        timer = null;
-    }
+    function next() { goTo(index + 1); }
+    function start() { stop(); timer = setInterval(next, interval); }
+    function stop() { if (timer) clearInterval(timer); timer = null; }
 
     const hero = document.querySelector('.hero-banner');
     if (hero) {
@@ -1012,18 +303,13 @@
     start();
 })();
 
-
-
-// Flash Sales Countdown & Slider
 (function() {
-    // Countdown Timer
     const countdownDate = new Date();
-    countdownDate.setDate(countdownDate.getDate() + 3); // 3 days from now
+    countdownDate.setDate(countdownDate.getDate() + 3);
 
     function updateTimer() {
         const now = new Date().getTime();
         const distance = countdownDate - now;
-
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -1037,91 +323,39 @@
             timeUnits[3].innerText = seconds < 10 ? '0' + seconds : seconds;
         }
     }
+
     setInterval(updateTimer, 1000);
     updateTimer();
 
-    // Product Slider Navigation
     const productList = document.querySelector('.flash-sales-section .product-list');
     const leftArrow = document.querySelector('.flash-sales-row .nav-arrows .arrow-btn:first-child');
     const rightArrow = document.querySelector('.flash-sales-row .nav-arrows .arrow-btn:last-child');
 
     if (productList && leftArrow && rightArrow) {
         rightArrow.addEventListener('click', () => {
-            productList.scrollBy({
-                left: 270,
-                behavior: 'smooth'
-            });
+            productList.scrollBy({ left: 270, behavior: 'smooth' });
         });
 
         leftArrow.addEventListener('click', () => {
-            productList.scrollBy({
-                left: -270,
-                behavior: 'smooth'
-            });
+            productList.scrollBy({ left: -270, behavior: 'smooth' });
         });
     }
 
-
-
-
-    // Music Banner Countdown
-    (function() {
-        const musicCountdownDate = new Date();
-        musicCountdownDate.setDate(musicCountdownDate.getDate() + 5); // 5 days from now
-
-        function updateMusicTimer() {
-            const now = new Date().getTime();
-            const distance = musicCountdownDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            const timerNumbers = document.querySelectorAll('.music-countdown .circle-timer .number');
-
-            if (timerNumbers.length === 4) {
-                timerNumbers[0].innerText = days < 10 ? '0' + days : days;
-                timerNumbers[1].innerText = hours < 10 ? '0' + hours : hours;
-                timerNumbers[2].innerText = minutes < 10 ? '0' + minutes : minutes;
-                timerNumbers[3].innerText = seconds < 10 ? '0' + seconds : seconds;
-            }
-        }
-        setInterval(updateMusicTimer, 1000);
-        updateMusicTimer();
-    })();
-
-
-
-
-
-
-    // Explore Products Slider Navigation
     const exploreGrid = document.querySelector('.explore-products-section .product-grid-explore');
-    const exploreLeftArrow = document.querySelector(
-        '.explore-products-section .section-header .nav-arrows .arrow-btn:first-child');
-    const exploreRightArrow = document.querySelector(
-        '.explore-products-section .section-header .nav-arrows .arrow-btn:last-child');
+    const exploreLeftArrow = document.querySelector('.explore-products-section .section-header .nav-arrows .arrow-btn:first-child');
+    const exploreRightArrow = document.querySelector('.explore-products-section .section-header .nav-arrows .arrow-btn:last-child');
 
     if (exploreGrid && exploreLeftArrow && exploreRightArrow) {
         exploreRightArrow.addEventListener('click', () => {
-            exploreGrid.scrollBy({
-                left: 270,
-                behavior: 'smooth'
-            });
+            exploreGrid.scrollBy({ left: 270, behavior: 'smooth' });
         });
 
         exploreLeftArrow.addEventListener('click', () => {
-            exploreGrid.scrollBy({
-                left: -270,
-                behavior: 'smooth'
-            });
+            exploreGrid.scrollBy({ left: -270, behavior: 'smooth' });
         });
     }
 })();
 </script>
-@endsection
-
 @push('styles')
 <style>
 /* Hero Section */
@@ -2678,3 +1912,4 @@
 }
 </style>
 @endpush
+@endsection
