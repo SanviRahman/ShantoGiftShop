@@ -3,11 +3,13 @@
 @section('title', 'Home - ShantoGiftShop')
 
 @section('content')
+<!-- Hero Section -->
 <section class="hero-section">
     <div class="container hero-container">
+        <!-- Sidebar Categories -->
         <aside class="sidebar">
             <ul>
-                @foreach($sidebarCategories as $category)
+                @forelse($sidebarCategories as $category)
                     <li>
                         <a href="{{ route('products.index', ['category' => $category->slug]) }}">
                             {{ $category->name }}
@@ -16,10 +18,13 @@
                             @endif
                         </a>
                     </li>
-                @endforeach
+                @empty
+                    <li><a href="#">No Category Found</a></li>
+                @endforelse
             </ul>
         </aside>
 
+        <!-- Hero Banner -->
         <div class="hero-banner">
             <div class="banner-content">
                 <div class="brand-row">
@@ -27,18 +32,27 @@
                     <span>iPhone 14 Series</span>
                 </div>
                 <h2>Up to 10% <br> off Voucher</h2>
-                <a href="{{ route('products.index') }}" class="shop-now-btn">Shop Now <i class="fas fa-arrow-right"></i></a>
+                <a href="{{ route('products.index') }}" class="shop-now-btn">
+                    Shop Now <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
+
             <div class="banner-image">
                 <div class="slider-track">
-                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 1">
-                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 2">
-                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 3">
-                    <img src="https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 4">
-                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="iPhone 14 - 5">
+                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                        alt="iPhone 14 - 1">
+                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                        alt="iPhone 14 - 2">
+                    <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                        alt="iPhone 14 - 3">
+                    <img src="https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                        alt="iPhone 14 - 4">
+                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                        alt="iPhone 14 - 5">
                 </div>
             </div>
 
+            <!-- Pagination Dots -->
             <div class="pagination-dots">
                 <span class="dot active"></span>
                 <span class="dot"></span>
@@ -50,24 +64,39 @@
     </div>
 </section>
 
+<!-- Flash Sales Section -->
 <section class="flash-sales-section">
     <div class="container">
+        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
                 <span class="tag-text">Today's</span>
             </div>
+
             <div class="flash-sales-row">
                 <div class="title-timer">
                     <h2>Flash Sales</h2>
                     <div class="countdown">
-                        <div class="time-unit"><span class="label">Days</span><span class="value">03</span></div>
+                        <div class="time-unit">
+                            <span class="label">Days</span>
+                            <span class="value">03</span>
+                        </div>
                         <span class="separator">:</span>
-                        <div class="time-unit"><span class="label">Hours</span><span class="value">23</span></div>
+                        <div class="time-unit">
+                            <span class="label">Hours</span>
+                            <span class="value">23</span>
+                        </div>
                         <span class="separator">:</span>
-                        <div class="time-unit"><span class="label">Minutes</span><span class="value">19</span></div>
+                        <div class="time-unit">
+                            <span class="label">Minutes</span>
+                            <span class="value">19</span>
+                        </div>
                         <span class="separator">:</span>
-                        <div class="time-unit"><span class="label">Seconds</span><span class="value">56</span></div>
+                        <div class="time-unit">
+                            <span class="label">Seconds</span>
+                            <span class="value">56</span>
+                        </div>
                     </div>
                 </div>
 
@@ -78,12 +107,16 @@
             </div>
         </div>
 
+        <!-- Product List -->
         <div class="product-list">
-            @foreach($flashSales as $product)
-                @include('partials.product-card', ['product' => $product, 'showDiscount' => true])
-            @endforeach
+            @forelse($flashSales as $product)
+                @include('partials.home-product-card', ['product' => $product, 'showDiscount' => true])
+            @empty
+                <p>No flash sale product found.</p>
+            @endforelse
         </div>
 
+        <!-- View All Button -->
         <div class="view-all-container">
             <a href="{{ route('products.index') }}" class="view-all-btn">View All Products</a>
         </div>
@@ -92,8 +125,10 @@
     </div>
 </section>
 
+<!-- Categories Section -->
 <section class="categories-section">
     <div class="container">
+        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -104,21 +139,26 @@
             </div>
         </div>
 
+        <!-- Categories Grid -->
         <div class="categories-grid">
-            @foreach($homeCategories as $category)
+            @forelse($homeCategories as $category)
                 <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="category-card">
                     <i class="{{ $category->icon_class ?? 'fas fa-tag' }}"></i>
                     <span>{{ $category->name }}</span>
                 </a>
-            @endforeach
+            @empty
+                <p>No categories found.</p>
+            @endforelse
         </div>
 
         <hr class="section-divider">
     </div>
 </section>
 
+<!-- Best Selling Products Section -->
 <section class="best-selling-section">
     <div class="container">
+        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -130,14 +170,18 @@
             </div>
         </div>
 
+        <!-- Product List -->
         <div class="product-list">
-            @foreach($bestSellers as $product)
-                @include('partials.product-card', ['product' => $product, 'showDiscount' => false])
-            @endforeach
+            @forelse($bestSellers as $product)
+                @include('partials.home-product-card', ['product' => $product, 'showDiscount' => false])
+            @empty
+                <p>No best selling product found.</p>
+            @endforelse
         </div>
     </div>
 </section>
 
+<!-- Music Experience Banner Section -->
 <section class="music-banner-section">
     <div class="container">
         <div class="music-banner">
@@ -146,10 +190,22 @@
                 <h2>Enhance Your <br> Music Experience</h2>
 
                 <div class="music-countdown">
-                    <div class="circle-timer"><span class="number">05</span><span class="unit">Days</span></div>
-                    <div class="circle-timer"><span class="number">23</span><span class="unit">Hours</span></div>
-                    <div class="circle-timer"><span class="number">59</span><span class="unit">Minutes</span></div>
-                    <div class="circle-timer"><span class="number">35</span><span class="unit">Seconds</span></div>
+                    <div class="circle-timer">
+                        <span class="number">05</span>
+                        <span class="unit">Days</span>
+                    </div>
+                    <div class="circle-timer">
+                        <span class="number">23</span>
+                        <span class="unit">Hours</span>
+                    </div>
+                    <div class="circle-timer">
+                        <span class="number">59</span>
+                        <span class="unit">Minutes</span>
+                    </div>
+                    <div class="circle-timer">
+                        <span class="number">35</span>
+                        <span class="unit">Seconds</span>
+                    </div>
                 </div>
 
                 <a href="{{ route('products.index') }}" class="buy-now-btn-green">Buy Now!</a>
@@ -163,8 +219,10 @@
     </div>
 </section>
 
+<!-- Explore Our Products Section -->
 <section class="explore-products-section">
     <div class="container">
+        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -179,20 +237,26 @@
             </div>
         </div>
 
+        <!-- Product Grid -->
         <div class="product-grid-explore">
-            @foreach($exploreProducts as $product)
-                @include('partials.product-card', ['product' => $product, 'showDiscount' => false])
-            @endforeach
+            @forelse($exploreProducts as $product)
+                @include('partials.home-product-card', ['product' => $product, 'showDiscount' => false])
+            @empty
+                <p>No product found.</p>
+            @endforelse
         </div>
 
+        <!-- View All Button -->
         <div class="view-all-container">
             <a href="{{ route('products.index') }}" class="view-all-btn">View All Products</a>
         </div>
     </div>
 </section>
 
+<!-- New Arrival Section -->
 <section class="new-arrival-section">
     <div class="container">
+        <!-- Section Header -->
         <div class="section-header">
             <div class="today-tag">
                 <span class="red-block"></span>
@@ -201,9 +265,11 @@
             <h2>New Arrival</h2>
         </div>
 
+        <!-- Bento Grid -->
         <div class="new-arrival-grid">
             <div class="grid-item item-large">
-                <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="PlayStation 5">
+                <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    alt="PlayStation 5">
                 <div class="item-content">
                     <h3>PlayStation 5</h3>
                     <p>Black and White version of the PS5 coming out on sale.</p>
@@ -212,36 +278,75 @@
             </div>
 
             <div class="grid-column-right">
-                @foreach($featuredProducts->take(3) as $featured)
-                    <div class="grid-item {{ $loop->first ? 'item-wide' : 'item-small' }}">
-                        <img src="{{ $featured->image_url }}" alt="{{ $featured->title }}">
+                @if(isset($featuredProducts[0]))
+                    <div class="grid-item item-wide">
+                        <img src="{{ $featuredProducts[0]->image_url }}" alt="{{ $featuredProducts[0]->title }}">
                         <div class="item-content">
-                            <h3>{{ $featured->title }}</h3>
-                            <p>{{ $featured->short_description }}</p>
-                            <a href="{{ route('products.show', $featured) }}" class="shop-now-link">Shop Now</a>
+                            <h3>{{ $featuredProducts[0]->title }}</h3>
+                            <p>{{ $featuredProducts[0]->short_description }}</p>
+                            <a href="{{ route('products.show', $featuredProducts[0]) }}" class="shop-now-link">Shop Now</a>
                         </div>
                     </div>
-                @endforeach
+                @endif
+
+                <div class="grid-row-bottom">
+                    @if(isset($featuredProducts[1]))
+                        <div class="grid-item item-small">
+                            <img src="{{ $featuredProducts[1]->image_url }}" alt="{{ $featuredProducts[1]->title }}">
+                            <div class="item-content">
+                                <h3>{{ $featuredProducts[1]->title }}</h3>
+                                <p>{{ $featuredProducts[1]->short_description }}</p>
+                                <a href="{{ route('products.show', $featuredProducts[1]) }}" class="shop-now-link">Shop Now</a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(isset($featuredProducts[2]))
+                        <div class="grid-item item-small">
+                            <img src="{{ $featuredProducts[2]->image_url }}" alt="{{ $featuredProducts[2]->title }}">
+                            <div class="item-content">
+                                <h3>{{ $featuredProducts[2]->title }}</h3>
+                                <p>{{ $featuredProducts[2]->short_description }}</p>
+                                <a href="{{ route('products.show', $featuredProducts[2]) }}" class="shop-now-link">Shop Now</a>
+                            </div>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Services Section -->
 <section class="services-section">
     <div class="container">
         <div class="services-grid">
             <div class="service-item">
-                <div class="service-icon-outer"><div class="service-icon-inner"><i class="fas fa-truck-fast"></i></div></div>
+                <div class="service-icon-outer">
+                    <div class="service-icon-inner">
+                        <i class="fas fa-truck-fast"></i>
+                    </div>
+                </div>
                 <h3>FREE AND FAST DELIVERY</h3>
                 <p>Free delivery for all orders over $140</p>
             </div>
+
             <div class="service-item">
-                <div class="service-icon-outer"><div class="service-icon-inner"><i class="fas fa-headset"></i></div></div>
+                <div class="service-icon-outer">
+                    <div class="service-icon-inner">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                </div>
                 <h3>24/7 CUSTOMER SERVICE</h3>
                 <p>Friendly 24/7 customer support</p>
             </div>
+
             <div class="service-item">
-                <div class="service-icon-outer"><div class="service-icon-inner"><i class="fas fa-shield-halved"></i></div></div>
+                <div class="service-icon-outer">
+                    <div class="service-icon-inner">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                </div>
                 <h3>MONEY BACK GUARANTEE</h3>
                 <p>We return money within 30 days</p>
             </div>
@@ -249,11 +354,13 @@
     </div>
 </section>
 
+<!-- Scroll to Top Button -->
 <a href="#" class="scroll-to-top">
     <i class="fas fa-arrow-up"></i>
 </a>
 
 <script>
+// JS for Banner Slider
 (function() {
     const track = document.querySelector('.banner-image .slider-track');
     const slides = track ? Array.from(track.querySelectorAll('img')) : [];
@@ -261,7 +368,10 @@
     const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll('.dot')) : [];
     if (!track || slides.length === 0) return;
 
-    let index = 0, count = slides.length, timer = null, interval = 2600;
+    let index = 0,
+        count = slides.length,
+        timer = null,
+        interval = 2600;
 
     if (dots.length !== count && dotsContainer) {
         dotsContainer.innerHTML = '';
@@ -290,9 +400,19 @@
         start();
     }));
 
-    function next() { goTo(index + 1); }
-    function start() { stop(); timer = setInterval(next, interval); }
-    function stop() { if (timer) clearInterval(timer); timer = null; }
+    function next() {
+        goTo(index + 1);
+    }
+
+    function start() {
+        stop();
+        timer = setInterval(next, interval);
+    }
+
+    function stop() {
+        if (timer) clearInterval(timer);
+        timer = null;
+    }
 
     const hero = document.querySelector('.hero-banner');
     if (hero) {
@@ -303,6 +423,7 @@
     start();
 })();
 
+// Flash Sales Countdown & Slider
 (function() {
     const countdownDate = new Date();
     countdownDate.setDate(countdownDate.getDate() + 3);
@@ -310,6 +431,7 @@
     function updateTimer() {
         const now = new Date().getTime();
         const distance = countdownDate - now;
+
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -333,25 +455,70 @@
 
     if (productList && leftArrow && rightArrow) {
         rightArrow.addEventListener('click', () => {
-            productList.scrollBy({ left: 270, behavior: 'smooth' });
+            productList.scrollBy({
+                left: 270,
+                behavior: 'smooth'
+            });
         });
 
         leftArrow.addEventListener('click', () => {
-            productList.scrollBy({ left: -270, behavior: 'smooth' });
+            productList.scrollBy({
+                left: -270,
+                behavior: 'smooth'
+            });
         });
     }
 
+    // Music Banner Countdown
+    (function() {
+        const musicCountdownDate = new Date();
+        musicCountdownDate.setDate(musicCountdownDate.getDate() + 5);
+
+        function updateMusicTimer() {
+            const now = new Date().getTime();
+            const distance = musicCountdownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const timerNumbers = document.querySelectorAll('.music-countdown .circle-timer .number');
+
+            if (timerNumbers.length === 4) {
+                timerNumbers[0].innerText = days < 10 ? '0' + days : days;
+                timerNumbers[1].innerText = hours < 10 ? '0' + hours : hours;
+                timerNumbers[2].innerText = minutes < 10 ? '0' + minutes : minutes;
+                timerNumbers[3].innerText = seconds < 10 ? '0' + seconds : seconds;
+            }
+        }
+
+        setInterval(updateMusicTimer, 1000);
+        updateMusicTimer();
+    })();
+
+    // Explore Products Slider Navigation
     const exploreGrid = document.querySelector('.explore-products-section .product-grid-explore');
-    const exploreLeftArrow = document.querySelector('.explore-products-section .section-header .nav-arrows .arrow-btn:first-child');
-    const exploreRightArrow = document.querySelector('.explore-products-section .section-header .nav-arrows .arrow-btn:last-child');
+    const exploreLeftArrow = document.querySelector(
+        '.explore-products-section .section-header .nav-arrows .arrow-btn:first-child'
+    );
+    const exploreRightArrow = document.querySelector(
+        '.explore-products-section .section-header .nav-arrows .arrow-btn:last-child'
+    );
 
     if (exploreGrid && exploreLeftArrow && exploreRightArrow) {
         exploreRightArrow.addEventListener('click', () => {
-            exploreGrid.scrollBy({ left: 270, behavior: 'smooth' });
+            exploreGrid.scrollBy({
+                left: 270,
+                behavior: 'smooth'
+            });
         });
 
         exploreLeftArrow.addEventListener('click', () => {
-            exploreGrid.scrollBy({ left: -270, behavior: 'smooth' });
+            exploreGrid.scrollBy({
+                left: -270,
+                behavior: 'smooth'
+            });
         });
     }
 })();

@@ -3,22 +3,30 @@
 @section('title','Products - ShantoGiftShop')
 
 @section('content')
+
+<!-- Product Listing Section -->
 <div class="container products-page-layout" style="margin-top: 90px;">
+
+    <!-- Sidebar Filters -->
     <aside class="sidebar">
-        <form method="GET" action="{{ route('products.index') }}">
+        <form action="{{ route('products.index') }}" method="GET">
+            <!-- Categories -->
             <div class="sidebar-section">
                 <h3 class="sidebar-title">Category</h3>
                 <ul class="category-list">
-                    @foreach($categories as $category)
+                    @forelse($categories as $category)
                         <li>
                             <a href="{{ route('products.index', ['category' => $category->slug]) }}">
                                 {{ $category->name }}
                             </a>
                         </li>
-                    @endforeach
+                    @empty
+                        <li><a href="#">No Category Found</a></li>
+                    @endforelse
                 </ul>
             </div>
 
+            <!-- Price Range -->
             <div class="sidebar-section">
                 <h3 class="sidebar-title">Price Range</h3>
                 <div class="price-inputs">
@@ -27,17 +35,30 @@
                 </div>
                 <button class="apply-price-btn" type="submit">Apply</button>
             </div>
+
+            <!-- Color Filter (UI only) -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Color</h3>
+                <div class="color-options">
+                    <div class="color-option selected" style="background-color: #DB4444;"></div>
+                    <div class="color-option" style="background-color: #000000;"></div>
+                    <div class="color-option" style="background-color: #FFFFFF;"></div>
+                    <div class="color-option" style="background-color: #00FF66;"></div>
+                    <div class="color-option" style="background-color: #0000FF;"></div>
+                </div>
+            </div>
         </form>
     </aside>
 
+    <!-- Product Grid Area -->
     <main class="products-content">
-        <form method="GET" action="{{ route('products.index') }}" class="products-top-bar">
+        <!-- Top Bar -->
+        <form action="{{ route('products.index') }}" method="GET" class="products-top-bar">
             <div class="results-count">
                 Showing <span>{{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }}</span> of {{ $products->total() }} results
             </div>
 
             <div class="sort-wrapper">
-                <input type="text" name="search" placeholder="Search products..." value="{{ request('search') }}" class="sort-select">
                 <span>Sort By:</span>
                 <select class="sort-select" name="sort" onchange="this.form.submit()">
                     <option value="featured" {{ request('sort') == 'featured' ? 'selected' : '' }}>Featured</option>
@@ -48,19 +69,23 @@
             </div>
         </form>
 
+        <!-- Grid -->
         <div class="product-grid">
-            @foreach($products as $product)
-                @include('partials.product-card', ['product' => $product, 'showDiscount' => true])
-            @endforeach
+            @forelse($products as $product)
+                @include('partials.shop-product-card', ['product' => $product])
+            @empty
+                <p>No products found.</p>
+            @endforelse
         </div>
 
+        <!-- Pagination -->
         <div class="pagination">
             @if($products->currentPage() > 1)
-                <a class="page-item next" href="{{ $products->previousPageUrl() }}">< Prev</a>
+                <a class="page-item next" href="{{ $products->previousPageUrl() }}">Prev</a>
             @endif
 
             @foreach($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                <a class="page-item {{ $page == $products->currentPage() ? 'active' : '' }}" href="{{ $url }}">
+                <a href="{{ $url }}" class="page-item {{ $page == $products->currentPage() ? 'active' : '' }}">
                     {{ $page }}
                 </a>
             @endforeach
@@ -71,8 +96,8 @@
         </div>
     </main>
 </div>
+
 <script>
-// Simple Interaction Logic
 document.addEventListener('DOMContentLoaded', function() {
 
     // Language Selector Toggle
@@ -103,14 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
         option.addEventListener('click', function() {
             colorOptions.forEach(opt => opt.classList.remove('selected'));
             this.classList.add('selected');
-        });
-    });
-
-    // Add to Cart Interaction
-    const addButtons = document.querySelectorAll('.add-to-cart-btn');
-    addButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            alert('Product added to cart!');
         });
     });
 });

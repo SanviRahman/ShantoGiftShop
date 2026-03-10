@@ -1,65 +1,110 @@
- <!-- Top Header (Black Bar) -->
- <div class="top-header">
-     <div class="container top-header-content">
-         <div class="promo-text">
-             Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!
-             <a href="#" class="shop-now-link">ShopNow</a>
-         </div>
-         <div class="language-selector">
-             <span>English</span> <i class="fas fa-chevron-down"></i>
-             <ul class="lang-dropdown">
-                 <li>English</li>
-                 <li>Bengali</li>
-             </ul>
-         </div>
-     </div>
- </div>
+<!-- Top Header (Black Bar) -->
+<div class="top-header">
+    <div class="container top-header-content">
+        <div class="promo-text">
+            Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!
+            <a href="{{ route('products.index') }}" class="shop-now-link">ShopNow</a>
+        </div>
+        <div class="language-selector">
+            <span>English</span> <i class="fas fa-chevron-down"></i>
+            <ul class="lang-dropdown">
+                <li>English</li>
+                <li>Bengali</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
- <!-- Main Navigation -->
- <nav class="navbar">
-     <div class="container nav-content">
-         <div class="logo">
-             <h1>Shanto<span style="color: #e03939;">Gift</span>Shop</h1>
-         </div>
+<!-- Main Navigation -->
+<nav class="navbar">
+    <div class="container nav-content">
+        <div class="logo">
+            <h1>Shanto<span style="color: #e03939;">Gift</span>Shop</h1>
+        </div>
 
-         <ul class="nav-links">
-             <li><a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : ''}}">Home</a></li>
-             <li><a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'active' : ''}}">Contact</a></li>
-             <li><a href="{{ route('about') }}" class="{{ request()->is('about') ? 'active' : ''}}">About</a></li>
-             <li><a href="{{ route('signup') }}" class="{{ request()->is('signup') ? 'active' : ''}}">Sign Up</a></li>
-         </ul>
+        <ul class="nav-links">
+            <li>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('contact.index') }}" class="{{ request()->routeIs('contact.*') ? 'active' : '' }}">
+                    Contact
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">
+                    About
+                </a>
+            </li>
+            @guest
+                <li>
+                    <a href="{{ route('register') }}" class="{{ request()->routeIs('register') ? 'active' : '' }}">
+                        Sign Up
+                    </a>
+                </li>
+            @endguest
+        </ul>
 
-         <div class="icons">
-             <a href="#"><i class="far fa-heart"></i></a>
-             <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
+        <div class="icons">
+            @auth
+                <a href="{{ route('wishlist.index') }}"><i class="far fa-heart"></i></a>
+            @else
+                <a href="{{ route('login') }}"><i class="far fa-heart"></i></a>
+            @endauth
 
-             <!-- Profile Dropdown -->
-             <div class="profile-dropdown">
-                 <a href="#" class="profile-toggle"><i class="fas fa-user"></i></a>
-                 <div class="dropdown-menu">
-                     <a href="{{ route('account') }}">
-                         <i class="fas fa-user"></i>
-                         <span>My Profile</span>
-                     </a>
-                     <a href="#">
-                         <i class="fas fa-list"></i>
-                         <span>My Orders</span>
-                     </a>
-                     <a href="#">
-                         <i class="fas fa-cog"></i>
-                         <span>Settings</span>
-                     </a>
-                     <div class="dropdown-divider"></div> <!-- Optional divider -->
-                     <a href="#">
-                         <i class="fas fa-sign-out-alt"></i>
-                         <span>Logout</span>
-                     </a>
-                 </div>
-             </div>
-         </div>
-     </div>
- </nav>
+            <a href="{{ route('cart.index') }}"><i class="fas fa-shopping-cart"></i></a>
 
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown">
+                <a href="#" class="profile-toggle"><i class="fas fa-user"></i></a>
+
+                <div class="dropdown-menu">
+                    @guest
+                        <a href="{{ route('login') }}">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Login</span>
+                        </a>
+                        <a href="{{ route('register') }}">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Sign Up</span>
+                        </a>
+                    @endguest
+
+                    @auth
+                        <a href="{{ route('account.index') }}">
+                            <i class="fas fa-user"></i>
+                            <span>My Profile</span>
+                        </a>
+
+                        <a href="{{ route('wishlist.index') }}">
+                            <i class="far fa-heart"></i>
+                            <span>My Wishlist</span>
+                        </a>
+
+                        <a href="{{ route('cart.index') }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>My Cart</span>
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                        <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                            @csrf
+                            <button type="submit" style="width:100%; border:none; background:none; padding:0; text-align:left;">
+                                <span style="display:flex; align-items:center; padding:14px 20px; cursor:pointer;">
+                                    <i class="fas fa-sign-out-alt" style="width:24px; text-align:center; font-size:16px; color:#666; margin-right:12px;"></i>
+                                    <span style="font-size:14px; font-weight:500; color:#333;">Logout</span>
+                                </span>
+                            </button>
+                        </form>
+                    @endauth
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 
 
  <!-- Dropdown Menu keep with Responsive Support -->
