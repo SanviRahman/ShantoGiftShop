@@ -1,87 +1,95 @@
 @extends('home.layout')
 
-@section('title', 'Product Details - ShantoGiftShop')
+@section('title', $product->title . ' - ShantoGiftShop')
 
 @section('content')
-
-<!-- Breadcrumb -->
 <div class="container breadcrumb-container" style="margin-top: 90px;">
     <div class="breadcrumb">
-        <a href="index.html">Account</a>
+        <a href="{{ route('home') }}">Home</a>
         <span class="separator">/</span>
-        <a href="#">Gaming</a>
+        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a>
         <span class="separator">/</span>
-        <span class="current">Havic HV G-92 Gamepad</span>
+        <span class="current">{{ $product->title }}</span>
     </div>
 </div>
-<!-- Product Details Section -->
+
 <section class="container product-details-container" style="margin-top:50px">
-    <!-- Gallery -->
     <div class="product-gallery">
         <div class="gallery-thumbnails">
-            <div class="thumbnail active"><img src="https://via.placeholder.com/170x138/F5F5F5/000000?text=View+1"
-                    alt="Thumb 1"></div>
-            <div class="thumbnail"><img src="https://via.placeholder.com/170x138/F5F5F5/000000?text=View+2"
-                    alt="Thumb 2"></div>
-            <div class="thumbnail"><img src="https://via.placeholder.com/170x138/F5F5F5/000000?text=View+3"
-                    alt="Thumb 3"></div>
-            <div class="thumbnail"><img src="https://via.placeholder.com/170x138/F5F5F5/000000?text=View+4"
-                    alt="Thumb 4"></div>
+            @foreach(($product->detail->gallery ?? [$product->image_url]) as $image)
+                <div class="thumbnail {{ $loop->first ? 'active' : '' }}">
+                    <img src="{{ $image }}" alt="Thumb {{ $loop->iteration }}">
+                </div>
+            @endforeach
         </div>
         <div class="main-image">
-            <img src="https://via.placeholder.com/500x600/F5F5F5/000000?text=Havic+HV+G-92+Gamepad" alt="Main Product">
+            <img src="{{ ($product->detail->gallery[0] ?? $product->image_url) }}" alt="{{ $product->title }}">
         </div>
     </div>
 
-    <!-- Info -->
     <div class="product-info-col">
-        <h1 class="product-title">Havic HV G-92 Gamepad</h1>
+        <h1 class="product-title">{{ $product->title }}</h1>
+
         <div class="rating-row">
             <div class="rating-stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
+                @for($i = 1; $i <= 5; $i++)
+                    <i class="{{ $i <= round($product->rating) ? 'fas' : 'far' }} fa-star"></i>
+                @endfor
             </div>
-            <span>(150 Reviews)</span>
-            <span class="stock-status">In Stock</span>
+            <span>({{ $product->review_count }} Reviews)</span>
+            <span class="stock-status">{{ $product->stock_qty > 0 ? 'In Stock' : 'Out of Stock' }}</span>
         </div>
-        <div class="product-price-large">$192.00</div>
+
+        <div class="product-price-large">${{ number_format($product->price, 2) }}</div>
+
         <p class="product-description">
-            PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install &
-            mess free removal Pressure sensitive.
+            {{ $product->detail->description ?? $product->short_description }}
         </p>
 
         <div class="product-options">
             <div class="option-row">
                 <span class="option-label">Colours:</span>
                 <div class="colour-options">
-                    <div class="colour-radio selected" style="background-color: #A0BCE0;"></div> <!-- Blueish -->
-                    <div class="colour-radio" style="background-color: #E07575;"></div> <!-- Redish -->
+                    @foreach(($product->detail->colors ?? []) as $color)
+                        <div class="colour-radio {{ $loop->first ? 'selected' : '' }}" style="background-color: {{ $color }};"></div>
+                    @endforeach
                 </div>
             </div>
+
             <div class="option-row">
                 <span class="option-label">Size:</span>
                 <div class="size-options">
-                    <div class="size-radio">XS</div>
-                    <div class="size-radio">S</div>
-                    <div class="size-radio">M</div>
-                    <div class="size-radio">L</div>
-                    <div class="size-radio">XL</div>
+                    @foreach(($product->detail->sizes ?? []) as $size)
+                        <div class="size-radio">{{ $size }}</div>
+                    @endforeach
                 </div>
             </div>
         </div>
 
-        <div class="purchase-actions">
-            <div class="quantity-control">
-                <button class="qty-btn" id="qty-minus">-</button>
-                <input type="number" value="2" min="1" class="qty-input" id="qty-input">
-                <button class="qty-btn" id="qty-plus" style="background-color: #DB4444; color: #fff;">+</button>
+        <form action="{{ route('cart.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+            <div class="purchase-actions">
+                <div class="quantity-control">
+                    <button class="qty-btn" id="qty-minus" type="button">-</button>
+                    <input type="number" name="quantity" value="1" min="1" class="qty-input" id="qty-input">
+                    <button class="qty-btn" id="qty-plus" type="button" style="background-color: #DB4444; color: #fff;">+</button>
+                </div>
+
+                <button class="btn-primary" style="padding: 10px 48px;" type="submit">Add To Cart</button>
+
+                @auth
+                    <button class="wishlist-btn" type="submit" formaction="{{ route('wishlist.store') }}" formmethod="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <i class="far fa-heart"></i>
+                    </button>
+                @else
+                    <a href="{{ route('login') }}" class="wishlist-btn"><i class="far fa-heart"></i></a>
+                @endauth
             </div>
-            <button class="btn-primary" style="padding: 10px 48px;">Buy Now</button>
-            <button class="wishlist-btn"><i class="far fa-heart"></i></button>
-        </div>
+        </form>
 
         <div class="delivery-info">
             <div class="delivery-item">
@@ -102,7 +110,6 @@
     </div>
 </section>
 
-<!-- Related Items -->
 <section class="container related-items-section">
     <div class="section-header-simple">
         <div class="red-block-small"></div>
@@ -110,123 +117,14 @@
     </div>
 
     <div class="product-grid">
-        <!-- Product 1 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Gamepad" alt="Gamepad">
-                <span class="discount-badge">-40%</span>
-                <div class="card-actions">
-                    <div class="action-btn"><i class="far fa-heart"></i></div>
-                    <div class="action-btn"><i class="far fa-eye"></i></div>
-                </div>
-            </div>
-            <div class="product-info">
-                <h3>HAVIT HV-G92 Gamepad</h3>
-                <div class="product-price">
-                    $120 <span class="old-price">$160</span>
-                </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span>(88)</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Keyboard" alt="Keyboard">
-                <span class="discount-badge">-35%</span>
-                <div class="card-actions">
-                    <div class="action-btn"><i class="far fa-heart"></i></div>
-                    <div class="action-btn"><i class="far fa-eye"></i></div>
-                </div>
-                <div class="add-to-cart-bar">Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>AK-900 Wired Keyboard</h3>
-                <div class="product-price">
-                    $960 <span class="old-price">$1160</span>
-                </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <span>(75)</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Monitor" alt="Monitor">
-                <span class="discount-badge">-30%</span>
-                <div class="card-actions">
-                    <div class="action-btn"><i class="far fa-heart"></i></div>
-                    <div class="action-btn"><i class="far fa-eye"></i></div>
-                </div>
-            </div>
-            <div class="product-info">
-                <h3>IPS LCD Gaming Monitor</h3>
-                <div class="product-price">
-                    $370 <span class="old-price">$400</span>
-                </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span>(99)</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Cooler" alt="Cooler">
-                <div class="card-actions">
-                    <div class="action-btn"><i class="far fa-heart"></i></div>
-                    <div class="action-btn"><i class="far fa-eye"></i></div>
-                </div>
-            </div>
-            <div class="product-info">
-                <h3>RGB Liquid CPU Cooler</h3>
-                <div class="product-price">
-                    $160 <span class="old-price">$170</span>
-                </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                    </div>
-                    <span>(65)</span>
-                </div>
-            </div>
-        </div>
-
+        @foreach($relatedProducts as $product)
+            @include('partials.product-card', ['product' => $product, 'showDiscount' => true])
+        @endforeach
     </div>
 </section>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Quantity Logic
     const qtyInput = document.getElementById('qty-input');
     const qtyMinus = document.getElementById('qty-minus');
     const qtyPlus = document.getElementById('qty-plus');
@@ -236,13 +134,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let val = parseInt(qtyInput.value);
             if (val > 1) qtyInput.value = val - 1;
         });
+
         qtyPlus.addEventListener('click', () => {
             let val = parseInt(qtyInput.value);
             qtyInput.value = val + 1;
         });
     }
 
-    // Size Selection
     const sizeRadios = document.querySelectorAll('.size-radio');
     sizeRadios.forEach(radio => {
         radio.addEventListener('click', () => {
@@ -251,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Colour Selection
     const colourRadios = document.querySelectorAll('.colour-radio');
     colourRadios.forEach(radio => {
         radio.addEventListener('click', () => {
@@ -260,34 +157,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Thumbnail Gallery
     const thumbnails = document.querySelectorAll('.thumbnail');
     const mainImage = document.querySelector('.main-image img');
 
     thumbnails.forEach(thumb => {
         thumb.addEventListener('click', () => {
-            // Update active class
             thumbnails.forEach(t => t.classList.remove('active'));
             thumb.classList.add('active');
 
-            // Update main image (Simulated by using the thumb src text)
-            // In a real app, you'd swap the src based on data attributes or similar
-            // Here just simulating interaction
+            const thumbImg = thumb.querySelector('img');
+            if (thumbImg && mainImage) {
+                mainImage.src = thumbImg.src;
+            }
         });
     });
-
-    // Language Selector Logic (Reused)
-    const langSelector = document.querySelector('.language-selector');
-    const langDropdown = document.querySelector('.lang-dropdown');
-    if (langSelector && langDropdown) {
-        langSelector.addEventListener('click', function(e) {
-            e.stopPropagation();
-            langDropdown.style.display = langDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-        document.addEventListener('click', function() {
-            langDropdown.style.display = 'none';
-        });
-    }
 });
 </script>
 @push('styles')
