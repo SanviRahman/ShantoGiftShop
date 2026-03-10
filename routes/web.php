@@ -1,21 +1,34 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
-// Public Routes
-Route::get('/',[HomeController::class,'home'])->name('home');
-Route::get('/contact',[HomeController::class,'contact'])->name('contact');
-Route::get('/about',[HomeController::class,'about'])->name('about');
-Route::get('/products',[HomeController::class,'products'])->name('products');
-Route::get('/product-details',[HomeController::class,'productDetails'])->name('productDetails');
-Route::get('/404error',[HomeController::class,'error'])->name('error');
-Route::get('/cart',[HomeController::class,'cart'])->name('cart');
+Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 
+Route::resource('contact', ContactController::class)->only(['index', 'store']);
+Route::resource('products', ProductController::class)->only(['index', 'show']);
+Route::resource('cart', CartController::class)
+    ->parameters(['cart' => 'cartItem'])
+    ->only(['index', 'store', 'update', 'destroy']);
 
-//User Routes
-Route::get('/user/account',[UserController::class,'account'])->name('account');
-Route::get('/user/wishlist',[UserController::class,'wishlist'])->name('wishlist');
-Route::get('/user/signup',[UserController::class,'signup'])->name('signup');
-Route::get('/user/login',[UserController::class,'login'])->name('login');
+Route::post('/cart/sync', [CartController::class, 'sync'])->name('cart.sync');
+Route::resource('orders', OrderController::class)->only(['store']);
+
+Route::get('/register', [AuthController::class, 'createRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'storeRegister'])->name('register.store');
+Route::get('/login', [AuthController::class, 'createLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'storeLogin'])->name('login.store');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::resource('account', AccountController::class)->only(['index', 'update']);
+    Route::resource('wishlist', WishlistController::class)->only(['index', 'store', 'destroy']);
+});
