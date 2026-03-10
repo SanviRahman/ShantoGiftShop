@@ -3,36 +3,40 @@
 @section('title', 'Sign Up - ShantoGiftShop')
 
 @section('content')
-<!-- Sign Up Section -->
-<div class="auth-container" style="margin-top: 90px; ">
-    <!-- Left Side Image -->
+<div class="auth-container" style="margin-top: 90px;">
     <div class="auth-image">
         <img src="{{ asset('images/Frame-2.png') }}" alt="Side Image">
     </div>
 
-    <!-- Right Side Form -->
     <div class="auth-form-wrapper">
         <h2 class="auth-heading">Create an account</h2>
         <p class="auth-subheading">Enter your details below</p>
 
-        <form class="auth-form">
+        <form class="auth-form" method="POST" action="{{ route('register.store') }}">
+            @csrf
+
             <div class="form-group">
-                <input type="text" placeholder="Name" required>
+                <input type="text" name="name" placeholder="Name" required value="{{ old('name') }}">
             </div>
+
             <div class="form-group">
-                <input type="text" placeholder="Email or Phone Number" required>
+                <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}">
             </div>
+
             <div class="form-group">
-                <input type="password" placeholder="Password" required>
+                <input type="text" name="phone" placeholder="Phone Number" required value="{{ old('phone') }}">
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
             </div>
 
             <div class="auth-actions">
                 <button type="submit" class="btn-primary">Create Account</button>
-                <button type="button" class="btn-outline">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"
-                        style="width: 24px; height: 24px;">
-                    Sign up with Google
-                </button>
             </div>
 
             <div class="auth-footer">
@@ -42,7 +46,6 @@
         </form>
     </div>
 </div>
-
 @push('styles')
 <style>
 /* Reset and Base Styles */

@@ -3,24 +3,24 @@
 @section('title','Login - ShantoGiftShop')
 
 @section('content')
-<!-- Login Section -->
 <div class="auth-container" style="margin-top: 90px;">
-    <!-- Left Side Image -->
     <div class="auth-image">
         <img src="{{ asset('images/Frame-2.png') }}" alt="Side Image">
     </div>
 
-    <!-- Right Side Form -->
     <div class="auth-form-wrapper">
         <h2 class="auth-heading">Login to Shanto<span style="color: #e03939;">Gift</span>Shop</h2>
         <p class="auth-subheading">Enter your details below</p>
 
-        <form class="auth-form">
+        <form class="auth-form" method="POST" action="{{ route('login.store') }}">
+            @csrf
+
             <div class="form-group">
-                <input type="text" placeholder="Email or Phone Number" required>
+                <input type="text" name="login" placeholder="Email or Phone Number" required value="{{ old('login') }}">
             </div>
+
             <div class="form-group">
-                <input type="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required>
             </div>
 
             <div class="login-actions">

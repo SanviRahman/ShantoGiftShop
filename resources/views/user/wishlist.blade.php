@@ -3,204 +3,104 @@
 @section('title','Wishlist - ShantoGiftShop')
 
 @section('content')
-<!-- Wishlist Section -->
 <section class="wishlist-section container" style="margin-top: 50px;">
-    <div class="breadcrumb-container" style="margin-top: 40px; margin-bottom: 40px;">
-        <!-- Simple spacing or breadcrumb if needed, otherwise just margin -->
-    </div>
+    <div class="breadcrumb-container" style="margin-top: 40px; margin-bottom: 40px;"></div>
 
     <div class="wishlist-header">
-        <h2 class="wishlist-title">Wishlist (<span>4</span>)</h2>
-        <button class="move-all-btn">Move All To Bag</button>
+        <h2 class="wishlist-title">Wishlist (<span>{{ $wishlistItems->count() }}</span>)</h2>
+        <button class="move-all-btn" type="button">Move All To Bag</button>
     </div>
 
     <div class="product-grid" id="wishlist-grid">
+        @foreach($wishlistItems as $item)
+            @php $product = $item->product; @endphp
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="{{ $product->image_url }}" alt="{{ $product->title }}">
 
-        <!-- Wishlist Item 1 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+1" alt="Gucci Duffle Bag">
-                <span class="discount-badge">-35%</span>
-                <button class="trash-btn"><i class="far fa-trash-alt"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>Gucci Duffle Bag</h3>
-                <div class="product-price">
-                    $960 <span class="old-price">$1160</span>
+                    @if($product->discount_percent)
+                        <span class="discount-badge">-{{ $product->discount_percent }}%</span>
+                    @endif
+
+                    <form action="{{ route('wishlist.destroy', $item) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="trash-btn" type="submit"><i class="far fa-trash-alt"></i></button>
+                    </form>
+
+                    <form action="{{ route('cart.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button class="add-to-cart-bar" type="submit"><i class="fas fa-shopping-cart"></i> Add To Cart</button>
+                    </form>
+                </div>
+
+                <div class="product-info">
+                    <h3>{{ $product->title }}</h3>
+                    <div class="product-price">
+                        ${{ number_format($product->price, 0) }}
+                        @if($product->old_price)
+                            <span class="old-price">${{ number_format($product->old_price, 0) }}</span>
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Wishlist Item 2 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+2" alt="RGB Liquid CPU Cooler">
-                <button class="trash-btn"><i class="far fa-trash-alt"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>RGB Liquid CPU Cooler</h3>
-                <div class="product-price">
-                    $1960
-                </div>
-            </div>
-        </div>
-
-        <!-- Wishlist Item 3 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+3"
-                    alt="GP11 Shooter USB Gamepad">
-                <button class="trash-btn"><i class="far fa-trash-alt"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>GP11 Shooter USB Gamepad</h3>
-                <div class="product-price">
-                    $550
-                </div>
-            </div>
-        </div>
-
-        <!-- Wishlist Item 4 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Product+4" alt="Quilted Satin Jacket">
-                <button class="trash-btn"><i class="far fa-trash-alt"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>Quilted Satin Jacket</h3>
-                <div class="product-price">
-                    $750
-                </div>
-            </div>
-        </div>
-
+        @endforeach
     </div>
 </section>
 
-
-<!-- Just For You Section -->
 <section class="just-for-you-section container">
     <div class="section-header">
         <div class="section-title">
             <div class="red-block"></div>
             <h2>Just For You</h2>
         </div>
-        <button class="see-all-btn">See All</button>
+        <a href="{{ route('products.index') }}" class="see-all-btn">See All</a>
     </div>
 
     <div class="product-grid">
+        @foreach($recommendedProducts as $product)
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="{{ $product->image_url }}" alt="{{ $product->title }}">
 
-        <!-- Recommendation 1 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Rec+1" alt="ASUS FHD Gaming Laptop">
-                <span class="discount-badge">-35%</span>
-                <button class="eye-btn"><i class="far fa-eye"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>ASUS FHD Gaming Laptop</h3>
-                <div class="product-price">
-                    $960 <span class="old-price">$1160</span>
+                    @if($product->discount_percent)
+                        <span class="discount-badge">-{{ $product->discount_percent }}%</span>
+                    @endif
+
+                    <a href="{{ route('products.show', $product) }}" class="eye-btn"><i class="far fa-eye"></i></a>
+
+                    <form action="{{ route('cart.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button class="add-to-cart-bar" type="submit"><i class="fas fa-shopping-cart"></i> Add To Cart</button>
+                    </form>
                 </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
+
+                <div class="product-info">
+                    <h3>{{ $product->title }}</h3>
+                    <div class="product-price">
+                        ${{ number_format($product->price, 0) }}
+                        @if($product->old_price)
+                            <span class="old-price">${{ number_format($product->old_price, 0) }}</span>
+                        @endif
                     </div>
-                    <span>(65)</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Recommendation 2 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Rec+2" alt="IPS LCD Gaming Monitor">
-                <button class="eye-btn"><i class="far fa-eye"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>IPS LCD Gaming Monitor</h3>
-                <div class="product-price">
-                    $1160
-                </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
+                    <div class="product-rating">
+                        <div class="stars">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="{{ $i <= round($product->rating) ? 'fas' : 'far' }} fa-star"></i>
+                            @endfor
+                        </div>
+                        <span>({{ $product->review_count }})</span>
                     </div>
-                    <span>(65)</span>
                 </div>
             </div>
-        </div>
-
-        <!-- Recommendation 3 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Rec+3" alt="HAVIT HV-G92 Gamepad">
-                <span class="new-badge">NEW</span>
-                <button class="eye-btn"><i class="far fa-eye"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>HAVIT HV-G92 Gamepad</h3>
-                <div class="product-price">
-                    $560
-                </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span>(65)</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recommendation 4 -->
-        <div class="product-card">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/250x250/F5F5F5/000000?text=Rec+4" alt="AK-900 Wired Keyboard">
-                <button class="eye-btn"><i class="far fa-eye"></i></button>
-                <div class="add-to-cart-bar"><i class="fas fa-shopping-cart"></i> Add To Cart</div>
-            </div>
-            <div class="product-info">
-                <h3>AK-900 Wired Keyboard</h3>
-                <div class="product-price">
-                    $200
-                </div>
-                <div class="product-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                    </div>
-                    <span>(65)</span>
-                </div>
-            </div>
-        </div>
-
+        @endforeach
     </div>
 </section>
-
-
-
 @push('styles')
 <style>
 /* Typography & Colors */

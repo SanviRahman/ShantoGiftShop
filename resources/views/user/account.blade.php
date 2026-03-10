@@ -1,9 +1,8 @@
 @extends('home.layout')
 
-@section('title', 'Contact Us - ShantoGiftShop')
+@section('title', 'My Account - ShantoGiftShop')
 
 @section('content')
-<!-- Breadcrumb & Welcome -->
 <div class="container breadcrumb-container" style="margin-top: 90px;">
     <div class="breadcrumb" style="font-family: 'Poppins', sans-serif;">
         <a href="{{ route('home') }}">Home</a>
@@ -11,24 +10,22 @@
         <span class="current">My Account</span>
     </div>
     <div class="welcome-user" style="font-family: 'Poppins', sans-serif;">
-        Welcome! <span class="user-name">Md Rimel</span>
+        Welcome! <span class="user-name">{{ $user->name }}</span>
     </div>
 </div>
 
-<!-- Account Section -->
 <section class="account-section" style="margin-top: 40px;">
     <div class="container account-container">
-        <!-- Sidebar -->
         <aside class="account-sidebar">
             <div class="sidebar-group">
                 <h4>Manage My Account</h4>
                 <ul style="list-style: none; padding-left: 40px;">
-                    <li><a href="#" class="{{ request()->is('profile') ? 'active' : ''}}">My Profile</a></li>
-                    <li><a href="#" class="{{ request()->is('address-book') ? 'active' : ''}}">Address Book</a></li>
-                    <li><a href="#" class="{{ request()->is('payment-options') ? 'active' : ''}}">My Payment Options</a></li>
+                    <li><a href="{{ route('account.index', $user) }}" class="active">My Profile</a></li>
+                    <li><a href="#">Address Book</a></li>
+                    <li><a href="#">My Payment Options</a></li>
                 </ul>
             </div>
-            <div class="sidebar-group" >
+            <div class="sidebar-group">
                 <h4>My Orders</h4>
                 <ul style="list-style: none; padding-left: 40px;">
                     <li><a href="#">My Returns</a></li>
@@ -36,54 +33,81 @@
                 </ul>
             </div>
             <div class="sidebar-group">
-                <h4><a href="{{ route('wishlist') }}">My WishList</a></h4>
+                <h4><a href="{{ route('wishlist.index') }}">My WishList</a></h4>
             </div>
         </aside>
 
-        <!-- Main Content: Edit Profile -->
         <div class="account-content">
+            @if(session('success'))
+                <p style="color: green; margin-bottom: 15px;">{{ session('success') }}</p>
+            @endif
+
             <div class="edit-profile-form">
                 <h2 class="form-title">Edit Your Profile</h2>
 
-                <form action="#" method="GET">
+                <form action="{{ route('account.update', $user) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
                     <div class="form-row">
                         <div class="form-group">
                             <label>First Name</label>
-                            <input type="text" placeholder="Md" value="Md">
+                            <input type="text" name="first_name" value="{{ old('first_name', $user->profile->first_name ?? '') }}">
                         </div>
                         <div class="form-group">
                             <label>Last Name</label>
-                            <input type="text" placeholder="Rimel" value="Rimel">
+                            <input type="text" name="last_name" value="{{ old('last_name', $user->profile->last_name ?? '') }}">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" placeholder="rimel1111@gmail.com" value="rimel1111@gmail.com">
+                            <input type="email" name="email" value="{{ old('email', $user->email) }}">
                         </div>
                         <div class="form-group">
+                            <label>Phone</label>
+                            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
                             <label>Address</label>
-                            <input type="text" placeholder="Kingston, 5236, United State"
-                                value="Kingston, 5236, United State">
+                            <input type="text" name="address" value="{{ old('address', $user->profile->address ?? '') }}">
+                        </div>
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" name="city" value="{{ old('city', $user->profile->city ?? '') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Postal Code</label>
+                            <input type="text" name="postal_code" value="{{ old('postal_code', $user->profile->postal_code ?? '') }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <input type="text" name="country" value="{{ old('country', $user->profile->country ?? '') }}">
                         </div>
                     </div>
 
                     <div class="password-changes">
                         <label>Password Changes</label>
                         <div class="form-group">
-                            <input type="password" placeholder="Current Password">
+                            <input type="password" name="current_password" placeholder="Current Password">
                         </div>
                         <div class="form-group">
-                            <input type="password" placeholder="New Password">
+                            <input type="password" name="password" placeholder="New Password">
                         </div>
                         <div class="form-group">
-                            <input type="password" placeholder="Confirm New Password">
+                            <input type="password" name="password_confirmation" placeholder="Confirm New Password">
                         </div>
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="reset" class="cancel-btn">Cancel</button>
                         <button type="submit" class="save-btn">Save Changes</button>
                     </div>
                 </form>
@@ -91,7 +115,6 @@
         </div>
     </div>
 </section>
-@endsection
 @push('styles')
 <style>
 /* Breadcrumb */
@@ -293,3 +316,4 @@
 }
 </style>
 @endpush
+@endsection
