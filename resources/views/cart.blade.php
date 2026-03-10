@@ -3,76 +3,85 @@
 @section('title', 'Cart - ShantoGiftShop')
 
 @section('content')
-<!-- Breadcrumb -->
 <div class="container breadcrumb-container" style="margin-top: 90px;">
     <div class="breadcrumb">
-        <a href="{{ route('home') }}">Account</a>
+        <a href="{{ route('home') }}">Home</a>
         <span class="separator">/</span>
         <span class="current">cart</span>
     </div>
 </div>
-<!-- Cart Section -->
+
 <section class="cart-section container" style="margin-top: 50px;">
+    @if(session('success'))
+        <p style="color: green; margin-bottom: 15px;">{{ session('success') }}</p>
+    @endif
 
-    <!-- Cart Table -->
-    <div class="cart-table-wrapper">
-        <!-- Header Row -->
-        <div class="cart-header">
-            <div class="header-col">Product</div>
-            <div class="header-col">Price</div>
-            <div class="header-col">Quantity</div>
-            <div class="header-col" style="text-align: right;">Subtotal</div>
+    @if($errors->any())
+        <div style="color:red; margin-bottom:15px;">
+            @foreach($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
+    <form action="{{ route('cart.sync') }}" method="POST">
+        @csrf
+
+        <div class="cart-table-wrapper">
+            <div class="cart-header">
+                <div class="header-col">Product</div>
+                <div class="header-col">Price</div>
+                <div class="header-col">Quantity</div>
+                <div class="header-col" style="text-align: right;">Subtotal</div>
+            </div>
+
+            @forelse($cartItems as $item)
+                <div class="cart-item" data-price="{{ $item->unit_price }}">
+                    <div class="product-col">
+                        <form action="{{ route('cart.destroy', $item) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="remove-icon"><i class="fas fa-times"></i></button>
+                        </form>
+
+                        <img src="{{ $item->product->image_url }}" alt="{{ $item->product->title }}" class="product-thumb">
+                        <span class="product-name">{{ $item->product->title }}</span>
+                    </div>
+
+                    <div class="price-col">${{ number_format($item->unit_price, 0) }}</div>
+
+                    <div class="quantity-col">
+                        <input type="number" name="items[{{ $item->id }}]" value="{{ $item->quantity }}" min="1" class="quantity-input">
+                    </div>
+
+                    <div class="subtotal-col" style="text-align: right;">
+                        ${{ number_format($item->subtotal, 0) }}
+                    </div>
+                </div>
+            @empty
+                <p>Your cart is empty.</p>
+            @endforelse
         </div>
 
-        <!-- Item 1 -->
-        <div class="cart-item" data-price="650">
-            <div class="product-col">
-                <div class="remove-icon"><i class="fas fa-times"></i></div>
-                <img src="https://via.placeholder.com/50x50/F5F5F5/000000?text=Monitor" alt="LCD Monitor"
-                    class="product-thumb">
-                <span class="product-name">LCD Monitor</span>
-            </div>
-            <div class="price-col">$650</div>
-            <div class="quantity-col">
-                <input type="number" value="1" min="1" class="quantity-input">
-            </div>
-            <div class="subtotal-col" style="text-align: right;">$650</div>
+        <div class="cart-actions">
+            <a href="{{ route('products.index') }}" class="btn-secondary">Return To Shop</a>
+            @if($cartItems->count())
+                <button class="btn-secondary update-cart-btn" type="submit">Update Cart</button>
+            @endif
         </div>
+    </form>
 
-        <!-- Item 2 -->
-        <div class="cart-item" data-price="550">
-            <div class="product-col">
-                <div class="remove-icon"><i class="fas fa-times"></i></div>
-                <img src="https://via.placeholder.com/50x50/F5F5F5/000000?text=Gamepad" alt="H1 Gamepad"
-                    class="product-thumb">
-                <span class="product-name">H1 Gamepad</span>
-            </div>
-            <div class="price-col">$550</div>
-            <div class="quantity-col">
-                <input type="number" value="2" min="1" class="quantity-input">
-            </div>
-            <div class="subtotal-col" style="text-align: right;">$1100</div>
-        </div>
-    </div>
-
-    <!-- Cart Actions -->
-    <div class="cart-actions">
-        <button class="btn-secondary" onclick="window.location.href='index.html'">Return To Shop</button>
-        <button class="btn-secondary update-cart-btn">Update Cart</button>
-    </div>
-
-    <!-- Coupon & Total -->
     <div class="cart-bottom-section">
         <div class="coupon-section">
             <input type="text" placeholder="Coupon Code" class="coupon-input">
-            <button class="btn-primary">Apply Coupon</button>
+            <button class="btn-primary" type="button">Apply Coupon</button>
         </div>
 
         <div class="cart-total-box">
             <h3 class="cart-total-title">Cart Total</h3>
             <div class="total-row">
                 <span>Subtotal:</span>
-                <span class="cart-subtotal">$1750</span>
+                <span class="cart-subtotal">${{ number_format($subtotal, 0) }}</span>
             </div>
             <div class="total-row">
                 <span>Shipping:</span>
@@ -80,22 +89,69 @@
             </div>
             <div class="total-row">
                 <span>Total:</span>
-                <span class="cart-total">$1750</span>
-            </div>
-            <div class="checkout-btn-wrapper">
-                <button class="btn-primary" onclick="alert('Proceeding to checkout...')">Procees to checkout</button>
+                <span class="cart-total">${{ number_format($subtotal, 0) }}</span>
             </div>
         </div>
     </div>
+
+    @if($cartItems->count())
+        <div class="cart-total-box" style="width: 100%; margin-top: 30px;">
+            <h3 class="cart-total-title">Checkout Information</h3>
+
+            <form action="{{ route('orders.store') }}" method="POST">
+                @csrf
+
+                <div class="coupon-section" style="max-width: 100%; margin-bottom: 16px;">
+                    <input type="text" class="coupon-input" name="customer_name" placeholder="Full Name"
+                           value="{{ old('customer_name', auth()->user()->name ?? '') }}" required>
+                    <input type="email" class="coupon-input" name="email" placeholder="Email"
+                           value="{{ old('email', auth()->user()->email ?? '') }}" required>
+                </div>
+
+                <div class="coupon-section" style="max-width: 100%; margin-bottom: 16px;">
+                    <input type="text" class="coupon-input" name="phone" placeholder="Phone"
+                           value="{{ old('phone', auth()->user()->phone ?? '') }}" required>
+                    <input type="text" class="coupon-input" name="city" placeholder="City"
+                           value="{{ old('city', auth()->user()->profile->city ?? '') }}" required>
+                </div>
+
+                <div class="coupon-section" style="max-width: 100%; margin-bottom: 16px;">
+                    <input type="text" class="coupon-input" name="address" placeholder="Address"
+                           value="{{ old('address', auth()->user()->profile->address ?? '') }}" required>
+                    <input type="text" class="coupon-input" name="postal_code" placeholder="Postal Code"
+                           value="{{ old('postal_code', auth()->user()->profile->postal_code ?? '') }}">
+                </div>
+
+                <div class="coupon-section" style="max-width: 100%; margin-bottom: 16px;">
+                    <input type="text" class="coupon-input" name="country" placeholder="Country"
+                           value="{{ old('country', auth()->user()->profile->country ?? 'Bangladesh') }}">
+                    <select name="payment_method" class="coupon-input">
+                        <option value="cash_on_delivery">Cash on Delivery</option>
+                        <option value="bkash">bKash</option>
+                        <option value="nagad">Nagad</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <textarea name="notes" class="coupon-input" placeholder="Order Notes" style="width:100%; min-height:120px;">{{ old('notes') }}</textarea>
+                </div>
+
+                <div class="checkout-btn-wrapper">
+                    <button class="btn-primary" type="submit">Proceed to checkout</button>
+                </div>
+            </form>
+
+            <p style="margin-top: 12px; color: #666;">
+                Note: Guest user এবং logged-in user — দুইজনই order place করতে পারবে।
+            </p>
+        </div>
+    @endif
 </section>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-
-    // Initial Calculation
-    updateCartTotals();
-
-    // Quantity Change Listener
     const quantityInputs = document.querySelectorAll('.quantity-input');
+
     quantityInputs.forEach(input => {
         input.addEventListener('change', function() {
             if (this.value < 1) this.value = 1;
@@ -103,36 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCartTotals();
         });
 
-        // Optional: Update on input for real-time feel
         input.addEventListener('input', function() {
             if (this.value >= 1) {
                 updateItemSubtotal(this);
-                updateCartTotals(); // Only update totals if valid
+                updateCartTotals();
             }
         });
     });
-
-    // Remove Item Listener
-    const removeIcons = document.querySelectorAll('.remove-icon');
-    removeIcons.forEach(icon => {
-        icon.addEventListener('click', function() {
-            const item = this.closest('.cart-item');
-            item.style.opacity = '0';
-            setTimeout(() => {
-                item.remove();
-                updateCartTotals();
-                updateCartCount();
-            }, 300);
-        });
-    });
-
-    // Update Cart Button (Simulated)
-    const updateBtn = document.querySelector('.update-cart-btn');
-    if (updateBtn) {
-        updateBtn.addEventListener('click', function() {
-            alert('Cart updated successfully!');
-        });
-    }
 
     function updateItemSubtotal(input) {
         const item = input.closest('.cart-item');
@@ -158,25 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (subtotalEl) subtotalEl.textContent = '$' + total;
         if (totalEl) totalEl.textContent = '$' + total;
-    }
-
-    function updateCartCount() {
-        const count = document.querySelectorAll('.cart-item').length;
-        const badge = document.querySelector('.cart-count');
-        if (badge) badge.textContent = count;
-    }
-
-    // Language Selector Logic (Reused)
-    const langSelector = document.querySelector('.language-selector');
-    const langDropdown = document.querySelector('.lang-dropdown');
-    if (langSelector && langDropdown) {
-        langSelector.addEventListener('click', function(e) {
-            e.stopPropagation();
-            langDropdown.style.display = langDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-        document.addEventListener('click', function() {
-            langDropdown.style.display = 'none';
-        });
     }
 });
 </script>

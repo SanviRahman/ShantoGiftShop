@@ -3,7 +3,6 @@
 @section('title','Contact US - ShantoGiftShop')
 
 @section('content')
-<!-- Breadcrumb -->
 <div class="container breadcrumb-container" style="margin-top: 90px;">
     <div class="breadcrumb">
         <a href="{{ route('home') }}">Home</a>
@@ -12,17 +11,12 @@
     </div>
 </div>
 
-<!-- Contact Section -->
 <section class="contact-section" style="margin-top: 60px;">
     <div class="container contact-container">
-        <!-- Left Column: Contact Info -->
         <div class="contact-info">
-            <!-- Call To Us -->
             <div class="info-block">
                 <div class="info-header">
-                    <div class="icon-circle">
-                        <i class="fas fa-phone-alt"></i>
-                    </div>
+                    <div class="icon-circle"><i class="fas fa-phone-alt"></i></div>
                     <h3>Call To Us</h3>
                 </div>
                 <p>We are available 24/7, 7 days a week.</p>
@@ -31,41 +25,45 @@
 
             <hr class="divider">
 
-            <!-- Write To US -->
             <div class="info-block">
                 <div class="info-header">
-                    <div class="icon-circle">
-                        <i class="far fa-envelope"></i>
-                    </div>
+                    <div class="icon-circle"><i class="far fa-envelope"></i></div>
                     <h3>Write To US</h3>
                 </div>
                 <p>Fill out our form and we will contact you within 24 hours.</p>
-                <p>Emails: customer@exclusive.com</p>
-                <p>Emails: support@exclusive.com</p>
+                <p>Emails: customer@shantogiftshop.com</p>
+                <p>Emails: support@shantogiftshop.com</p>
             </div>
         </div>
 
-        <!-- Right Column: Contact Form -->
         <div class="contact-form-wrapper">
-            <form class="contact-form">
+            @if(session('success'))
+                <p style="color: green; margin-bottom: 15px;">{{ session('success') }}</p>
+            @endif
+
+            <form class="contact-form" action="{{ route('contact.store') }}" method="POST">
+                @csrf
                 <div class="form-row">
-                    <input type="text" placeholder="Your Name *" required>
-                    <input type="email" placeholder="Your Email *" required>
-                    <input type="tel" placeholder="Your Phone *" required>
+                    <input type="text" name="name" placeholder="Your Name *" required value="{{ old('name') }}">
+                    <input type="email" name="email" placeholder="Your Email *" required value="{{ old('email') }}">
+                    <input type="tel" name="phone" placeholder="Your Phone *" value="{{ old('phone') }}">
                 </div>
+
                 <div class="form-row">
-                    <textarea placeholder="Your Massage" rows="8" required></textarea>
+                    <input type="text" name="subject" placeholder="Subject" value="{{ old('subject') }}">
                 </div>
+
+                <div class="form-row">
+                    <textarea name="message" placeholder="Your Message" rows="8" required>{{ old('message') }}</textarea>
+                </div>
+
                 <div class="form-actions">
-                    <button type="submit" class="btn-submit">Send Massage</button>
+                    <button type="submit" class="btn-submit">Send Message</button>
                 </div>
             </form>
         </div>
     </div>
 </section>
-@endsection
-
-
 @push('styles')
 <style>
     /* Breadcrumb */
@@ -308,3 +306,4 @@
 }
 </style>
 @endpush
+@endsection
