@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductDetail extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'product_id',
         'description',
@@ -16,17 +18,14 @@ class ProductDetail extends Model
         'specifications',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'colors' => 'array',
-            'sizes' => 'array',
-            'gallery' => 'array',
-            'specifications' => 'array',
-        ];
-    }
+    protected $casts = [
+        'colors' => 'array',
+        'sizes' => 'array',
+        'gallery' => 'array',
+        'specifications' => 'array',
+    ];
 
-    public function product(): BelongsTo
+    public function product()
     {
         return $this->belongsTo(Product::class);
     }

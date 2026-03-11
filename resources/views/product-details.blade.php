@@ -22,6 +22,7 @@
                 </div>
             @endforeach
         </div>
+
         <div class="main-image">
             <img src="{{ ($product->detail->gallery[0] ?? $product->image_url) }}" alt="{{ $product->title }}">
         </div>
@@ -47,23 +48,27 @@
         </p>
 
         <div class="product-options">
-            <div class="option-row">
-                <span class="option-label">Colours:</span>
-                <div class="colour-options">
-                    @foreach(($product->detail->colors ?? []) as $color)
-                        <div class="colour-radio {{ $loop->first ? 'selected' : '' }}" style="background-color: {{ $color }};"></div>
-                    @endforeach
+            @if(!empty($product->detail->colors))
+                <div class="option-row">
+                    <span class="option-label">Colours:</span>
+                    <div class="colour-options">
+                        @foreach($product->detail->colors as $color)
+                            <div class="colour-radio {{ $loop->first ? 'selected' : '' }}" style="background-color: {{ $color }};"></div>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
 
-            <div class="option-row">
-                <span class="option-label">Size:</span>
-                <div class="size-options">
-                    @foreach(($product->detail->sizes ?? []) as $size)
-                        <div class="size-radio">{{ $size }}</div>
-                    @endforeach
+            @if($isClothsCategory && !empty($product->detail->sizes))
+                <div class="option-row">
+                    <span class="option-label">Size:</span>
+                    <div class="size-options">
+                        @foreach($product->detail->sizes as $size)
+                            <div class="size-radio">{{ $size }}</div>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
 
         <form action="{{ route('cart.store') }}" method="POST">
@@ -99,6 +104,7 @@
                     <p>Enter your postal code for Delivery Availability</p>
                 </div>
             </div>
+
             <div class="delivery-item">
                 <div class="delivery-icon"><i class="fas fa-sync-alt"></i></div>
                 <div class="delivery-text">
@@ -110,15 +116,72 @@
     </div>
 </section>
 
-<section class="container related-items-section">
+<section class="container related-items-section" style="margin-top: 80px;">
     <div class="section-header-simple">
         <div class="red-block-small"></div>
         <h3>Related Item</h3>
     </div>
 
     <div class="product-grid">
-        @foreach($relatedProducts as $product)
-            @include('partials.product-card', ['product' => $product, 'showDiscount' => true])
+        @foreach($relatedProducts as $relatedProduct)
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="{{ $relatedProduct->image_url }}" alt="{{ $relatedProduct->title }}">
+
+                    @if($relatedProduct->discount_percent)
+                        <span class="discount-badge">-{{ $relatedProduct->discount_percent }}%</span>
+                    @endif
+
+                    <div class="card-actions">
+                        @auth
+                            <form action="{{ route('wishlist.store') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
+                                <button type="submit" class="action-btn">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="action-btn">
+                                <i class="far fa-heart"></i>
+                            </a>
+                        @endauth
+
+                        <a href="{{ route('products.show', $relatedProduct) }}" class="action-btn">
+                            <i class="far fa-eye"></i>
+                        </a>
+                    </div>
+
+                    <form action="{{ route('cart.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="add-to-cart-bar">Add To Cart</button>
+                    </form>
+                </div>
+
+                <div class="product-info">
+                    <h3>
+                        <a href="{{ route('products.show', $relatedProduct) }}">{{ $relatedProduct->title }}</a>
+                    </h3>
+
+                    <div class="product-price">
+                        ${{ number_format($relatedProduct->price, 0) }}
+                        @if($relatedProduct->old_price)
+                            <span class="old-price">${{ number_format($relatedProduct->old_price, 0) }}</span>
+                        @endif
+                    </div>
+
+                    <div class="product-rating">
+                        <div class="stars">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="{{ $i <= round($relatedProduct->rating) ? 'fas' : 'far' }} fa-star"></i>
+                            @endfor
+                        </div>
+                        <span>({{ $relatedProduct->review_count }})</span>
+                    </div>
+                </div>
+            </div>
         @endforeach
     </div>
 </section>
