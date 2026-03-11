@@ -14,10 +14,16 @@ class CartController extends Controller
         $cart = $this->resolveCart();
         $cart->load('items.product');
 
+        $subtotal = (float) $cart->items->sum('subtotal');
+        $couponSummary = $this->getCouponSummary($subtotal);
+
         return view('cart', [
             'cart' => $cart,
             'cartItems' => $cart->items,
-            'subtotal' => $cart->items->sum('subtotal'),
+            'subtotal' => $subtotal,
+            'discount' => $couponSummary['discount'],
+            'total' => $couponSummary['total'],
+            'appliedCoupon' => $couponSummary['coupon'],
         ]);
     }
 
@@ -90,6 +96,8 @@ class CartController extends Controller
 
         $cartItem->delete();
 
+        $this->forgetCouponIfCartEmpty($cart);
+
         return back()->with('success', 'Item removed from cart.');
     }
 
@@ -118,7 +126,117 @@ class CartController extends Controller
             }
         }
 
-        return back()->with('success', 'Cart synced successfully.');
+        return back()->with('success', 'Cart updated successfully.');
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $data = $request->validate([
+            'coupon_code' => ['required', 'string', 'max:50'],
+        ]);
+
+        $cart = $this->resolveCart();
+        $cart->load('items');
+
+        $subtotal = (float) $cart->items->sum('subtotal');
+
+        if ($subtotal <= 0) {
+            return back()->with('error', 'Your cart is empty.');
+        }
+
+        $code = strtoupper(trim($data['coupon_code']));
+        $coupon = $this->availableCoupons()[$code] ?? null;
+
+        if (!$coupon) {
+            return back()->with('error', 'Invalid coupon code.');
+        }
+
+        session()->put('cart_coupon', [
+            'code' => $code,
+        ]);
+
+        return back()->with('success', 'Coupon applied successfully.');
+    }
+
+    public function removeCoupon()
+    {
+        session()->forget('cart_coupon');
+
+        return back()->with('success', 'Coupon removed successfully.');
+    }
+
+    private function availableCoupons(): array
+    {
+        return [
+            'SHANTO27' => [
+                'type' => 'percent',
+                'value' => 10,
+                'label' => '10% OFF',
+            ],
+        ];
+    }
+
+    private function getCouponSummary(float $subtotal): array
+    {
+        if ($subtotal <= 0) {
+            session()->forget('cart_coupon');
+
+            return [
+                'coupon' => null,
+                'discount' => 0,
+                'total' => 0,
+            ];
+        }
+
+        $sessionCoupon = session('cart_coupon');
+
+        if (!$sessionCoupon || empty($sessionCoupon['code'])) {
+            return [
+                'coupon' => null,
+                'discount' => 0,
+                'total' => $subtotal,
+            ];
+        }
+
+        $code = strtoupper($sessionCoupon['code']);
+        $coupon = $this->availableCoupons()[$code] ?? null;
+
+        if (!$coupon) {
+            session()->forget('cart_coupon');
+
+            return [
+                'coupon' => null,
+                'discount' => 0,
+                'total' => $subtotal,
+            ];
+        }
+
+        if ($coupon['type'] === 'percent') {
+            $discount = round(($subtotal * $coupon['value']) / 100);
+        } else {
+            $discount = (float) $coupon['value'];
+        }
+
+        $discount = min($discount, $subtotal);
+        $total = max($subtotal - $discount, 0);
+
+        return [
+            'coupon' => [
+                'code' => $code,
+                'label' => $coupon['label'],
+                'type' => $coupon['type'],
+                'value' => $coupon['value'],
+            ],
+            'discount' => $discount,
+            'total' => $total,
+        ];
+    }
+
+    private function forgetCouponIfCartEmpty(Cart $cart): void
+    {
+        if ($cart->items()->count() === 0) {
+            session()->forget('cart_coupon');
+        }
     }
 
     private function resolveCart(): Cart
