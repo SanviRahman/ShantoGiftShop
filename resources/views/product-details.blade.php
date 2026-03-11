@@ -127,8 +127,7 @@
                             class="btn-primary action-btn-block buy-now-btn"
                             type="submit"
                             name="buy_now"
-                            value="1"
-                        >
+                            value="1">
                             Buy Now
                         </button>
                     </div>
