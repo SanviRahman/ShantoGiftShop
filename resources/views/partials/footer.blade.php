@@ -7,10 +7,12 @@
                 <h3 class="footer-logo">Exclusive</h3>
                 <h4 class="footer-heading">Subscribe</h4>
                 <p class="footer-text">Get 10% off your first order</p>
-                <form action="{{ route('subscribe.store') }}" method="POST">
+
+                <form action="{{ route('subscribe') }}" method="POST">
+                    @csrf
                     <div class="subscribe-input-group">
-                        <input type="email" placeholder="Enter your email">
-                        <button><i class="fas fa-paper-plane"></i></button>
+                        <input type="email" name="email" placeholder="Enter your email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </form>
             </div>
@@ -77,7 +79,7 @@
 
     <div class="footer-bottom">
         <div class="container">
-            <p>&copy; Copyright ShantogiftShop
+            <p>&copy; Copyright Shanto<span style="color: #e03939;">Gift</span>Shop
                 <script>
                 document.write(new Date().getFullYear());
                 </script>

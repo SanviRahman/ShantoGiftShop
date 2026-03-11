@@ -14,10 +14,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::post('/subscribe', [UserController::class, 'subscribe'])->name('subscribe');
+
 
 Route::resource('contact', ContactController::class)->only(['index', 'store']);
 Route::resource('products', ProductController::class)->only(['index', 'show']);
-Route::resource('subscribe', UserController::class)->only(['index', 'store']);
+
 
 Route::resource('cart', CartController::class)
     ->parameters(['cart' => 'cartItem'])
@@ -60,6 +62,7 @@ Route::post('/email/verification-notification', [AuthController::class, 'verific
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
 
+//User Routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('account', AccountController::class)->only(['index', 'update']);
     Route::resource('wishlist', WishlistController::class)->only(['index', 'store', 'destroy']);

@@ -21,17 +21,10 @@
                 <h4>Manage My Account</h4>
                 <ul style="list-style: none; padding-left: 40px;">
                     <li><a href="{{ route('account.index', $user) }}" class="active">My Profile</a></li>
-                    <li><a href="#">Address Book</a></li>
-                    <li><a href="#">My Payment Options</a></li>
+
                 </ul>
             </div>
-            <div class="sidebar-group">
-                <h4>My Orders</h4>
-                <ul style="list-style: none; padding-left: 40px;">
-                    <li><a href="#">My Returns</a></li>
-                    <li><a href="#">My Cancellations</a></li>
-                </ul>
-            </div>
+    
             <div class="sidebar-group">
                 <h4><a href="{{ route('wishlist.index') }}">My WishList</a></h4>
             </div>
