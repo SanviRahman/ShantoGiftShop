@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 class UserController extends Controller
 {
     // User account page
@@ -24,4 +26,14 @@ class UserController extends Controller
     {
         return view('user.login');
     }
+
+    public function subscribe(Request $request)
+    {
+         $data = $request->validate([
+            'email' => ['required', 'email', 'unique:subscribes,email'],
+        ]);
+
+        return redirect()->back()->with('success', 'Subscribed successfully.');
+    }
+   
 }

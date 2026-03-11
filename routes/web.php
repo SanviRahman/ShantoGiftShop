@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -16,6 +17,7 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 
 Route::resource('contact', ContactController::class)->only(['index', 'store']);
 Route::resource('products', ProductController::class)->only(['index', 'show']);
+Route::resource('subscribe', UserController::class)->only(['index', 'store']);
 
 Route::resource('cart', CartController::class)
     ->parameters(['cart' => 'cartItem'])

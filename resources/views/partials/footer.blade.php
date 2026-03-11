@@ -7,19 +7,21 @@
                 <h3 class="footer-logo">Exclusive</h3>
                 <h4 class="footer-heading">Subscribe</h4>
                 <p class="footer-text">Get 10% off your first order</p>
-                <div class="subscribe-input-group">
-                    <input type="email" placeholder="Enter your email">
-                    <button><i class="fas fa-paper-plane"></i></button>
-                </div>
+                <form action="{{ route('subscribe.store') }}" method="POST">
+                    <div class="subscribe-input-group">
+                        <input type="email" placeholder="Enter your email">
+                        <button><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </form>
             </div>
 
             <!-- Column 2: Support -->
             <div class="footer-col">
                 <h4 class="footer-heading">Support</h4>
                 <ul class="footer-links-list">
-                    <li>111 Bijoy sarani, Dhaka, DH 1515, Bangladesh.</li>
-                    <li>exclusive@gmail.com</li>
-                    <li>+88015-88888-9999</li>
+                    <li>Dhaka,Bangladesh.</li>
+                    <li>sheikh15-3700@diu.edu.bd</li>
+                    <li>+88017-06940942</li>
                 </ul>
             </div>
 
@@ -27,11 +29,11 @@
             <div class="footer-col">
                 <h4 class="footer-heading">Account</h4>
                 <ul class="footer-links-list">
-                    <li><a href="#">My Account</a></li>
-                    <li><a href="#">Login / Register</a></li>
-                    <li><a href="#">Cart</a></li>
-                    <li><a href="#">Wishlist</a></li>
-                    <li><a href="#">Shop</a></li>
+                    <li><a href="{{ route('account.index') }}">My Account</a></li>
+                    <li><a href="{{ route('register') }}">Login / Register</a></li>
+                    <li><a href="{{ route('cart.index') }}">Cart</a></li>
+                    <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
+                    <li><a href="{{ route('products.index') }}">Shop</a></li>
                 </ul>
             </div>
 
@@ -42,7 +44,7 @@
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms Of Use</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="{{ route('contact.index') }}">Contact</a></li>
                 </ul>
             </div>
 
@@ -63,10 +65,11 @@
                     </div>
                 </div>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.facebook.com/SFAShanto"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://wa.me/message/ABMBRACOIP5WL1"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://github.com/SanviRahman"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/sheikh-forid-ahmed-shanto-03919424a/"><i
+                            class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>
@@ -74,7 +77,18 @@
 
     <div class="footer-bottom">
         <div class="container">
-            <p>&copy; Copyright ShatoGiftShop 2026. All right reserved</p>
+            <p>&copy; Copyright ShantogiftShop
+                <script>
+                document.write(new Date().getFullYear());
+                </script>
+                All rights reserved | This website developed by
+                <i class="icon-heart color-danger" aria-hidden="true">
+                </i>
+                <a href="https://sfashanto.netlify.app/" target="_blank">
+                    <b style="color: #ffbd39;"> SFA Shanto
+                    </b>
+                </a>
+            </p>
         </div>
     </div>
 </footer>
