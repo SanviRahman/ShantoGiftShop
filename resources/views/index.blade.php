@@ -318,7 +318,7 @@
 </section>
 
 <!-- Services Section -->
-<section class="services-section" style="margin-top: 100px;">
+<section class="services-section" style="margin-top: 450px;">
     <div class="container">
         <div class="services-grid">
             <div class="service-item">

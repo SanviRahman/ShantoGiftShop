@@ -3,20 +3,39 @@
 @section('title', $product->title . ' - ShantoGiftShop')
 
 @section('content')
+@php
+    $gallery = data_get($product, 'detail.gallery', []);
+    $gallery = is_array($gallery) && count($gallery) ? $gallery : [$product->image_url];
+
+    $colors = data_get($product, 'detail.colors', []);
+    $colors = is_array($colors) ? $colors : [];
+
+    $sizes = data_get($product, 'detail.sizes', []);
+    $sizes = is_array($sizes) ? $sizes : [];
+
+    $description = data_get($product, 'detail.description', $product->short_description);
+    $mainImage = $gallery[0] ?? $product->image_url;
+
+    $defaultColor = $colors[0] ?? '';
+    $defaultSize = $sizes[0] ?? '';
+@endphp
+
 <div class="container breadcrumb-container" style="margin-top: 90px;">
     <div class="breadcrumb">
         <a href="{{ route('home') }}">Home</a>
         <span class="separator">/</span>
-        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a>
+        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}">
+            {{ $product->category->name }}
+        </a>
         <span class="separator">/</span>
         <span class="current">{{ $product->title }}</span>
     </div>
 </div>
 
-<section class="container product-details-container" style="margin-top:50px">
+<section class="container product-details-container">
     <div class="product-gallery">
         <div class="gallery-thumbnails">
-            @foreach(($product->detail->gallery ?? [$product->image_url]) as $image)
+            @foreach($gallery as $image)
                 <div class="thumbnail {{ $loop->first ? 'active' : '' }}">
                     <img src="{{ $image }}" alt="Thumb {{ $loop->iteration }}">
                 </div>
@@ -24,7 +43,7 @@
         </div>
 
         <div class="main-image">
-            <img src="{{ ($product->detail->gallery[0] ?? $product->image_url) }}" alt="{{ $product->title }}">
+            <img src="{{ $mainImage }}" alt="{{ $product->title }}">
         </div>
     </div>
 
@@ -44,59 +63,92 @@
         <div class="product-price-large">${{ number_format($product->price, 2) }}</div>
 
         <p class="product-description">
-            {{ $product->detail->description ?? $product->short_description }}
+            {{ $description }}
         </p>
 
         <div class="product-options">
-            @if(!empty($product->detail->colors))
+            @if(!empty($colors))
                 <div class="option-row">
                     <span class="option-label">Colours:</span>
                     <div class="colour-options">
-                        @foreach($product->detail->colors as $color)
-                            <div class="colour-radio {{ $loop->first ? 'selected' : '' }}" style="background-color: {{ $color }};"></div>
+                        @foreach($colors as $color)
+                            <div
+                                class="colour-radio {{ $loop->first ? 'selected' : '' }}"
+                                style="background-color: {{ $color }};"
+                                data-color="{{ $color }}"
+                                title="{{ $color }}"
+                            ></div>
                         @endforeach
                     </div>
                 </div>
             @endif
 
-            @if($isClothsCategory && !empty($product->detail->sizes))
+            @if($isClothsCategory && !empty($sizes))
                 <div class="option-row">
                     <span class="option-label">Size:</span>
                     <div class="size-options">
-                        @foreach($product->detail->sizes as $size)
-                            <div class="size-radio">{{ $size }}</div>
+                        @foreach($sizes as $size)
+                            <div class="size-radio {{ $loop->first ? 'selected' : '' }}" data-size="{{ $size }}">
+                                {{ $size }}
+                            </div>
                         @endforeach
                     </div>
                 </div>
             @endif
         </div>
 
-        <form action="{{ route('cart.store') }}" method="POST">
-            @csrf
-            <input type="hidden" name="product_id" value="{{ $product->id }}">
+        <div class="purchase-row">
+            <form action="{{ route('cart.store') }}" method="POST" class="cart-purchase-form">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                <input type="hidden" name="selected_color" id="selected-color" value="{{ $defaultColor }}">
+                <input type="hidden" name="selected_size" id="selected-size" value="{{ $defaultSize }}">
 
-            <div class="purchase-actions">
-                <div class="quantity-control">
-                    <button class="qty-btn" id="qty-minus" type="button">-</button>
-                    <input type="number" name="quantity" value="1" min="1" class="qty-input" id="qty-input">
-                    <button class="qty-btn" id="qty-plus" type="button" style="background-color: #DB4444; color: #fff;">+</button>
+                <div class="purchase-actions">
+                    <div class="quantity-control">
+                        <button class="qty-btn" id="qty-minus" type="button">-</button>
+                        <input
+                            type="number"
+                            name="quantity"
+                            value="1"
+                            min="1"
+                            class="qty-input"
+                            id="qty-input"
+                        >
+                        <button class="qty-btn qty-plus" id="qty-plus" type="button">+</button>
+                    </div>
+
+                    <div class="product-action-buttons">
+                        <button class="btn-primary action-btn-block" type="submit">
+                            Add To Cart
+                        </button>
+
+                        <button
+                            class="btn-primary action-btn-block buy-now-btn"
+                            type="submit"
+                            name="buy_now"
+                            value="1"
+                        >
+                            Buy Now
+                        </button>
+                    </div>
                 </div>
+            </form>
 
-                <button class="btn-primary" style="padding: 10px 48px;" type="submit">Add To Cart</button>
-                <br><br><br>
-                <button class="btn-primary" style="padding: 10px 48px; background-color: #000;" type="submit" name="buy_now" value="1">Buy Now</button>
-
-                @auth
-                    <button class="wishlist-btn" type="submit" formaction="{{ route('wishlist.store') }}" formmethod="POST">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+            @auth
+                <form action="{{ route('wishlist.store') }}" method="POST" class="wishlist-form">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <button class="wishlist-btn" type="submit" aria-label="Add to wishlist">
                         <i class="far fa-heart"></i>
                     </button>
-                @else
-                    <a href="{{ route('login') }}" class="wishlist-btn"><i class="far fa-heart"></i></a>
-                @endauth
-            </div>
-        </form>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="wishlist-btn wishlist-link" aria-label="Login to add wishlist">
+                    <i class="far fa-heart"></i>
+                </a>
+            @endauth
+        </div>
 
         <div class="delivery-info">
             <div class="delivery-item">
@@ -118,7 +170,7 @@
     </div>
 </section>
 
-<section class="container related-items-section" style="margin-top: 80px;">
+<section class="container related-items-section">
     <div class="section-header-simple">
         <div class="red-block-small"></div>
         <h3>Related Item</h3>
@@ -139,17 +191,17 @@
                             <form action="{{ route('wishlist.store') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
-                                <button type="submit" class="action-btn">
+                                <button type="submit" class="action-btn" aria-label="Add to wishlist">
                                     <i class="far fa-heart"></i>
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="action-btn">
+                            <a href="{{ route('login') }}" class="action-btn" aria-label="Login to add wishlist">
                                 <i class="far fa-heart"></i>
                             </a>
                         @endauth
 
-                        <a href="{{ route('products.show', $relatedProduct) }}" class="action-btn">
+                        <a href="{{ route('products.show', $relatedProduct) }}" class="action-btn" aria-label="View product">
                             <i class="far fa-eye"></i>
                         </a>
                     </div>
@@ -189,36 +241,54 @@
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const qtyInput = document.getElementById('qty-input');
     const qtyMinus = document.getElementById('qty-minus');
     const qtyPlus = document.getElementById('qty-plus');
 
     if (qtyInput && qtyMinus && qtyPlus) {
         qtyMinus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
+            let val = parseInt(qtyInput.value || 1, 10);
             if (val > 1) qtyInput.value = val - 1;
         });
 
         qtyPlus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
+            let val = parseInt(qtyInput.value || 1, 10);
             qtyInput.value = val + 1;
+        });
+
+        qtyInput.addEventListener('input', () => {
+            if (parseInt(qtyInput.value || 0, 10) < 1) {
+                qtyInput.value = 1;
+            }
         });
     }
 
     const sizeRadios = document.querySelectorAll('.size-radio');
+    const selectedSizeInput = document.getElementById('selected-size');
+
     sizeRadios.forEach(radio => {
         radio.addEventListener('click', () => {
             sizeRadios.forEach(r => r.classList.remove('selected'));
             radio.classList.add('selected');
+
+            if (selectedSizeInput) {
+                selectedSizeInput.value = radio.dataset.size || radio.textContent.trim();
+            }
         });
     });
 
     const colourRadios = document.querySelectorAll('.colour-radio');
+    const selectedColorInput = document.getElementById('selected-color');
+
     colourRadios.forEach(radio => {
         radio.addEventListener('click', () => {
             colourRadios.forEach(r => r.classList.remove('selected'));
             radio.classList.add('selected');
+
+            if (selectedColorInput) {
+                selectedColorInput.value = radio.dataset.color || '';
+            }
         });
     });
 
@@ -238,18 +308,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
 @push('styles')
 <style>
-/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --primary-red: #DB4444;
+    --text-black: #000000;
+    --text-gray: #7D8184;
+    --bg-gray: #F5F5F5;
+    --white: #FFFFFF;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
-    color: #000;
+    color: var(--text-black);
     line-height: 1.6;
     background-color: #fff;
 }
@@ -258,10 +336,6 @@ a {
     text-decoration: none;
     color: inherit;
     transition: color 0.3s;
-}
-
-ul {
-    list-style: none;
 }
 
 img {
@@ -276,21 +350,16 @@ img {
     padding: 0 15px;
 }
 
-/* Typography & Colors */
-:root {
-    --primary-red: #DB4444;
-    --text-black: #000000;
-    --text-gray: #7D8184;
-    /* For secondary text */
-    --bg-gray: #F5F5F5;
-    --white: #FFFFFF;
-}
-
-
 /* Breadcrumb */
 .breadcrumb-container {
-    margin-top: 80px;
-    margin-bottom: 80px;
+    margin-bottom: 36px;
+}
+
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 6px;
 }
 
 .breadcrumb a {
@@ -318,7 +387,7 @@ img {
     font-weight: 500;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
     white-space: nowrap;
     text-align: center;
     display: inline-block;
@@ -328,174 +397,29 @@ img {
     background-color: #E07575;
 }
 
-.btn-outline {
-    background-color: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    color: #000;
-    padding: 16px 48px;
-    border-radius: 4px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+.btn-primary:active,
+.action-btn:active,
+.wishlist-btn:active,
+.qty-btn:active {
+    transform: translateY(1px);
 }
 
-.btn-outline:hover {
-    background-color: var(--bg-gray);
-}
-
-
-/* =========================================
-   Auth Pages (Signup / Login)
-   ========================================= */
-
-.auth-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 140px;
-    gap: 129px;
-    /* Gap between image and form per design */
-}
-
-.auth-image {
-    width: 805px;
-    /* Large side image */
-    height: 781px;
-    background-color: #CBE4E8;
-    /* Placeholder color from image */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.auth-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.auth-form-wrapper {
-    max-width: 371px;
-    width: 100%;
-    padding-right: 20px;
-    /* Some padding for responsiveness */
-}
-
-.auth-heading {
-    font-size: 36px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    margin-bottom: 24px;
-}
-
-.auth-subheading {
-    font-size: 16px;
-    font-weight: 400;
-    margin-bottom: 48px;
-}
-
-.auth-form .form-group {
-    margin-bottom: 40px;
-    position: relative;
-}
-
-.auth-form input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-    padding: 8px 0;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.auth-form input:focus {
-    border-bottom-color: #000;
-}
-
-.auth-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.auth-actions .btn-primary {
-    width: 100%;
-}
-
-.auth-actions .btn-outline {
-    width: 100%;
-}
-
-.auth-footer {
-    margin-top: 32px;
-    text-align: center;
-    color: rgba(0, 0, 0, 0.7);
-}
-
-.auth-footer a {
-    font-weight: 500;
-    color: #000;
-    border-bottom: 1px solid #000;
-    margin-left: 4px;
-}
-
-.login-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 40px;
-}
-
-.forgot-password {
-    color: var(--primary-red);
-    font-size: 16px;
-}
-
-
-/* =========================================
-   404 Page Styles
-   ========================================= */
-
-.error-page-section {
-    padding: 140px 0;
-    text-align: center;
-}
-
-.error-heading {
-    font-size: 110px;
-    font-weight: 500;
-    line-height: 115px;
-    letter-spacing: 0.03em;
-    margin-bottom: 40px;
-}
-
-.error-text {
-    font-size: 16px;
-    margin-bottom: 80px;
-}
-
-/* =========================================
-   Product Details Page Styles
-   ========================================= */
-
+/* Product Details */
 .product-details-container {
-    display: flex;
-    gap: 70px;
-    margin-bottom: 140px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 400px);
+    gap: 56px;
+    align-items: start;
+    margin-top: 50px;
+    margin-bottom: 120px;
 }
 
 /* Gallery */
 .product-gallery {
-    display: flex;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
 }
 
 .gallery-thumbnails {
@@ -505,7 +429,7 @@ img {
 }
 
 .thumbnail {
-    width: 170px;
+    width: 100%;
     height: 138px;
     background-color: var(--bg-gray);
     display: flex;
@@ -513,7 +437,9 @@ img {
     justify-content: center;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: border-color 0.3s, transform 0.2s;
+    border: 1px solid transparent;
+    overflow: hidden;
 }
 
 .thumbnail img {
@@ -524,79 +450,84 @@ img {
 
 .thumbnail:hover,
 .thumbnail.active {
-    border: 1px solid #000;
-    /* Or active state */
+    border-color: #000;
 }
 
 .main-image {
-    width: 500px;
-    height: 600px;
+    width: 100%;
+    min-height: 600px;
     background-color: var(--bg-gray);
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
+    overflow: hidden;
+    padding: 24px;
 }
 
 .main-image img {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
 }
 
 /* Info */
 .product-info-col {
-    flex: 1;
-    max-width: 400px;
+    width: 100%;
+    min-width: 0;
 }
 
 .product-title {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 16px;
+    line-height: 1.35;
 }
 
 .rating-row {
     display: flex;
     align-items: center;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
     margin-bottom: 16px;
     font-size: 14px;
     color: var(--text-gray);
 }
 
-.rating-stars {
+.rating-stars,
+.stars {
     color: #FFAD33;
 }
 
 .stock-status {
-    color: #00FF66;
-    border-left: 1px solid rgba(0, 0, 0, 0.5);
+    color: #00B85C;
+    border-left: 1px solid rgba(0, 0, 0, 0.3);
     padding-left: 16px;
 }
 
 .product-price-large {
     font-size: 24px;
     font-weight: 400;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .product-description {
     font-size: 14px;
     margin-bottom: 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
     padding-bottom: 24px;
 }
 
 .product-options {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .option-row {
     display: flex;
     align-items: center;
     gap: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .option-label {
@@ -605,10 +536,11 @@ img {
     min-width: 80px;
 }
 
-/* Colour Radio */
+/* Colour */
 .colour-options {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .colour-radio {
@@ -618,24 +550,25 @@ img {
     cursor: pointer;
     position: relative;
     border: 1px solid transparent;
-    /* For white/light colors */
+    flex: 0 0 auto;
 }
 
 .colour-radio.selected {
     outline: 2px solid #000;
-    /* Active ring */
     outline-offset: 2px;
 }
 
-/* Size Radio */
+/* Size */
 .size-options {
     display: flex;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .size-radio {
-    width: 32px;
-    height: 32px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     display: flex;
@@ -647,35 +580,43 @@ img {
     transition: all 0.3s;
 }
 
-.size-radio:hover {
-    background-color: var(--primary-red);
-    color: #fff;
-    border-color: var(--primary-red);
-}
-
+.size-radio:hover,
 .size-radio.selected {
     background-color: var(--primary-red);
     color: #fff;
     border-color: var(--primary-red);
 }
 
-/* Quantity & Buy Actions */
+/* Purchase Area */
+.purchase-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+.cart-purchase-form {
+    flex: 1;
+    min-width: 0;
+}
+
 .purchase-actions {
     display: flex;
     gap: 16px;
-    margin-bottom: 40px;
-    align-items: center;
+    align-items: stretch;
 }
 
 .quantity-control {
     display: flex;
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 4px;
-    height: 44px;
+    height: 48px;
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
 .qty-btn {
-    width: 40px;
+    width: 42px;
     border: none;
     background: transparent;
     font-size: 20px;
@@ -683,6 +624,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .qty-btn:hover {
@@ -690,16 +632,20 @@ img {
     color: #fff;
 }
 
+.qty-plus {
+    background-color: var(--primary-red);
+    color: #fff;
+}
+
 .qty-input {
-    width: 80px;
+    width: 74px;
     border: none;
     border-left: 1px solid rgba(0, 0, 0, 0.5);
     border-right: 1px solid rgba(0, 0, 0, 0.5);
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
     outline: none;
-    /* Hide spinners */
     -moz-appearance: textfield;
 }
 
@@ -709,9 +655,36 @@ img {
     margin: 0;
 }
 
+.product-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 190px;
+}
+
+.action-btn-block {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    text-align: center;
+}
+
+.buy-now-btn {
+    background-color: #000;
+}
+
+.buy-now-btn:hover {
+    background-color: #333;
+}
+
+.wishlist-form,
+.wishlist-link {
+    flex-shrink: 0;
+}
+
 .wishlist-btn {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     display: flex;
@@ -720,6 +693,7 @@ img {
     cursor: pointer;
     font-size: 20px;
     transition: all 0.3s;
+    background: #fff;
 }
 
 .wishlist-btn:hover {
@@ -728,17 +702,18 @@ img {
     border-color: var(--primary-red);
 }
 
-/* Delivery Info Box */
+/* Delivery */
 .delivery-info {
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 4px;
+    overflow: hidden;
 }
 
 .delivery-item {
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 24px;
+    padding: 22px 24px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
@@ -750,12 +725,13 @@ img {
     font-size: 24px;
     width: 40px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .delivery-text h4 {
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .delivery-text p {
@@ -764,16 +740,17 @@ img {
     text-decoration: underline;
 }
 
-/* Related Items */
+/* Related */
 .related-items-section {
-    margin-bottom: 140px;
+    margin-top: 80px;
+    margin-bottom: 120px;
 }
 
 .section-header-simple {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 60px;
+    margin-bottom: 48px;
 }
 
 .red-block-small {
@@ -781,6 +758,7 @@ img {
     height: 40px;
     background-color: var(--primary-red);
     border-radius: 4px;
+    flex-shrink: 0;
 }
 
 .section-header-simple h3 {
@@ -789,17 +767,16 @@ img {
     font-weight: 600;
 }
 
-
-/* Reusable Product Card Grid from previous turn, adding here for completeness */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 30px;
 }
 
 .product-card {
     position: relative;
     background-color: #fff;
+    min-width: 0;
 }
 
 .product-image {
@@ -812,6 +789,7 @@ img {
     justify-content: center;
     margin-bottom: 16px;
     overflow: hidden;
+    padding: 16px;
 }
 
 .product-image img {
@@ -843,6 +821,7 @@ img {
     width: 34px;
     height: 34px;
     background-color: #fff;
+    border: none;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -869,6 +848,7 @@ img {
     font-weight: 500;
     cursor: pointer;
     opacity: 0;
+    border: none;
     transition: opacity 0.3s;
 }
 
@@ -880,10 +860,12 @@ img {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 8px;
+    line-height: 1.45;
 }
 
 .product-price {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     align-items: center;
     margin-bottom: 8px;
@@ -900,57 +882,17 @@ img {
 .product-rating {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
     font-size: 14px;
     color: var(--text-gray);
 }
 
-.stars {
-    color: #FFAD33;
-}
-
-
-/* Responsive Styles */
-@media (max-width: 1024px) {
-    .auth-container {
-        flex-direction: column;
-        gap: 60px;
-    }
-
-    .auth-image {
-        width: 100%;
-        height: 400px;
-        /* Reduced height for mobile/tablet */
-    }
-
-    .auth-form-wrapper {
-        max-width: 100%;
-        padding: 0 20px;
-    }
-
+/* Large tablet */
+@media (max-width: 1199px) {
     .product-details-container {
-        flex-direction: column;
-    }
-
-    .product-gallery {
-        flex-direction: column-reverse;
-        /* Thumbnails below main image */
-    }
-
-    .gallery-thumbnails {
-        flex-direction: row;
-        overflow-x: auto;
-    }
-
-    .thumbnail {
-        min-width: 100px;
-        width: 100px;
-        height: 80px;
-    }
-
-    .main-image {
-        width: 100%;
-        height: 400px;
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
 
     .product-info-col {
@@ -958,52 +900,175 @@ img {
     }
 
     .product-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .footer-content {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-@media (max-width: 768px) {
-    .nav-links {
-        display: none;
+/* Tablet */
+@media (max-width: 991px) {
+    .breadcrumb-container {
+        margin-bottom: 28px;
     }
 
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .footer-content {
+    .product-gallery {
         grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .subscribe-input-group {
-        margin: 0 auto;
-    }
-
-    .app-download-area,
-    .social-icons {
-        justify-content: center;
-    }
-
-    .error-heading {
-        font-size: 60px;
-        line-height: 70px;
-    }
-}
-
-@media (max-width: 480px) {
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .login-actions {
-        flex-direction: column;
         gap: 16px;
+    }
+
+    .gallery-thumbnails {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .gallery-thumbnails::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .thumbnail {
+        min-width: 100px;
+        width: 100px;
+        height: 90px;
+        flex: 0 0 auto;
+    }
+
+    .main-image {
+        min-height: 420px;
+    }
+
+    .purchase-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .purchase-actions {
+        flex-wrap: wrap;
+    }
+
+    .wishlist-form,
+    .wishlist-link {
+        width: 48px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .container {
+        padding: 0 12px;
+    }
+
+    .product-details-container {
+        margin-top: 32px;
+        margin-bottom: 80px;
+        gap: 28px;
+    }
+
+    .product-title {
+        font-size: 22px;
+    }
+
+    .product-price-large {
+        font-size: 22px;
+    }
+
+    .option-label {
+        min-width: auto;
+        font-size: 18px;
+    }
+
+    .main-image {
+        min-height: 320px;
+        padding: 20px;
+    }
+
+    .purchase-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .quantity-control {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .qty-btn {
+        width: 48px;
+    }
+
+    .qty-input {
+        flex: 1;
+        width: auto;
+    }
+
+    .product-action-buttons {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .action-btn-block {
+        width: 100%;
+    }
+
+    .wishlist-form,
+    .wishlist-link,
+    .wishlist-btn {
+        width: 100%;
+    }
+
+    .wishlist-btn {
+        height: 48px;
+    }
+
+    .delivery-item {
+        padding: 18px 16px;
         align-items: flex-start;
+    }
+
+    .related-items-section {
+        margin-top: 60px;
+        margin-bottom: 80px;
+    }
+
+    .section-header-simple {
+        margin-bottom: 30px;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 575px) {
+    .breadcrumb {
+        font-size: 14px;
+    }
+
+    .rating-row {
+        font-size: 13px;
+    }
+
+    .stock-status {
+        border-left: none;
+        padding-left: 0;
+        width: 100%;
+    }
+
+    .option-row {
+        gap: 12px;
+    }
+
+    .main-image {
+        min-height: 260px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-image {
+        height: 220px;
     }
 }
 </style>
