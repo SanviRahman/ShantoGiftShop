@@ -118,6 +118,7 @@ class OrderController extends Controller
                 'user_id' => auth()->id(),
                 'cart_id' => $cart->id,
                 'order_number' => 'SGS-'.now()->format('YmdHis').'-'.Str::upper(Str::random(4)),
+                'public_token' => Str::lower(Str::random(40)),
                 'customer_name' => $data['customer_name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
@@ -157,13 +158,41 @@ class OrderController extends Controller
             }
         });
 
-        if ($order && $order->payment_method !== 'cash_on_delivery') {
-            session()->put('recent_order_id', $order->id);
-
-            return redirect()->route('orders.payments.create', $order);
+        if (! $order) {
+            return redirect()->route('cart.index')->with('error', 'Failed to place order. Please try again.');
         }
 
-        return redirect()->route('cart.index')->with('success', 'Order placed successfully.');
+        session()->put('recent_order_id', $order->id);
+        session()->put('recent_order_token', $order->public_token);
+
+        if ($order->payment_method !== 'cash_on_delivery') {
+            return redirect()->route('orders.payments.create', [
+                'order' => $order,
+                'token' => $order->public_token,
+            ]);
+        }
+
+        return redirect()->route('orders.show', [
+            'order' => $order,
+            'token' => $order->public_token,
+        ])->with('success', 'Order placed successfully.');
+    }
+
+    public function show(Request $request, Order $order)
+    {
+        $this->authorizeInvoiceAccess($request, $order);
+
+        $order->load('items');
+
+        if ($request->boolean('download')) {
+            $content = view('invoice-download', compact('order'))->render();
+
+            return response($content)
+                ->header('Content-Type', 'text/html; charset=UTF-8')
+                ->header('Content-Disposition', 'attachment; filename="invoice-'.$order->order_number.'.html"');
+        }
+
+        return view('invoice', compact('order'));
     }
 
     private function resolveCart(): Cart
@@ -284,5 +313,22 @@ class OrderController extends Controller
             'discount' => $discount,
             'total' => $total,
         ];
+    }
+
+    private function authorizeInvoiceAccess(Request $request, Order $order): void
+    {
+        if (auth()->check()) {
+            abort_unless($order->user_id === auth()->id(), 403);
+
+            return;
+        }
+
+        $token = (string) $request->query('token', '');
+
+        if ($token !== '' && hash_equals((string) $order->public_token, $token)) {
+            return;
+        }
+
+        abort_unless((int) session('recent_order_id') === (int) $order->id, 403);
     }
 }

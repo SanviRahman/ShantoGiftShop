@@ -30,17 +30,123 @@
             </div>
         </div>
 
-        <div class="payment-actions">
-            <form action="{{ route('orders.payments.store', $order) }}" method="POST">
-                @csrf
-                <input type="hidden" name="status" value="success">
-                <button type="submit" class="btn-primary">Pay Now</button>
-            </form>
+        <div class="invoice-link">
+            <a href="{{ route('orders.show', ['order' => $order, 'token' => $token]) }}">View Invoice</a>
+        </div>
 
-            <form action="{{ route('orders.payments.store', $order) }}" method="POST">
+        <div class="gateway-box">
+            @if($order->payment_method === 'bkash')
+                <div class="gateway-head">
+                    <span class="gateway-badge bkash">bKash</span>
+                    <span class="gateway-sub">Checkout</span>
+                </div>
+
+                <form action="{{ route('orders.payments.store', ['order' => $order, 'token' => $token]) }}" method="POST" class="gateway-form" id="gateway-form">
+                    @csrf
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="text" name="bkash_mobile" value="{{ old('bkash_mobile') }}" placeholder="01XXXXXXXXX" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>OTP</label>
+                            <input type="text" name="bkash_otp" value="{{ old('bkash_otp') }}" placeholder="Enter OTP" required>
+                        </div>
+                        <div class="form-group">
+                            <label>PIN</label>
+                            <input type="password" name="bkash_pin" value="{{ old('bkash_pin') }}" placeholder="Enter PIN" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Pay with bKash</button>
+                </form>
+            @elseif($order->payment_method === 'nagad')
+                <div class="gateway-head">
+                    <span class="gateway-badge nagad">Nagad</span>
+                    <span class="gateway-sub">Checkout</span>
+                </div>
+
+                <form action="{{ route('orders.payments.store', ['order' => $order, 'token' => $token]) }}" method="POST" class="gateway-form" id="gateway-form">
+                    @csrf
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="text" name="nagad_mobile" value="{{ old('nagad_mobile') }}" placeholder="01XXXXXXXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label>OTP</label>
+                        <input type="text" name="nagad_otp" value="{{ old('nagad_otp') }}" placeholder="Enter OTP" required>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Pay with Nagad</button>
+                </form>
+            @elseif($order->payment_method === 'card')
+                <div class="gateway-head">
+                    <span class="gateway-badge card">Card</span>
+                    <span class="gateway-sub">Payment</span>
+                </div>
+
+                <form action="{{ route('orders.payments.store', ['order' => $order, 'token' => $token]) }}" method="POST" class="gateway-form" id="gateway-form">
+                    @csrf
+                    <div class="form-group">
+                        <label>Name on Card</label>
+                        <input type="text" name="card_name" value="{{ old('card_name') }}" placeholder="Cardholder name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" name="card_number" value="{{ old('card_number') }}" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expiry (MM/YY)</label>
+                            <input type="text" name="card_expiry" value="{{ old('card_expiry') }}" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="password" name="card_cvv" value="{{ old('card_cvv') }}" placeholder="***" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Pay with Card</button>
+                </form>
+            @elseif($order->payment_method === 'bank')
+                <div class="gateway-head">
+                    <span class="gateway-badge bank">Bank</span>
+                    <span class="gateway-sub">Transfer</span>
+                </div>
+
+                <form action="{{ route('orders.payments.store', ['order' => $order, 'token' => $token]) }}" method="POST" class="gateway-form" id="gateway-form">
+                    @csrf
+                    <div class="form-group">
+                        <label>Bank Name</label>
+                        <input type="text" name="bank_name" value="{{ old('bank_name') }}" placeholder="Your bank name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Name</label>
+                            <input type="text" name="account_name" value="{{ old('account_name') }}" placeholder="Account holder" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Number</label>
+                            <input type="text" name="account_number" value="{{ old('account_number') }}" placeholder="Account number" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Routing Number (optional)</label>
+                        <input type="text" name="routing_number" value="{{ old('routing_number') }}" placeholder="Routing number">
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Confirm Transfer</button>
+                </form>
+            @else
+                <div class="gateway-head">
+                    <span class="gateway-badge other">Payment</span>
+                    <span class="gateway-sub">Not available</span>
+                </div>
+                <p class="gateway-note">Selected payment method is not supported.</p>
+            @endif
+        </div>
+
+        <div class="payment-actions">
+            <form action="{{ route('orders.payments.store', ['order' => $order, 'token' => $token]) }}" method="POST">
                 @csrf
-                <input type="hidden" name="status" value="failed">
-                <button type="submit" class="btn-secondary">Simulate Failure</button>
+                <input type="hidden" name="cancel" value="1">
+                <button type="submit" class="btn-secondary btn-full">Cancel Payment</button>
             </form>
         </div>
     </div>
@@ -149,6 +255,111 @@ body {
     flex-wrap: wrap;
 }
 
+.invoice-link {
+    margin-bottom: 18px;
+}
+
+.invoice-link a {
+    color: var(--primary-red);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gateway-box {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+    background: #fff;
+}
+
+.gateway-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.gateway-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.gateway-badge.bkash {
+    background: #e2136e;
+}
+
+.gateway-badge.nagad {
+    background: #f26a21;
+}
+
+.gateway-badge.card {
+    background: #111827;
+}
+
+.gateway-badge.bank {
+    background: #2563eb;
+}
+
+.gateway-badge.other {
+    background: #6b7280;
+}
+
+.gateway-sub {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+}
+
+.gateway-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.gateway-form input {
+    padding: 12px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    background: var(--bg-gray);
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}
+
+.gateway-note {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 14px;
+}
+
 .btn-primary {
     background-color: var(--primary-red);
     color: #fff;
@@ -182,6 +393,12 @@ body {
     background-color: #000;
     color: #fff;
     border-color: #000;
+}
+
+@media (max-width: 680px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 @endpush

@@ -83,6 +83,8 @@
                 </div>
 
                 <button class="btn-primary" style="padding: 10px 48px;" type="submit">Add To Cart</button>
+                <br><br><br>
+                <button class="btn-primary" style="padding: 10px 48px; background-color: #000;" type="submit" name="buy_now" value="1">Buy Now</button>
 
                 @auth
                     <button class="wishlist-btn" type="submit" formaction="{{ route('wishlist.store') }}" formmethod="POST">

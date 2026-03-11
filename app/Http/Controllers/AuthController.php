@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -40,7 +44,9 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('home')->with('success', 'Registration successful.');
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->route('verification.notice')->with('success', 'Registration successful. Please verify your email.');
     }
 
     public function createLogin()
@@ -60,6 +66,10 @@ class AuthController extends Controller
         if (Auth::attempt([$field => $data['login'], 'password' => $data['password']])) {
             $request->session()->regenerate();
 
+            if (! Auth::user()->hasVerifiedEmail()) {
+                return redirect()->route('verification.notice');
+            }
+
             return redirect()->intended(route('home'));
         }
 
@@ -76,5 +86,100 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home');
+    }
+
+    public function createForgotPassword()
+    {
+        return view('user.forgot-password');
+    }
+
+    public function storeForgotPassword(Request $request)
+    {
+        $data = $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $status = Password::sendResetLink([
+            'email' => $data['email'],
+        ]);
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('success', __($status));
+        }
+
+        return back()->withErrors([
+            'email' => __($status),
+        ]);
+    }
+
+    public function createResetPassword(Request $request, string $token)
+    {
+        return view('user.reset-password', [
+            'token' => $token,
+            'email' => (string) $request->query('email', ''),
+        ]);
+    }
+
+    public function storeResetPassword(Request $request)
+    {
+        $data = $request->validate([
+            'token' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'confirmed', 'min:6'],
+        ]);
+
+        $status = Password::reset(
+            [
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'password_confirmation' => $data['password_confirmation'],
+                'token' => $data['token'],
+            ],
+            function ($user, string $password) {
+                $user->forceFill([
+                    'password' => $password,
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('success', __($status));
+        }
+
+        return back()->withErrors([
+            'email' => __($status),
+        ]);
+    }
+
+    public function verificationNotice(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('home');
+        }
+
+        return view('user.verify-email', [
+            'email' => $request->user()->email,
+        ]);
+    }
+
+    public function verificationSend(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('home');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('success', 'Verification link sent to your email.');
+    }
+
+    public function verificationVerify(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+
+        return redirect()->route('home')->with('success', 'Email verified successfully.');
     }
 }

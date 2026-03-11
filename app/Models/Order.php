@@ -12,6 +12,7 @@ class Order extends Model
         'user_id',
         'cart_id',
         'order_number',
+        'public_token',
         'customer_name',
         'email',
         'phone',

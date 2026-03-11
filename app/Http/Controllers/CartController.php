@@ -32,6 +32,7 @@ class CartController extends Controller
         $data = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
             'quantity' => ['nullable', 'integer', 'min:1'],
+            'buy_now' => ['nullable'],
         ]);
 
         $product = Product::where('is_active', true)->findOrFail($data['product_id']);
@@ -55,11 +56,17 @@ class CartController extends Controller
             $item->subtotal = $item->quantity * $item->unit_price;
             $item->save();
         } else {
-            $cart->items()->create([
+            $item = $cart->items()->create([
                 'product_id' => $product->id,
                 'quantity' => $quantity,
                 'unit_price' => $product->price,
                 'subtotal' => $product->price * $quantity,
+            ]);
+        }
+
+        if ($request->has('buy_now')) {
+            return redirect()->route('orders.create', [
+                'items' => [$item->id],
             ]);
         }
 

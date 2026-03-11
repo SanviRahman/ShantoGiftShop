@@ -25,7 +25,7 @@ Route::post('/cart/sync', [CartController::class, 'sync'])->name('cart.sync');
 Route::post('/cart/coupon/apply', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
 Route::delete('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 
-Route::resource('orders', OrderController::class)->only(['create', 'store']);
+Route::resource('orders', OrderController::class)->only(['create', 'store', 'show']);
 Route::resource('orders.payments', PaymentController::class)->only(['create', 'store']);
 
 Route::get('/register', [AuthController::class, 'createRegister'])->name('register');
@@ -35,7 +35,30 @@ Route::get('/login', [AuthController::class, 'createLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'storeLogin'])->name('login.store');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->group(function () {
+Route::get('/forgot-password', [AuthController::class, 'createForgotPassword'])
+    ->middleware('guest')
+    ->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'storeForgotPassword'])
+    ->middleware('guest')
+    ->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'createResetPassword'])
+    ->middleware('guest')
+    ->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'storeResetPassword'])
+    ->middleware('guest')
+    ->name('password.update');
+
+Route::get('/email/verify', [AuthController::class, 'verificationNotice'])
+    ->middleware('auth')
+    ->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verificationVerify'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
+Route::post('/email/verification-notification', [AuthController::class, 'verificationSend'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
+
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('account', AccountController::class)->only(['index', 'update']);
     Route::resource('wishlist', WishlistController::class)->only(['index', 'store', 'destroy']);
 });
