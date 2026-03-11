@@ -19,7 +19,7 @@
 <nav class="navbar">
     <div class="container nav-content">
         <div class="logo">
-            <h1>Shanto<span style="color: #e03939;">Gift</span>Shop</h1>
+            <a href="{{ route('home') }}"><h1>Shanto<span style="color: #e03939;">Gift</span>Shop</h1></a>
         </div>
 
         <ul class="nav-links">

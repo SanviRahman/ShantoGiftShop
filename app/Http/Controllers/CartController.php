@@ -32,10 +32,20 @@ class CartController extends Controller
         $cart = $this->resolveCart();
         $quantity = $data['quantity'] ?? 1;
 
+        if ($product->stock_qty < $quantity) {
+            return back()->with('error', 'Requested quantity is not available in stock.');
+        }
+
         $item = $cart->items()->where('product_id', $product->id)->first();
 
         if ($item) {
-            $item->quantity += $quantity;
+            $newQty = $item->quantity + $quantity;
+
+            if ($product->stock_qty < $newQty) {
+                return back()->with('error', 'You cannot add more than available stock.');
+            }
+
+            $item->quantity = $newQty;
             $item->subtotal = $item->quantity * $item->unit_price;
             $item->save();
         } else {
@@ -60,6 +70,10 @@ class CartController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
+        if ($cartItem->product && $data['quantity'] > $cartItem->product->stock_qty) {
+            return back()->with('error', 'Requested quantity exceeds available stock.');
+        }
+
         $cartItem->update([
             'quantity' => $data['quantity'],
             'subtotal' => $cartItem->unit_price * $data['quantity'],
@@ -82,6 +96,7 @@ class CartController extends Controller
     public function sync(Request $request)
     {
         $cart = $this->resolveCart();
+        $cart->load('items.product');
 
         $data = $request->validate([
             'items' => ['nullable', 'array'],
@@ -91,6 +106,10 @@ class CartController extends Controller
         foreach ($cart->items as $item) {
             if (isset($data['items'][$item->id])) {
                 $qty = (int) $data['items'][$item->id];
+
+                if ($item->product && $qty > $item->product->stock_qty) {
+                    return back()->with('error', $item->product->title . ' stock is limited.');
+                }
 
                 $item->update([
                     'quantity' => $qty,

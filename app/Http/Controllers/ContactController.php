@@ -15,15 +15,19 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:50'],
-            'subject' => ['nullable', 'string', 'max:255'],
-            'message' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:120'],
+            'phone' => ['required', 'string', 'max:30'],
+            'subject' => ['nullable', 'string', 'max:120'],
+            'message' => ['required', 'string', 'max:2000'],
         ]);
 
-        ContactMessage::create($data);
+        try {
+            ContactMessage::create($data);
 
-        return back()->with('success', 'Your message has been sent successfully.');
+            return back()->with('success', 'Your message has been sent successfully.');
+        } catch (\Throwable $e) {
+            return back()->withInput()->with('error', 'Something went wrong. Please try again.');
+        }
     }
 }

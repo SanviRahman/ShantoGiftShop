@@ -14,7 +14,7 @@
                         <a href="{{ route('products.index', ['category' => $category->slug]) }}">
                             {{ $category->name }}
                             @if($category->children->count())
-                                <i class="fas fa-chevron-right"></i>
+                                <!-- <i class="fas fa-chevron-right"></i> -->
                             @endif
                         </a>
                     </li>
@@ -318,7 +318,7 @@
 </section>
 
 <!-- Services Section -->
-<section class="services-section">
+<section class="services-section" style="margin-top: 100px;">
     <div class="container">
         <div class="services-grid">
             <div class="service-item">
