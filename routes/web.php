@@ -1,6 +1,13 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminCouponController;
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminReportController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactController;
@@ -66,4 +73,28 @@ Route::post('/email/verification-notification', [AuthController::class, 'verific
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('account', AccountController::class)->only(['index', 'update']);
     Route::resource('wishlist', WishlistController::class)->only(['index', 'store', 'destroy']);
+});
+
+// Admin Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    
+    // Users Management
+    Route::resource('users', AdminUserController::class)->only(['index', 'show', 'destroy']);
+    
+    // Orders Management
+    Route::resource('orders', AdminOrderController::class)->only(['index', 'show']);
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
+
+    // Categories Management
+    Route::resource('categories', AdminCategoryController::class);
+    
+    // Products Management
+    Route::resource('products', AdminProductController::class);
+
+    // Coupon Management
+    Route::resource('coupons', AdminCouponController::class);
+
+    // Report Generation
+    Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
 });

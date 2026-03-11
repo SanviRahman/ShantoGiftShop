@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -150,6 +151,11 @@ class OrderController extends Controller
                 }
             }
 
+            // Increment coupon usage
+            if ($couponSummary['coupon_model']) {
+                $couponSummary['coupon_model']->increment('used_count');
+            }
+
             $cart->items()->whereIn('id', $itemsToOrder->pluck('id'))->delete();
 
             if ($cart->items()->count() === 0) {
@@ -248,17 +254,6 @@ class OrderController extends Controller
         ]);
     }
 
-    private function availableCoupons(): array
-    {
-        return [
-            'SHANTO27' => [
-                'type' => 'percent',
-                'value' => 10,
-                'label' => '10% OFF',
-            ],
-        ];
-    }
-
     private function getCouponSummary(float $subtotal): array
     {
         if ($subtotal <= 0) {
@@ -266,6 +261,7 @@ class OrderController extends Controller
 
             return [
                 'coupon' => null,
+                'coupon_model' => null,
                 'discount' => 0,
                 'total' => 0,
             ];
@@ -276,28 +272,45 @@ class OrderController extends Controller
         if (! $sessionCoupon || empty($sessionCoupon['code'])) {
             return [
                 'coupon' => null,
+                'coupon_model' => null,
                 'discount' => 0,
                 'total' => $subtotal,
             ];
         }
 
         $code = strtoupper($sessionCoupon['code']);
-        $coupon = $this->availableCoupons()[$code] ?? null;
+        $coupon = Coupon::where('code', $code)->first();
 
-        if (! $coupon) {
+        if (! $coupon || ! $coupon->isValid()) {
             session()->forget('cart_coupon');
 
             return [
                 'coupon' => null,
+                'coupon_model' => null,
                 'discount' => 0,
                 'total' => $subtotal,
             ];
         }
 
-        if ($coupon['type'] === 'percent') {
-            $discount = round(($subtotal * $coupon['value']) / 100);
+        // Check min spend
+        if ($coupon->min_spend && $subtotal < $coupon->min_spend) {
+            session()->forget('cart_coupon');
+            // Ideally we should flash a message here, but for now just remove it
+            return [
+                'coupon' => null,
+                'coupon_model' => null,
+                'discount' => 0,
+                'total' => $subtotal,
+            ];
+        }
+
+        if ($coupon->type === 'percent') {
+            $discount = round(($subtotal * $coupon->value) / 100);
+            if ($coupon->max_discount && $discount > $coupon->max_discount) {
+                $discount = $coupon->max_discount;
+            }
         } else {
-            $discount = (float) $coupon['value'];
+            $discount = (float) $coupon->value;
         }
 
         $discount = min($discount, $subtotal);
@@ -306,10 +319,11 @@ class OrderController extends Controller
         return [
             'coupon' => [
                 'code' => $code,
-                'label' => $coupon['label'],
-                'type' => $coupon['type'],
-                'value' => $coupon['value'],
+                'label' => $coupon->type === 'percent' ? $coupon->value.'% OFF' : '$'.$coupon->value.' OFF',
+                'type' => $coupon->type,
+                'value' => $coupon->value,
             ],
+            'coupon_model' => $coupon,
             'discount' => $discount,
             'total' => $total,
         ];

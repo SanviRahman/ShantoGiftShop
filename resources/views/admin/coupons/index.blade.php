@@ -1,0 +1,71 @@
+@extends('admin.layout')
+
+@section('title', 'Coupons')
+@section('header', 'Coupons')
+
+@section('content')
+<div class="card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
+    <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">All Coupons</h3>
+        <a href="{{ route('admin.coupons.create') }}" class="btn-primary" style="background: var(--primary-color); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 4px; font-size: 0.9rem;">
+            <i class="fas fa-plus"></i> Add New
+        </a>
+    </div>
+    
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f8f9fa; text-align: left;">
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Code</th>
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Type</th>
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Value</th>
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Usage</th>
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Status</th>
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($coupons as $coupon)
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 12px 20px; font-weight: bold; color: #555;">{{ $coupon->code }}</td>
+                    <td style="padding: 12px 20px;">{{ ucfirst($coupon->type) }}</td>
+                    <td style="padding: 12px 20px;">
+                        @if($coupon->type == 'percent')
+                            {{ $coupon->value }}%
+                        @else
+                            ${{ $coupon->value }}
+                        @endif
+                    </td>
+                    <td style="padding: 12px 20px;">
+                        {{ $coupon->used_count }} / {{ $coupon->usage_limit ?? '∞' }}
+                    </td>
+                    <td style="padding: 12px 20px;">
+                        @if($coupon->is_active)
+                            <span style="color: #28a745; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Active</span>
+                        @else
+                            <span style="color: #dc3545; font-size: 0.85rem;"><i class="fas fa-times-circle"></i> Inactive</span>
+                        @endif
+                    </td>
+                    <td style="padding: 12px 20px;">
+                        <a href="{{ route('admin.coupons.edit', $coupon) }}" style="color: #ffc107; margin-right: 10px; font-size: 1.1rem;">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{{ route('admin.coupons.destroy', $coupon) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 1.1rem;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="padding: 20px;">
+        {{ $coupons->links() }}
+    </div>
+</div>
+@endsection

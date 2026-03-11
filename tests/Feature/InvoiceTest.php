@@ -117,3 +117,4 @@ class InvoiceTest extends TestCase
         $response->assertHeader('Content-Disposition');
     }
 }
+

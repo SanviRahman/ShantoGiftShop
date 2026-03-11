@@ -50,7 +50,7 @@
     </div>
 </section>
 
-<section class="just-for-you-section container">
+<section class="just-for-you-section container" style="margin-top: 50px;">
     <div class="section-header">
         <div class="section-title">
             <div class="red-block"></div>
