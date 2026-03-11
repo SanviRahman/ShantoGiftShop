@@ -48,7 +48,7 @@ class PaymentController extends Controller
                 'order_status' => 'pending_payment',
             ]);
 
-            return redirect()->route('orders.create', [
+            return redirect()->route('orders.show', [
                 'order' => $order,
                 'token' => $order->public_token,
             ])->with('error', 'Payment cancelled.');

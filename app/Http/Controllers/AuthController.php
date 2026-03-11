@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
@@ -30,7 +31,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
-            'password' => $data['password'],
+            'password' => Hash::make($data['password']),
         ]);
 
         $names = preg_split('/\s+/', trim($data['name']), 2);
@@ -46,7 +47,9 @@ class AuthController extends Controller
 
         $user->sendEmailVerificationNotification();
 
-        return redirect()->route('verification.notice')->with('success', 'Registration successful. Please verify your email.');
+        return redirect()
+            ->route('verification.notice')
+            ->with('success', 'Registration successful. Please verify your email.');
     }
 
     public function createLogin()
@@ -66,7 +69,7 @@ class AuthController extends Controller
         if (Auth::attempt([$field => $data['login'], 'password' => $data['password']])) {
             $request->session()->regenerate();
 
-            if (! Auth::user()->hasVerifiedEmail()) {
+            if (!Auth::user()->hasVerifiedEmail()) {
                 return redirect()->route('verification.notice');
             }
 
@@ -126,6 +129,7 @@ class AuthController extends Controller
             'token' => ['required', 'string'],
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', 'min:6'],
+            'password_confirmation' => ['required'],
         ]);
 
         $status = Password::reset(
@@ -137,7 +141,7 @@ class AuthController extends Controller
             ],
             function ($user, string $password) {
                 $user->forceFill([
-                    'password' => $password,
+                    'password' => Hash::make($password),
                     'remember_token' => Str::random(60),
                 ])->save();
 
@@ -151,7 +155,7 @@ class AuthController extends Controller
 
         return back()->withErrors([
             'email' => __($status),
-        ]);
+        ])->withInput($request->only('email'));
     }
 
     public function verificationNotice(Request $request)

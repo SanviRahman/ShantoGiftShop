@@ -13,8 +13,8 @@
 
 <section class="invoice-section container">
     @php
-        $invoiceToken = request('token') ?: $order->public_token;
-        $canPay = $order->payment_method !== 'cash_on_delivery' && $order->payment_status !== 'paid';
+    $invoiceToken = request('token') ?: $order->public_token;
+    $canPay = $order->payment_method !== 'cash_on_delivery' && $order->payment_status !== 'paid';
     @endphp
 
     <div class="invoice-card" id="invoice-card">
@@ -51,26 +51,15 @@
                 <p>{{ $order->phone }}</p>
                 <p>{{ $order->address }}, {{ $order->city }}</p>
                 @if($order->postal_code || $order->country)
-                    <p>{{ $order->postal_code }} {{ $order->country }}</p>
+                <p>{{ $order->postal_code }} {{ $order->country }}</p>
                 @endif
             </div>
 
             <div class="actions">
-                <a
-                    class="btn-secondary"
-                    href="{{ route('orders.show', ['order' => $order, 'token' => $invoiceToken, 'download' => 1]) }}"
-                >Download Invoice</a>
+                <a class="btn-secondary"
+                    href="{{ route('orders.show', ['order' => $order, 'token' => $invoiceToken, 'download' => 1]) }}">Download
+                    Invoice</a>
                 <button type="button" class="btn-primary" id="print-invoice">Print</button>
-                @if($canPay)
-                    <a
-                        class="btn-primary"
-                        href="{{ route('orders.payments.create', ['order' => $order, 'token' => $invoiceToken]) }}"
-                    >Pay Now</a>
-                @endif
-                @if(! $canPay)
-                    <a class="btn-secondary" href="{{ route('products.index') }}">Continue Shopping</a>
-                    <a class="btn-secondary" href="{{ route('home') }}">Home</a>
-                @endif
             </div>
         </div>
 
@@ -83,12 +72,12 @@
             </div>
 
             @foreach($order->items as $item)
-                <div class="table-row">
-                    <div class="title">{{ $item->product_title }}</div>
-                    <div>${{ number_format((float) $item->unit_price, 0) }}</div>
-                    <div>{{ $item->quantity }}</div>
-                    <div class="right">${{ number_format((float) $item->subtotal, 0) }}</div>
-                </div>
+            <div class="table-row">
+                <div class="title">{{ $item->product_title }}</div>
+                <div>${{ number_format((float) $item->unit_price, 0) }}</div>
+                <div>{{ $item->quantity }}</div>
+                <div class="right">${{ number_format((float) $item->subtotal, 0) }}</div>
+            </div>
             @endforeach
         </div>
 
@@ -112,10 +101,19 @@
         </div>
 
         @if($order->notes)
-            <div class="notes">
-                <h3>Notes</h3>
-                <pre>{{ $order->notes }}</pre>
-            </div>
+        <div class="notes">
+            <h3>Notes</h3>
+            <pre>{{ $order->notes }}</pre>
+        </div>
+        @endif
+
+        @if(! $canPay)
+        <a class="btn-secondary" href="{{ route('products.index') }}">Continue Shopping</a>
+        <a class="btn-secondary" href="{{ route('home') }}">Home</a>
+        @endif
+        @if($canPay)
+        <a class="btn-primary"
+            href="{{ route('orders.payments.create', ['order' => $order, 'token' => $invoiceToken]) }}">Pay Now</a>
         @endif
     </div>
 </section>
@@ -123,10 +121,10 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('print-invoice');
     if (!btn) return;
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function() {
         const card = document.getElementById('invoice-card');
         const styleTag = document.getElementById('invoice-style');
 
@@ -408,17 +406,21 @@ body {
     .invoice-top {
         flex-direction: column;
     }
+
     .meta {
         min-width: 0;
         width: 100%;
     }
+
     .invoice-grid {
         flex-direction: column;
     }
+
     .actions {
         width: 100%;
         justify-content: flex-start;
     }
+
     .table-head,
     .table-row {
         grid-template-columns: 1.6fr 1fr 0.6fr 1fr;
@@ -426,6 +428,7 @@ body {
 }
 
 @media print {
+
     .top-header,
     .navbar,
     .footer,
@@ -434,9 +437,11 @@ body {
     .actions {
         display: none !important;
     }
+
     .invoice-section {
         margin-bottom: 0;
     }
+
     .invoice-card {
         box-shadow: none;
         padding: 0;
