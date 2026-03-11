@@ -1,7 +1,6 @@
 <?php
-namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
 
 class UserController extends Controller
 {
@@ -25,5 +24,4 @@ class UserController extends Controller
     {
         return view('user.login');
     }
-
 }

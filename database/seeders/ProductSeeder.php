@@ -133,7 +133,7 @@ class ProductSeeder extends Seeder
         foreach ($catalog as $categorySlug => $products) {
             $category = Category::where('slug', $categorySlug)->first();
 
-            if (!$category) {
+            if (! $category) {
                 continue;
             }
 
@@ -141,9 +141,9 @@ class ProductSeeder extends Seeder
                 $product = Product::create([
                     'category_id' => $category->id,
                     'title' => $item['title'],
-                    'slug' => Str::slug($item['title'] . '-' . $categorySlug),
-                    'sku' => 'SKU-' . strtoupper(Str::random(8)),
-                    'short_description' => $item['title'] . ' short description',
+                    'slug' => Str::slug($item['title'].'-'.$categorySlug),
+                    'sku' => 'SKU-'.strtoupper(Str::random(8)),
+                    'short_description' => $item['title'].' short description',
                     'price' => $item['price'],
                     'old_price' => $item['old_price'] ?? null,
                     'rating' => $item['rating'],
@@ -169,7 +169,7 @@ class ProductSeeder extends Seeder
                     : [];
 
                 $product->detail()->create([
-                    'description' => 'High quality ' . $item['title'] . ' for your daily use.',
+                    'description' => 'High quality '.$item['title'].' for your daily use.',
                     'colors' => ['#A0BCE0', '#E07575', '#000000'],
                     'sizes' => $sizes,
                     'gallery' => $gallery,

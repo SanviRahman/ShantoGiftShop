@@ -10,6 +10,7 @@ class AccountController extends Controller
     public function index()
     {
         $user = auth()->user()->load('profile');
+
         return view('user.account', compact('user'));
     }
 
@@ -20,8 +21,8 @@ class AccountController extends Controller
         $data = $request->validate([
             'first_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['nullable', 'string', 'max:100'],
-            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
-            'phone' => ['nullable', 'string', 'unique:users,phone,' . $user->id],
+            'email' => ['required', 'email', 'unique:users,email,'.$user->id],
+            'phone' => ['nullable', 'string', 'unique:users,phone,'.$user->id],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
             'postal_code' => ['nullable', 'string', 'max:50'],
@@ -31,7 +32,7 @@ class AccountController extends Controller
         ]);
 
         $user->update([
-            'name' => trim(($data['first_name'] ?? '') . ' ' . ($data['last_name'] ?? '')) ?: $user->name,
+            'name' => trim(($data['first_name'] ?? '').' '.($data['last_name'] ?? '')) ?: $user->name,
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
         ]);
@@ -49,8 +50,8 @@ class AccountController extends Controller
             ]
         );
 
-        if (!empty($data['password'])) {
-            if (empty($data['current_password']) || !Hash::check($data['current_password'], $user->password)) {
+        if (! empty($data['password'])) {
+            if (empty($data['current_password']) || ! Hash::check($data['current_password'], $user->password)) {
                 return back()->withErrors(['current_password' => 'Current password is incorrect.']);
             }
 

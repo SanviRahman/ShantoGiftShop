@@ -116,7 +116,7 @@ class CartController extends Controller
                 $qty = (int) $data['items'][$item->id];
 
                 if ($item->product && $qty > $item->product->stock_qty) {
-                    return back()->with('error', $item->product->title . ' stock is limited.');
+                    return back()->with('error', $item->product->title.' stock is limited.');
                 }
 
                 $item->update([
@@ -147,7 +147,7 @@ class CartController extends Controller
         $code = strtoupper(trim($data['coupon_code']));
         $coupon = $this->availableCoupons()[$code] ?? null;
 
-        if (!$coupon) {
+        if (! $coupon) {
             return back()->with('error', 'Invalid coupon code.');
         }
 
@@ -190,7 +190,7 @@ class CartController extends Controller
 
         $sessionCoupon = session('cart_coupon');
 
-        if (!$sessionCoupon || empty($sessionCoupon['code'])) {
+        if (! $sessionCoupon || empty($sessionCoupon['code'])) {
             return [
                 'coupon' => null,
                 'discount' => 0,
@@ -201,7 +201,7 @@ class CartController extends Controller
         $code = strtoupper($sessionCoupon['code']);
         $coupon = $this->availableCoupons()[$code] ?? null;
 
-        if (!$coupon) {
+        if (! $coupon) {
             session()->forget('cart_coupon');
 
             return [
@@ -253,8 +253,9 @@ class CartController extends Controller
                 ->where('status', 'open')
                 ->first();
 
-            if ($guestCart && !$userCart) {
+            if ($guestCart && ! $userCart) {
                 $guestCart->update(['user_id' => auth()->id()]);
+
                 return $guestCart;
             }
 
@@ -272,6 +273,7 @@ class CartController extends Controller
                 }
 
                 $guestCart->delete();
+
                 return $userCart;
             }
 

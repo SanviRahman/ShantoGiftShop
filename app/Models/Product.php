@@ -66,7 +66,7 @@ class Product extends Model
 
     public function getImageUrlAttribute(): string
     {
-        if (!$this->featured_image) {
+        if (! $this->featured_image) {
             return 'https://via.placeholder.com/400x400/F5F5F5/000000?text=Product';
         }
 
@@ -74,6 +74,6 @@ class Product extends Model
             return $this->featured_image;
         }
 
-        return asset('storage/' . $this->featured_image);
+        return asset('storage/'.$this->featured_image);
     }
 }

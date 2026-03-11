@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,8 @@ Route::post('/cart/sync', [CartController::class, 'sync'])->name('cart.sync');
 Route::post('/cart/coupon/apply', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
 Route::delete('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 
-Route::resource('orders', OrderController::class)->only(['store']);
+Route::resource('orders', OrderController::class)->only(['create', 'store']);
+Route::resource('orders.payments', PaymentController::class)->only(['create', 'store']);
 
 Route::get('/register', [AuthController::class, 'createRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'storeRegister'])->name('register.store');

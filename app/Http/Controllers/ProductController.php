@@ -36,7 +36,7 @@ class ProductController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%'.$request->search.'%');
         }
 
         switch ($request->sort) {
@@ -84,7 +84,7 @@ class ProductController extends Controller
             ->get();
 
         return view('admin.products.form', [
-            'product' => new Product(),
+            'product' => new Product,
             'categories' => $categories,
             'isEdit' => false,
         ]);
@@ -114,8 +114,8 @@ class ProductController extends Controller
         $product = Product::create([
             'category_id' => $data['category_id'],
             'title' => $data['title'],
-            'slug' => Str::slug($data['title']) . '-' . Str::lower(Str::random(5)),
-            'sku' => $data['sku'] ?? 'SKU-' . strtoupper(Str::random(8)),
+            'slug' => Str::slug($data['title']).'-'.Str::lower(Str::random(5)),
+            'sku' => $data['sku'] ?? 'SKU-'.strtoupper(Str::random(8)),
             'short_description' => $data['short_description'] ?? null,
             'price' => $data['price'],
             'old_price' => $data['old_price'] ?? null,
@@ -130,23 +130,23 @@ class ProductController extends Controller
             'featured_image' => $imagePath,
         ]);
 
-        $colors = !empty($data['colors'])
+        $colors = ! empty($data['colors'])
             ? array_map('trim', explode(',', $data['colors']))
             : ['#A0BCE0', '#E07575', '#000000'];
 
-        $sizes = !empty($data['sizes'])
+        $sizes = ! empty($data['sizes'])
             ? array_map('trim', explode(',', $data['sizes']))
             : [];
 
         $gallery = [
-            asset('storage/' . $imagePath),
-            asset('storage/' . $imagePath),
-            asset('storage/' . $imagePath),
-            asset('storage/' . $imagePath),
+            asset('storage/'.$imagePath),
+            asset('storage/'.$imagePath),
+            asset('storage/'.$imagePath),
+            asset('storage/'.$imagePath),
         ];
 
         $product->detail()->create([
-            'description' => $data['description'] ?? ($data['title'] . ' description'),
+            'description' => $data['description'] ?? ($data['title'].' description'),
             'colors' => $colors,
             'sizes' => $sizes,
             'gallery' => $gallery,
@@ -226,25 +226,25 @@ class ProductController extends Controller
             'featured_image' => $imagePath,
         ]);
 
-        $colors = !empty($data['colors'])
+        $colors = ! empty($data['colors'])
             ? array_map('trim', explode(',', $data['colors']))
             : ['#A0BCE0', '#E07575', '#000000'];
 
-        $sizes = !empty($data['sizes'])
+        $sizes = ! empty($data['sizes'])
             ? array_map('trim', explode(',', $data['sizes']))
             : [];
 
         $gallery = [
-            asset('storage/' . $imagePath),
-            asset('storage/' . $imagePath),
-            asset('storage/' . $imagePath),
-            asset('storage/' . $imagePath),
+            asset('storage/'.$imagePath),
+            asset('storage/'.$imagePath),
+            asset('storage/'.$imagePath),
+            asset('storage/'.$imagePath),
         ];
 
         $product->detail()->updateOrCreate(
             ['product_id' => $product->id],
             [
-                'description' => $data['description'] ?? ($data['title'] . ' description'),
+                'description' => $data['description'] ?? ($data['title'].' description'),
                 'colors' => $colors,
                 'sizes' => $sizes,
                 'gallery' => $gallery,

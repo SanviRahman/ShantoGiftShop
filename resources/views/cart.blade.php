@@ -34,6 +34,7 @@
 
         <div class="cart-table-wrapper">
             <div class="cart-header">
+                <div class="header-col">Select</div>
                 <div class="header-col">Product</div>
                 <div class="header-col">Price</div>
                 <div class="header-col">Quantity</div>
@@ -42,6 +43,14 @@
 
             @forelse($cartItems as $item)
                 <div class="cart-item" data-price="{{ $item->unit_price }}">
+                    <div class="select-col">
+                        <input
+                            type="checkbox"
+                            class="checkout-select"
+                            value="{{ $item->id }}"
+                            checked
+                        >
+                    </div>
                     <div class="product-col">
                         <button
                             type="button"
@@ -78,6 +87,7 @@
 
         <div class="cart-actions">
             <a href="{{ route('products.index') }}" class="btn-secondary">Return To Shop</a>
+            <button type="button" class="btn-primary" id="proceed-to-checkout">Proceed To Checkout</button>
         </div>
     </form>
 
@@ -158,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const removeButtons = document.querySelectorAll('.remove-item-btn');
     const removeItemForm = document.getElementById('remove-item-form');
     const totalBox = document.querySelector('.cart-total-box');
+    const proceedBtn = document.getElementById('proceed-to-checkout');
 
     let syncTimer;
 
@@ -238,6 +249,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (discountEl) discountEl.textContent = '-$' + Math.round(discount);
         if (totalEl) totalEl.textContent = '$' + Math.round(total);
     }
+
+    if (proceedBtn) {
+        proceedBtn.addEventListener('click', function () {
+            const checked = Array.from(document.querySelectorAll('.checkout-select:checked')).map(el => el.value);
+            const url = new URL("{{ route('orders.create') }}", window.location.origin);
+
+            checked.forEach(id => url.searchParams.append('items[]', id));
+
+            window.location.href = url.toString();
+        });
+    }
 });
 </script>
 
@@ -313,7 +335,7 @@ img {
 
 .cart-header {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr;
     padding: 24px 40px;
     background-color: #fff;
     box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.05);
@@ -325,7 +347,7 @@ img {
 
 .cart-item {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr;
     padding: 24px 40px;
     background-color: #fff;
     box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.05);
@@ -333,6 +355,19 @@ img {
     margin-bottom: 24px;
     align-items: center;
     position: relative;
+}
+
+.select-col {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.checkout-select {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-red);
+    cursor: pointer;
 }
 
 .product-col {
@@ -415,6 +450,23 @@ img {
     background-color: var(--text-black);
     color: #fff;
     border-color: var(--text-black);
+}
+
+.btn-primary {
+    background-color: var(--primary-red);
+    color: #fff;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #E07575;
 }
 
 .cart-bottom-section {
