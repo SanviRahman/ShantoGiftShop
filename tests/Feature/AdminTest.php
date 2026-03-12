@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
@@ -39,5 +38,44 @@ class AdminTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewIs('admin.index');
+    }
+
+    public function test_admins_can_access_admin_pages()
+    {
+        $admin = User::factory()->create([
+            'usertype' => 'admin',
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/admin/products')
+            ->assertStatus(200)
+            ->assertViewIs('admin.products.index');
+
+        $this->actingAs($admin)
+            ->get('/admin/categories')
+            ->assertStatus(200)
+            ->assertViewIs('admin.categories.index');
+
+        $this->actingAs($admin)
+            ->get('/admin/coupons')
+            ->assertStatus(200)
+            ->assertViewIs('admin.coupons.index');
+
+        $this->actingAs($admin)
+            ->get('/admin/reports')
+            ->assertStatus(200)
+            ->assertViewIs('admin.reports.index');
+    }
+
+    public function test_regular_users_cannot_access_admin_pages()
+    {
+        $user = User::factory()->create([
+            'usertype' => 'user',
+        ]);
+
+        $this->actingAs($user)->get('/admin/products')->assertRedirect('/');
+        $this->actingAs($user)->get('/admin/categories')->assertRedirect('/');
+        $this->actingAs($user)->get('/admin/coupons')->assertRedirect('/');
+        $this->actingAs($user)->get('/admin/reports')->assertRedirect('/');
     }
 }

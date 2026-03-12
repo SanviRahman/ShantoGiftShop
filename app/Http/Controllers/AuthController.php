@@ -69,8 +69,26 @@ class AuthController extends Controller
         if (Auth::attempt([$field => $data['login'], 'password' => $data['password']])) {
             $request->session()->regenerate();
 
-            if (! Auth::user()->hasVerifiedEmail()) {
+            $user = Auth::user();
+
+            if ($user->usertype === 'admin') {
+                $intended = (string) $request->session()->get('url.intended', '');
+
+                if ($intended !== '' && str_contains($intended, '/admin')) {
+                    return redirect()->to($intended);
+                }
+
+                return redirect()->route('admin.dashboard');
+            }
+
+            if (! $user->hasVerifiedEmail()) {
                 return redirect()->route('verification.notice');
+            }
+
+            $intended = (string) $request->session()->get('url.intended', '');
+
+            if ($intended !== '' && str_contains($intended, '/admin')) {
+                $request->session()->forget('url.intended');
             }
 
             return redirect()->intended(route('home'));
@@ -161,6 +179,10 @@ class AuthController extends Controller
     public function verificationNotice(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
+            if ($request->user()->usertype === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
             return redirect()->route('home');
         }
 
@@ -172,6 +194,10 @@ class AuthController extends Controller
     public function verificationSend(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
+            if ($request->user()->usertype === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
             return redirect()->route('home');
         }
 
@@ -183,6 +209,10 @@ class AuthController extends Controller
     public function verificationVerify(EmailVerificationRequest $request)
     {
         $request->fulfill();
+
+        if ($request->user()->usertype === 'admin') {
+            return redirect()->route('admin.dashboard')->with('success', 'Email verified successfully.');
+        }
 
         return redirect()->route('home')->with('success', 'Email verified successfully.');
     }
