@@ -66,6 +66,7 @@
             flex: 1;
             padding: 20px 0;
             list-style: none;
+            overflow-y: auto;
         }
 
         .sidebar-menu li {
@@ -116,15 +117,53 @@
             z-index: 999;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
         .header-title {
             font-size: 1.2rem;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .user-menu {
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 998;
         }
 
         .logout-btn {
@@ -170,11 +209,58 @@
         }
 
         @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: inline-flex;
+            }
+
             .sidebar {
                 transform: translateX(-100%);
             }
+
+            body.sidebar-open .sidebar {
+                transform: translateX(0);
+            }
+
+            body.sidebar-open .sidebar-overlay {
+                display: block;
+            }
+
             .main-content {
                 margin-left: 0;
+            }
+
+            .content {
+                padding: 14px;
+            }
+
+            .user-menu > span {
+                display: none;
+            }
+
+            .header {
+                padding: 0 12px;
+            }
+
+            .sidebar-header {
+                justify-content: flex-start;
+                padding-left: 16px;
+            }
+
+            .sidebar-menu a {
+                padding: 12px 12px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .theme-btn, .logout-btn {
+                padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .content table th,
+            .content table td {
+                padding: 10px 12px !important;
             }
         }
     </style>
@@ -226,11 +312,18 @@
         </ul>
     </aside>
 
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->
         <header class="header">
-            <div class="header-title">@yield('header', 'Dashboard')</div>
+            <div class="header-left">
+                <button type="button" class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-title">@yield('header', 'Dashboard')</div>
+            </div>
             <div class="user-menu">
                 <span>{{ Auth::user()->name }}</span>
                 <button type="button" class="theme-btn" id="themeToggle">
@@ -294,6 +387,38 @@
                     applyTheme(next);
                 });
             }
+
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            const closeSidebar = () => body.classList.remove('sidebar-open');
+            const openSidebar = () => body.classList.add('sidebar-open');
+            const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    if (!isMobile()) return;
+                    if (body.classList.contains('sidebar-open')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+
+            document.querySelectorAll('.sidebar a').forEach((link) => {
+                link.addEventListener('click', () => {
+                    if (isMobile()) closeSidebar();
+                });
+            });
+
+            window.addEventListener('resize', () => {
+                if (!isMobile()) closeSidebar();
+            });
         })();
     </script>
     @stack('scripts')

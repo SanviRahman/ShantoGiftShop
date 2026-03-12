@@ -4,8 +4,8 @@
 @section('header', 'Products')
 
 @section('content')
-<div class="card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
-    <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+<div class="card admin-card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
+    <div class="admin-card-head" style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
         <h3 style="margin: 0;">All Products</h3>
         <a href="{{ route('admin.products.create') }}" class="btn-primary" style="background: var(--primary-color); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 4px; font-size: 0.9rem;">
             <i class="fas fa-plus"></i> Add New
@@ -81,4 +81,17 @@
         {{ $products->links() }}
     </div>
 </div>
+
+<style>
+    @media (max-width: 768px) {
+        .admin-card > div[style*="padding: 20px"] {
+            padding: 14px !important;
+        }
+
+        .admin-card-head a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 @endsection

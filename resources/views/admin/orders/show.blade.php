@@ -4,7 +4,7 @@
 @section('header', 'Order Details')
 
 @section('content')
-<div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
+<div class="order-page-grid" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
     <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
         <div style="padding: 20px; border-bottom: 1px solid #eee; display:flex; justify-content: space-between; align-items:center; gap: 12px;">
             <div>
@@ -13,7 +13,7 @@
                     {{ $order->created_at->format('M d, Y h:i A') }}
                 </div>
             </div>
-            <div style="display:flex; gap: 10px; flex-wrap: wrap; justify-content:flex-end;">
+            <div class="order-actions" style="display:flex; gap: 10px; flex-wrap: wrap; justify-content:flex-end;">
                 <a href="{{ route('orders.show', ['order' => $order]) }}" target="_blank" style="background: #f8f9fa; color: #333; border: 1px solid #ddd; padding: 8px 12px; border-radius: 6px; text-decoration: none;">
                     <i class="fas fa-eye"></i> View Invoice
                 </a>
@@ -189,6 +189,23 @@
 <style>
     @media (max-width: 1100px) {
         body .content > div { grid-template-columns: 1fr !important; }
+    }
+
+    @media (max-width: 768px) {
+        .order-page-grid > div > div[style*="padding: 20px"] {
+            padding: 14px !important;
+        }
+
+        .order-actions {
+            width: 100%;
+            justify-content: flex-start !important;
+        }
+
+        .order-actions a,
+        .order-actions button {
+            width: 100%;
+            text-align: center;
+        }
     }
 </style>
 @endsection

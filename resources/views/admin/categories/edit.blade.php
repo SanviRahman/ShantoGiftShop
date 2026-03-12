@@ -4,7 +4,7 @@
 @section('header', 'Edit Category')
 
 @section('content')
-<div class="card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;">
+<div class="card admin-card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;">
     <div style="padding: 20px; border-bottom: 1px solid #eee;">
         <h3 style="margin: 0;">Edit Category: {{ $category->name }}</h3>
     </div>
@@ -52,7 +52,7 @@
                 </label>
             </div>
 
-            <div style="display: flex; gap: 10px;">
+            <div class="admin-form-actions" style="display: flex; gap: 10px;">
                 <button type="submit" 
                     style="background: var(--primary-color); color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 1rem;">
                     Update Category
@@ -65,4 +65,22 @@
         </form>
     </div>
 </div>
+
+<style>
+    @media (max-width: 768px) {
+        .admin-card > div[style*="padding: 20px"] {
+            padding: 14px !important;
+        }
+
+        .admin-form-actions {
+            flex-direction: column;
+        }
+
+        .admin-form-actions a,
+        .admin-form-actions button {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 @endsection

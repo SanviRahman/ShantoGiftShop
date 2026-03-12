@@ -4,13 +4,13 @@
 @section('header', 'Reports')
 
 @section('content')
-<div class="card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+<div class="card admin-card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
     <div style="padding: 20px; border-bottom: 1px solid #eee;">
         <h3 style="margin: 0;">Sales Report</h3>
     </div>
     
     <div style="padding: 20px;">
-        <form action="{{ route('admin.reports.index') }}" method="GET" style="display: flex; gap: 20px; align-items: flex-end; margin-bottom: 30px;">
+        <form action="{{ route('admin.reports.index') }}" method="GET" class="admin-filter-form" style="display: flex; gap: 20px; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap;">
             <div>
                 <label for="start_date" style="display: block; margin-bottom: 8px; font-weight: 500;">Start Date</label>
                 <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
@@ -91,4 +91,26 @@
         </div>
     </div>
 </div>
+
+<style>
+    @media (max-width: 768px) {
+        .admin-card > div[style*="padding: 20px"] {
+            padding: 14px !important;
+        }
+
+        .admin-filter-form {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 12px !important;
+        }
+
+        .admin-filter-form input[type="date"] {
+            width: 100%;
+        }
+
+        .admin-filter-form button {
+            width: 100%;
+        }
+    }
+</style>
 @endsection

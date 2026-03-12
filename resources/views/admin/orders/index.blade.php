@@ -4,8 +4,8 @@
 @section('header', 'Orders Management')
 
 @section('content')
-<div class="card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
-    <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+<div class="card admin-card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
+    <div class="admin-card-head" style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
         <h3 style="margin: 0;">All Orders</h3>
         <span style="font-size: 0.9rem; color: #666;">Total: {{ $orders->total() }}</span>
     </div>
@@ -85,4 +85,12 @@
         {{ $orders->links() }}
     </div>
 </div>
+
+<style>
+    @media (max-width: 768px) {
+        .admin-card > div[style*="padding: 20px"] {
+            padding: 14px !important;
+        }
+    }
+</style>
 @endsection
