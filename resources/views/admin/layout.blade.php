@@ -271,7 +271,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            SGS Admin
+            Shanto<span style="color: #e03939;">Gift</span>Shop  Admin
         </div>
         <ul class="sidebar-menu">
             <li>

@@ -58,9 +58,6 @@
                         <div style="font-size: 0.8rem; color:#888; margin-top: 2px;">Score: {{ (int) ($order->risk_score ?? 0) }}</div>
                     </td>
                     <td style="padding: 12px 20px;">
-                        <a href="{{ route('orders.show', ['order' => $order, 'token' => $order->public_token]) }}" target="_blank" style="color: #1aa6d9; margin-right: 10px;">
-                            <i class="fas fa-eye"></i>
-                        </a>
                         <a href="{{ route('admin.orders.show', $order) }}" style="color: #6f42c1; margin-right: 10px;">
                             <i class="fas fa-pen"></i>
                         </a>

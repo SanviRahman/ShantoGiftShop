@@ -14,9 +14,6 @@
                 </div>
             </div>
             <div class="order-actions" style="display:flex; gap: 10px; flex-wrap: wrap; justify-content:flex-end;">
-                <a href="{{ route('orders.show', ['order' => $order]) }}" target="_blank" style="background: #f8f9fa; color: #333; border: 1px solid #ddd; padding: 8px 12px; border-radius: 6px; text-decoration: none;">
-                    <i class="fas fa-eye"></i> View Invoice
-                </a>
                 <a href="{{ route('orders.show', ['order' => $order, 'download' => 1]) }}" style="background: #28a745; color: #fff; border: 1px solid #28a745; padding: 8px 12px; border-radius: 6px; text-decoration: none;">
                     <i class="fas fa-download"></i> Download Invoice
                 </a>
