@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\OrderRiskService;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -23,6 +24,43 @@ class AdminOrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    public function update(Request $request, Order $order)
+    {
+        $data = $request->validate([
+            'customer_name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'postal_code' => ['nullable', 'string', 'max:50'],
+            'country' => ['nullable', 'string', 'max:100'],
+            'notes' => ['nullable', 'string'],
+            'order_status' => ['nullable', 'string', 'max:50'],
+            'payment_status' => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $updates = collect($data)
+            ->filter(fn ($v) => $v !== null)
+            ->all();
+
+        if (! empty($updates)) {
+            $order->update($updates);
+        }
+
+        (new OrderRiskService())->apply($order);
+
+        return back()->with('success', 'Order updated successfully.');
+    }
+
+    public function destroy(Order $order)
+    {
+        $order->delete();
+
+        return redirect()
+            ->route('admin.orders.index')
+            ->with('success', 'Order deleted successfully.');
+    }
+
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
@@ -35,6 +73,15 @@ class AdminOrderController extends Controller
             'payment_status' => $request->payment_status,
         ]);
 
+        (new OrderRiskService())->apply($order);
+
         return back()->with('success', 'Order status updated successfully.');
+    }
+
+    public function verify(Order $order)
+    {
+        (new OrderRiskService())->apply($order);
+
+        return back()->with('success', 'Order verification updated successfully.');
     }
 }

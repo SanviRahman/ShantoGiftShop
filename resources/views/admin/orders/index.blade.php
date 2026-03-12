@@ -48,20 +48,32 @@
                         </span>
                     </td>
                     <td style="padding: 12px 20px;">
-                         {{-- Fake Order Detection Logic --}}
-                         @if($order->payment_method == 'cash_on_delivery' && $order->total > 5000 && $order->user_id == null)
-                            <span style="color: #dc3545; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-exclamation-triangle"></i> High Risk</span>
-                         @elseif($order->payment_method == 'cash_on_delivery' && $order->total > 2000)
-                            <span style="color: #ffc107; font-weight: bold; font-size: 0.85rem;">Check</span>
-                         @else
-                            <span style="color: #28a745; font-size: 0.85rem;">Normal</span>
-                         @endif
+                        @if(($order->risk_level ?? 'low') === 'high')
+                            <span style="color: #dc3545; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-exclamation-triangle"></i> High</span>
+                        @elseif(($order->risk_level ?? 'low') === 'medium')
+                            <span style="color: #ffc107; font-weight: bold; font-size: 0.85rem;">Medium</span>
+                        @else
+                            <span style="color: #28a745; font-size: 0.85rem;">Low</span>
+                        @endif
+                        <div style="font-size: 0.8rem; color:#888; margin-top: 2px;">Score: {{ (int) ($order->risk_score ?? 0) }}</div>
                     </td>
                     <td style="padding: 12px 20px;">
                         <a href="{{ route('orders.show', ['order' => $order, 'token' => $order->public_token]) }}" target="_blank" style="color: #1aa6d9; margin-right: 10px;">
                             <i class="fas fa-eye"></i>
                         </a>
-                        {{-- Add status change modal/dropdown here --}}
+                        <a href="{{ route('admin.orders.show', $order) }}" style="color: #6f42c1; margin-right: 10px;">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="{{ route('orders.show', ['order' => $order, 'download' => 1]) }}" style="color: #28a745; margin-right: 10px;">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Delete this order?');" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach

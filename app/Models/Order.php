@@ -27,6 +27,10 @@ class Order extends Model
         'payment_method',
         'payment_status',
         'order_status',
+        'risk_score',
+        'risk_level',
+        'is_suspicious',
+        'verification_notes',
         'notes',
     ];
 
@@ -37,6 +41,8 @@ class Order extends Model
             'discount_amount' => 'decimal:2',
             'shipping_amount' => 'decimal:2',
             'total' => 'decimal:2',
+            'risk_score' => 'integer',
+            'is_suspicious' => 'boolean',
         ];
     }
 

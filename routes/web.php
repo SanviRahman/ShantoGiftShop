@@ -83,8 +83,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('users', AdminUserController::class)->only(['index', 'show', 'destroy']);
     
     // Orders Management
-    Route::resource('orders', AdminOrderController::class)->only(['index', 'show']);
+    Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update', 'destroy']);
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::post('/orders/{order}/verify', [AdminOrderController::class, 'verify'])->name('orders.verify');
 
     // Categories Management
     Route::resource('categories', AdminCategoryController::class);

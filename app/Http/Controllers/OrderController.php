@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Services\OrderRiskService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -136,6 +137,8 @@ class OrderController extends Controller
                 'order_status' => $data['payment_method'] === 'cash_on_delivery' ? 'pending' : 'pending_payment',
                 'notes' => $notesParts ? implode("\n", $notesParts) : null,
             ]);
+
+            (new OrderRiskService())->apply($order);
 
             foreach ($itemsToOrder as $item) {
                 $order->items()->create([
@@ -332,6 +335,10 @@ class OrderController extends Controller
     private function authorizeInvoiceAccess(Request $request, Order $order): void
     {
         if (auth()->check()) {
+            if (auth()->user()->usertype === 'admin') {
+                return;
+            }
+
             abort_unless($order->user_id === auth()->id(), 403);
 
             return;

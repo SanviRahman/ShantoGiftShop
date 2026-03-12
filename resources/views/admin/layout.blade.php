@@ -27,6 +27,15 @@
             display: flex;
         }
 
+        body[data-theme="dark"] {
+            filter: invert(1) hue-rotate(180deg);
+        }
+
+        body[data-theme="dark"] img,
+        body[data-theme="dark"] canvas {
+            filter: invert(1) hue-rotate(180deg);
+        }
+
         /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
@@ -135,6 +144,26 @@
             border-color: var(--primary-color);
         }
 
+        .theme-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-btn:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
         /* Content */
         .content {
             padding: 20px;
@@ -204,6 +233,9 @@
             <div class="header-title">@yield('header', 'Dashboard')</div>
             <div class="user-menu">
                 <span>{{ Auth::user()->name }}</span>
+                <button type="button" class="theme-btn" id="themeToggle">
+                    <i class="fas fa-moon"></i> Theme
+                </button>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="logout-btn">
@@ -231,6 +263,39 @@
         </main>
     </div>
 
+    <script>
+        (function () {
+            const STORAGE_KEY = 'admin_theme';
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    body.setAttribute('data-theme', 'dark');
+                    if (btn) {
+                        btn.innerHTML = '<i class="fas fa-sun"></i> Light';
+                    }
+                } else {
+                    body.removeAttribute('data-theme');
+                    if (btn) {
+                        btn.innerHTML = '<i class="fas fa-moon"></i> Dark';
+                    }
+                }
+            };
+
+            const saved = localStorage.getItem(STORAGE_KEY);
+            applyTheme(saved === 'dark' ? 'dark' : 'light');
+
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const current = body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                    const next = current === 'dark' ? 'light' : 'dark';
+                    localStorage.setItem(STORAGE_KEY, next);
+                    applyTheme(next);
+                });
+            }
+        })();
+    </script>
     @stack('scripts')
 </body>
 </html>
