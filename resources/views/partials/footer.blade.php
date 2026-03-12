@@ -79,11 +79,7 @@
 
     <div class="footer-bottom">
         <div class="container">
-            <p>&copy; Copyright Shanto<span style="color: #e03939;">Gift</span>Shop
-                <script>
-                document.write(new Date().getFullYear());
-                </script>
-                All rights reserved | This website developed by
+            <p>&copy; Copyright 2026.All rights reserved.This website developed by
                 <i class="icon-heart color-danger" aria-hidden="true">
                 </i>
                 <a href="https://sfashanto.netlify.app/" target="_blank">
