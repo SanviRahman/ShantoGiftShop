@@ -68,6 +68,26 @@
                 </div>
 
                 <div>
+                    <label for="rating" style="display: block; margin-bottom: 8px; font-weight: 500;">Rating (0 - 5)</label>
+                    <input type="number" name="rating" id="rating" step="0.1" min="0" max="5"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                        value="{{ old('rating', 0) }}">
+                    @error('rating')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="review_count" style="display: block; margin-bottom: 8px; font-weight: 500;">Review Count</label>
+                    <input type="number" name="review_count" id="review_count" min="0"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                        value="{{ old('review_count', 0) }}">
+                    @error('review_count')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
                     <label for="stock_qty" style="display: block; margin-bottom: 8px; font-weight: 500;">Stock Quantity</label>
                     <input type="number" name="stock_qty" id="stock_qty" min="0" required
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"

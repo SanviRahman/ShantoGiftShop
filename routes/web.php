@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminReportController;
+use App\Http\Controllers\Admin\AdminSubscribeController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
@@ -95,6 +96,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Coupon Management
     Route::resource('coupons', AdminCouponController::class);
+
+    // Subscribers Management
+    Route::resource('subscribes', AdminSubscribeController::class)->only(['index', 'edit', 'update', 'destroy']);
 
     // Report Generation
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');

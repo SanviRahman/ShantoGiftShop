@@ -311,6 +311,12 @@
             </li>
             <pre></pre>
             <li>
+                <a href="{{ route('admin.subscribes.index') }}" class="{{ request()->routeIs('admin.subscribes.*') ? 'active' : '' }}">
+                    <i class="fas fa-envelope"></i> Subscribers
+                </a>
+            </li>
+            <pre></pre>
+            <li>
                 <a href="{{ route('admin.reports.index') }}" class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                     <i class="fas fa-chart-line"></i> Reports
                 </a>
