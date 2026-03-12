@@ -13,11 +13,25 @@ class AdminProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('category')
-            ->latest()
-            ->paginate(15);
+        $q = trim((string) request()->query('q', ''));
 
-        return view('admin.products.index', compact('products'));
+        $products = Product::with('category')
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($q1) use ($q) {
+                    $q1->where('title', 'like', '%'.$q.'%')
+                        ->orWhere('sku', 'like', '%'.$q.'%')
+                        ->orWhere('slug', 'like', '%'.$q.'%')
+                        ->orWhereHas('category', function ($q2) use ($q) {
+                            $q2->where('name', 'like', '%'.$q.'%')
+                                ->orWhere('slug', 'like', '%'.$q.'%');
+                        });
+                });
+            })
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.products.index', compact('products', 'q'));
     }
 
     public function create()
@@ -37,11 +51,14 @@ class AdminProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku',
             'short_description' => 'nullable|string',
             'featured_image' => 'nullable|image|max:2048', // 2MB
+            'gallery_images' => 'nullable|array|max:4',
+            'gallery_images.*' => 'image|max:2048',
+            'sizes' => 'nullable|string|max:100',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
         ]);
 
-        $data = $request->except('featured_image');
+        $data = $request->except('featured_image', 'gallery_images', 'sizes');
         $data['slug'] = Str::slug($request->title) . '-' . Str::random(6);
         $data['is_active'] = $request->boolean('is_active', true);
         $data['is_featured'] = $request->boolean('is_featured');
@@ -53,7 +70,57 @@ class AdminProductController extends Controller
             $data['featured_image'] = $path;
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        $category = Category::with('parent')->find($product->category_id);
+        $isClothsCategory =
+            in_array((string) $category?->slug, ['cloths', 'mens-fashion', 'womens-fashion'], true) ||
+            in_array((string) $category?->parent?->slug, ['cloths', 'mens-fashion', 'womens-fashion'], true);
+
+        $sizesInput = trim((string) $request->input('sizes', ''));
+        $sizes = [];
+        if ($sizesInput !== '') {
+            $sizes = preg_split('/[,|]+/', strtoupper($sizesInput)) ?: [];
+            $sizes = array_values(array_unique(array_filter(array_map('trim', $sizes))));
+        } elseif ($isClothsCategory) {
+            $sizes = ['XS', 'S', 'M', 'L', 'XL'];
+        }
+
+        $gallery = [];
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images', []) as $file) {
+                if (! $file) {
+                    continue;
+                }
+                $gPath = $file->store('products/gallery', 'public');
+                $gallery[] = asset('storage/'.$gPath);
+            }
+        }
+
+        if (! $gallery) {
+            $gallery = array_fill(0, 4, $product->image_url);
+        }
+
+        $gallery = array_values(array_filter($gallery));
+        $gallery = array_slice($gallery, 0, 4);
+        if (count($gallery) < 4) {
+            $pad = $gallery[0] ?? $product->image_url;
+            while (count($gallery) < 4) {
+                $gallery[] = $pad;
+            }
+        }
+
+        $product->detail()->updateOrCreate([], [
+            'description' => $product->short_description ?: ('High quality '.$product->title.' for your daily use.'),
+            'colors' => $isClothsCategory ? ['#A0BCE0', '#E07575', '#000000'] : [],
+            'sizes' => $sizes,
+            'gallery' => $gallery,
+            'specifications' => [
+                'brand' => 'ShantoGiftShop',
+                'origin' => 'Bangladesh',
+                'warranty' => '6 Months',
+            ],
+        ]);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully.');
@@ -61,6 +128,7 @@ class AdminProductController extends Controller
 
     public function edit(Product $product)
     {
+        $product->load('detail');
         $categories = Category::where('is_active', true)->get();
         return view('admin.products.edit', compact('product', 'categories'));
     }
@@ -76,11 +144,14 @@ class AdminProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
             'short_description' => 'nullable|string',
             'featured_image' => 'nullable|image|max:2048',
+            'gallery_images' => 'nullable|array|max:4',
+            'gallery_images.*' => 'image|max:2048',
+            'sizes' => 'nullable|string|max:100',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
         ]);
 
-        $data = $request->except('featured_image');
+        $data = $request->except('featured_image', 'gallery_images', 'sizes');
         // Keep existing slug or update? Usually better to keep unless explicitly changed.
         // If title changed significantly, maybe update slug, but for SEO stability, keep it.
         // $data['slug'] = Str::slug($request->title); 
@@ -101,6 +172,64 @@ class AdminProductController extends Controller
         }
 
         $product->update($data);
+
+        $category = Category::with('parent')->find($product->category_id);
+        $isClothsCategory =
+            in_array((string) $category?->slug, ['cloths', 'mens-fashion', 'womens-fashion'], true) ||
+            in_array((string) $category?->parent?->slug, ['cloths', 'mens-fashion', 'womens-fashion'], true);
+
+        $sizesInput = trim((string) $request->input('sizes', ''));
+        $sizes = null;
+        if ($sizesInput !== '') {
+            $parsed = preg_split('/[,|]+/', strtoupper($sizesInput)) ?: [];
+            $parsed = array_values(array_unique(array_filter(array_map('trim', $parsed))));
+            $sizes = $parsed;
+        }
+
+        $gallery = null;
+        if ($request->hasFile('gallery_images')) {
+            $gallery = [];
+            foreach ($request->file('gallery_images', []) as $file) {
+                if (! $file) {
+                    continue;
+                }
+                $gPath = $file->store('products/gallery', 'public');
+                $gallery[] = asset('storage/'.$gPath);
+            }
+        }
+
+        $existingGallery = (array) data_get($product->detail, 'gallery', []);
+        if ($gallery === null) {
+            $gallery = $existingGallery ?: array_fill(0, 4, $product->image_url);
+        }
+
+        $gallery = array_values(array_filter($gallery));
+        $gallery = array_slice($gallery, 0, 4);
+        if (count($gallery) < 4) {
+            $pad = $gallery[0] ?? $product->image_url;
+            while (count($gallery) < 4) {
+                $gallery[] = $pad;
+            }
+        }
+
+        $detailPayload = [
+            'description' => $product->short_description ?: ('High quality '.$product->title.' for your daily use.'),
+            'colors' => $isClothsCategory ? ['#A0BCE0', '#E07575', '#000000'] : [],
+            'gallery' => $gallery,
+            'specifications' => [
+                'brand' => 'ShantoGiftShop',
+                'origin' => 'Bangladesh',
+                'warranty' => '6 Months',
+            ],
+        ];
+
+        if ($sizes !== null) {
+            $detailPayload['sizes'] = $sizes;
+        } elseif ($isClothsCategory && empty((array) data_get($product->detail, 'sizes', []))) {
+            $detailPayload['sizes'] = ['XS', 'S', 'M', 'L', 'XL'];
+        }
+
+        $product->detail()->updateOrCreate([], $detailPayload);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated successfully.');

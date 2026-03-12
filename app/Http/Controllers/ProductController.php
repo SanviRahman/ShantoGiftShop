@@ -63,15 +63,40 @@ class ProductController extends Controller
     {
         $product->load(['category.parent', 'detail']);
 
+        $isClothsCategory =
+            in_array($product->category->slug, ['cloths', 'mens-fashion', 'womens-fashion'], true) ||
+            in_array((string) optional($product->category->parent)->slug, ['cloths', 'mens-fashion', 'womens-fashion'], true);
+
+        if (! $product->detail) {
+            $gallery = array_slice(array_values(array_filter([
+                $product->image_url,
+                $product->image_url,
+                $product->image_url,
+                $product->image_url,
+            ])), 0, 4);
+
+            $sizes = $isClothsCategory ? ['XS', 'S', 'M', 'L', 'XL'] : [];
+
+            $product->detail()->create([
+                'description' => $product->short_description ?: ('High quality '.$product->title.' for your daily use.'),
+                'colors' => $isClothsCategory ? ['#A0BCE0', '#E07575', '#000000'] : [],
+                'sizes' => $sizes,
+                'gallery' => $gallery,
+                'specifications' => [
+                    'brand' => 'ShantoGiftShop',
+                    'origin' => 'Bangladesh',
+                    'warranty' => '6 Months',
+                ],
+            ]);
+
+            $product->load('detail');
+        }
+
         $relatedProducts = Product::where('is_active', true)
             ->where('category_id', $product->category_id)
             ->whereKeyNot($product->id)
             ->take(4)
             ->get();
-
-        $isClothsCategory =
-            $product->category->slug === 'cloths' ||
-            optional($product->category->parent)->slug === 'cloths';
 
         return view('product-details', compact('product', 'relatedProducts', 'isClothsCategory'));
     }

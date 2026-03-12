@@ -9,13 +9,27 @@ use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('user')
-            ->latest()
-            ->paginate(20);
+        $q = trim((string) $request->query('q', ''));
 
-        return view('admin.orders.index', compact('orders'));
+        $orders = Order::with('user')
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($q1) use ($q) {
+                    $q1->where('order_number', 'like', '%'.$q.'%')
+                        ->orWhere('customer_name', 'like', '%'.$q.'%')
+                        ->orWhere('email', 'like', '%'.$q.'%')
+                        ->orWhere('phone', 'like', '%'.$q.'%')
+                        ->orWhere('order_status', 'like', '%'.$q.'%')
+                        ->orWhere('payment_status', 'like', '%'.$q.'%')
+                        ->orWhere('payment_method', 'like', '%'.$q.'%');
+                });
+            })
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.orders.index', compact('orders', 'q'));
     }
 
     public function show(Order $order)

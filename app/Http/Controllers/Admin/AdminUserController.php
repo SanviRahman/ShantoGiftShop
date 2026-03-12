@@ -8,14 +8,24 @@ use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $q = trim((string) $request->query('q', ''));
+
         $users = User::withCount('orders')
             ->where('usertype', '!=', 'admin')
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($q1) use ($q) {
+                    $q1->where('name', 'like', '%'.$q.'%')
+                        ->orWhere('email', 'like', '%'.$q.'%')
+                        ->orWhere('phone', 'like', '%'.$q.'%');
+                });
+            })
             ->latest()
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'q'));
     }
 
     public function show(User $user)

@@ -95,10 +95,48 @@
                     @enderror
                 </div>
 
+                <div>
+                    <label for="gallery_images" style="display: block; margin-bottom: 8px; font-weight: 500;">Gallery Images (Up to 4)</label>
+                    <input type="file" name="gallery_images[]" id="gallery_images" accept="image/*" multiple
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    @error('gallery_images')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                    @error('gallery_images.*')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+
+                    @php
+                        $gallery = (array) data_get($product, 'detail.gallery', []);
+                        $gallery = array_values(array_filter($gallery));
+                        $gallery = array_slice($gallery, 0, 4);
+                    @endphp
+                    @if(count($gallery))
+                        <div style="margin-top: 10px; display:flex; gap: 8px; flex-wrap: wrap;">
+                            @foreach($gallery as $img)
+                                <img src="{{ $img }}" alt="Gallery {{ $loop->iteration }}" style="width: 64px; height: 64px; object-fit: cover; border-radius: 6px; border: 1px solid #eee;">
+                            @endforeach
+                        </div>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 6px;">Uploading new images will replace current gallery.</div>
+                    @else
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">If empty, featured image will be used as thumbnails.</div>
+                    @endif
+                </div>
+
                 <div style="grid-column: span 2;">
                     <label for="short_description" style="display: block; margin-bottom: 8px; font-weight: 500;">Short Description</label>
                     <textarea name="short_description" id="short_description" rows="3"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">{{ old('short_description', $product->short_description) }}</textarea>
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label for="sizes" style="display: block; margin-bottom: 8px; font-weight: 500;">Sizes (Optional)</label>
+                    <input type="text" name="sizes" id="sizes" placeholder="XS, S, M, L, XL"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                        value="{{ old('sizes', is_array(data_get($product, 'detail.sizes')) ? implode(', ', data_get($product, 'detail.sizes', [])) : '') }}">
+                    @error('sizes')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div style="grid-column: span 2; display: flex; gap: 20px; flex-wrap: wrap;">

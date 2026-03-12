@@ -86,10 +86,33 @@
                     @enderror
                 </div>
 
+                <div>
+                    <label for="gallery_images" style="display: block; margin-bottom: 8px; font-weight: 500;">Gallery Images (Up to 4)</label>
+                    <input type="file" name="gallery_images[]" id="gallery_images" accept="image/*" multiple
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    @error('gallery_images')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                    @error('gallery_images.*')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">If empty, featured image will be used as thumbnails.</div>
+                </div>
+
                 <div style="grid-column: span 2;">
                     <label for="short_description" style="display: block; margin-bottom: 8px; font-weight: 500;">Short Description</label>
                     <textarea name="short_description" id="short_description" rows="3"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">{{ old('short_description') }}</textarea>
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label for="sizes" style="display: block; margin-bottom: 8px; font-weight: 500;">Sizes (Optional)</label>
+                    <input type="text" name="sizes" id="sizes" placeholder="XS, S, M, L, XL"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                        value="{{ old('sizes') }}">
+                    @error('sizes')
+                        <div style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div style="grid-column: span 2; display: flex; gap: 20px; flex-wrap: wrap;">

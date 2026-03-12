@@ -8,10 +8,22 @@ use Illuminate\Http\Request;
 
 class AdminCouponController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $coupons = Coupon::latest()->paginate(15);
-        return view('admin.coupons.index', compact('coupons'));
+        $q = trim((string) $request->query('q', ''));
+
+        $coupons = Coupon::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($q1) use ($q) {
+                    $q1->where('code', 'like', '%'.$q.'%')
+                        ->orWhere('type', 'like', '%'.$q.'%');
+                });
+            })
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.coupons.index', compact('coupons', 'q'));
     }
 
     public function create()

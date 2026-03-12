@@ -7,6 +7,18 @@
 <div class="card admin-card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
     <div class="admin-card-head" style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
         <h3 style="margin: 0;">All Coupons</h3>
+        <form method="GET" action="{{ route('admin.coupons.index') }}" style="display:flex; gap: 8px; align-items:center; flex-wrap: wrap; margin-left: auto;">
+            <input type="text" name="q" value="{{ $q ?? '' }}" placeholder="Search coupons..."
+                style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; min-width: 220px;">
+            <button type="submit" style="background: #1aa6d9; color:#fff; border: 1px solid #1aa6d9; padding: 8px 12px; border-radius: 6px; cursor:pointer;">
+                <i class="fas fa-search"></i>
+            </button>
+            @if(!empty($q))
+                <a href="{{ route('admin.coupons.index') }}" style="background: #f8f9fa; color:#333; border: 1px solid #ddd; padding: 8px 12px; border-radius: 6px; text-decoration:none;">
+                    Clear
+                </a>
+            @endif
+        </form>
         <a href="{{ route('admin.coupons.create') }}" class="btn-primary" style="background: var(--primary-color); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 4px; font-size: 0.9rem;">
             <i class="fas fa-plus"></i> Add New
         </a>
@@ -73,6 +85,22 @@
     @media (max-width: 768px) {
         .admin-card > div[style*="padding: 20px"] {
             padding: 14px !important;
+        }
+
+        .admin-card-head form {
+            width: 100%;
+            margin-left: 0 !important;
+        }
+
+        .admin-card-head form input {
+            width: 100%;
+            min-width: 0 !important;
+        }
+
+        .admin-card-head form button,
+        .admin-card-head form a {
+            width: 100%;
+            text-align: center;
         }
 
         .admin-card-head a {

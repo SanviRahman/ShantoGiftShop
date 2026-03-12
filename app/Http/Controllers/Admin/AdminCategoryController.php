@@ -10,14 +10,27 @@ use Illuminate\Validation\Rule;
 
 class AdminCategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $q = trim((string) $request->query('q', ''));
+
         $categories = Category::with('parent')
             ->withCount('products')
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($q1) use ($q) {
+                    $q1->where('name', 'like', '%'.$q.'%')
+                        ->orWhere('slug', 'like', '%'.$q.'%')
+                        ->orWhereHas('parent', function ($q2) use ($q) {
+                            $q2->where('name', 'like', '%'.$q.'%')
+                                ->orWhere('slug', 'like', '%'.$q.'%');
+                        });
+                });
+            })
             ->latest()
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index', compact('categories', 'q'));
     }
 
     public function create()

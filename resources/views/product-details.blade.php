@@ -6,6 +6,14 @@
 @php
     $gallery = data_get($product, 'detail.gallery', []);
     $gallery = is_array($gallery) && count($gallery) ? $gallery : [$product->image_url];
+    $gallery = array_values(array_filter($gallery));
+    $gallery = array_slice($gallery, 0, 4);
+    if (count($gallery) < 4) {
+        $pad = $gallery[0] ?? $product->image_url;
+        while (count($gallery) < 4) {
+            $gallery[] = $pad;
+        }
+    }
 
     $colors = data_get($product, 'detail.colors', []);
     $colors = is_array($colors) ? $colors : [];
@@ -37,13 +45,13 @@
         <div class="gallery-thumbnails">
             @foreach($gallery as $image)
                 <div class="thumbnail {{ $loop->first ? 'active' : '' }}">
-                    <img src="{{ $image }}" alt="Thumb {{ $loop->iteration }}">
+                    <img src="{{ $image }}" alt="{{ $product->title }} thumbnail {{ $loop->iteration }}" data-image="{{ $image }}">
                 </div>
             @endforeach
         </div>
 
         <div class="main-image">
-            <img src="{{ $mainImage }}" alt="{{ $product->title }}">
+            <img src="{{ $mainImage }}" alt="{{ $product->title }}" id="mainProductImage">
         </div>
     </div>
 
@@ -169,7 +177,7 @@
     </div>
 </section>
 
-<section class="container related-items-section">
+<section class="container related-items-section" style="margin-top: 80px;">
     <div class="section-header-simple">
         <div class="red-block-small"></div>
         <h3>Related Item</h3>
@@ -1071,5 +1079,25 @@ img {
     }
 }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+    (function () {
+        const mainImage = document.getElementById('mainProductImage');
+        if (!mainImage) return;
+
+        const thumbnails = document.querySelectorAll('.gallery-thumbnails .thumbnail');
+        thumbnails.forEach((thumb) => {
+            thumb.addEventListener('click', () => {
+                thumbnails.forEach((t) => t.classList.remove('active'));
+                thumb.classList.add('active');
+                const img = thumb.querySelector('img');
+                const src = img?.getAttribute('data-image') || img?.getAttribute('src');
+                if (src) mainImage.setAttribute('src', src);
+            });
+        });
+    })();
+</script>
 @endpush
 @endsection

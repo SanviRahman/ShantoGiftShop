@@ -279,31 +279,37 @@
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
+            <pre></pre>
             <li>
                 <a href="{{ route('admin.products.index') }}" class="{{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i> Products
                 </a>
             </li>
+            <pre></pre>
             <li>
                 <a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                     <i class="fas fa-shopping-cart"></i> Orders
                 </a>
             </li>
+            <pre></pre>
             <li>
                 <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i> Users
                 </a>
             </li>
+            <pre></pre>
              <li>
                 <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <i class="fas fa-list"></i> Categories
                 </a>
             </li>
+            <pre></pre>
             <li>
                 <a href="{{ route('admin.coupons.index') }}" class="{{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i> Coupons
                 </a>
             </li>
+            <pre></pre>
             <li>
                 <a href="{{ route('admin.reports.index') }}" class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                     <i class="fas fa-chart-line"></i> Reports
