@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminController;
@@ -48,9 +47,11 @@ Route::get('/login', [AuthController::class, 'createLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'storeLogin'])->name('login.store');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Socialite Routes
 Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
+// Password Reset Routes
 Route::get('/forgot-password', [AuthController::class, 'createForgotPassword'])
     ->middleware('guest')
     ->name('password.request');
