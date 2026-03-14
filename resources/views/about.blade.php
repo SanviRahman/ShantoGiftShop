@@ -89,12 +89,13 @@
                     <div class="team-image">
                         <img src="{{ asset('images/sanvi-01.jpg') }}" alt="Tom Cruise">
                     </div>
-                    <h3 class="team-name">Tom Cruise</h3>
+                    <h3 class="team-name">SFA</h3>
                     <p class="team-role">Founder & Chairman</p>
                     <div class="team-socials">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.facebook.com/SFAShanto"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/message/ABMBRACOIP5WL1"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/sheikh-forid-ahmed-shanto-03919424a/"><i
+                            class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
 
@@ -103,12 +104,13 @@
                     <div class="team-image">
                         <img src="{{ asset('images/sanvi-02.jpg') }}" alt="Emma Watson">
                     </div>
-                    <h3 class="team-name">Emma Watson</h3>
+                    <h3 class="team-name">SFA Shanto</h3>
                     <p class="team-role">Managing Director</p>
                     <div class="team-socials">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.facebook.com/SFAShanto"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/message/ABMBRACOIP5WL1"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/sheikh-forid-ahmed-shanto-03919424a/"><i
+                            class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
 
@@ -117,12 +119,13 @@
                     <div class="team-image">
                         <img src="{{ asset('images/sanvi-01.jpg') }}" alt="Will Smith">
                     </div>
-                    <h3 class="team-name">Will Smith</h3>
+                    <h3 class="team-name">SFA Shanto</h3>
                     <p class="team-role">Product Designer</p>
                     <div class="team-socials">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.facebook.com/SFAShanto"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/message/ABMBRACOIP5WL1"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/sheikh-forid-ahmed-shanto-03919424a/"><i
+                            class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
 
@@ -131,12 +134,13 @@
                     <div class="team-image">
                         <img src="{{ asset('images/sanvi-02.jpg') }}" alt="Tom Cruise">
                     </div>
-                    <h3 class="team-name">Tom Cruise</h3>
+                    <h3 class="team-name">SFA Shanto</h3>
                     <p class="team-role">Founder & Chairman</p>
-                    <div class="team-socials">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                     <div class="team-socials">
+                        <a href="https://www.facebook.com/SFAShanto"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/message/ABMBRACOIP5WL1"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/sheikh-forid-ahmed-shanto-03919424a/"><i
+                            class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
 
@@ -145,26 +149,13 @@
                     <div class="team-image">
                         <img src="{{ asset('images/sanvi-01.jpg') }}" alt="Emma Watson">
                     </div>
-                    <h3 class="team-name">Emma Watson</h3>
+                    <h3 class="team-name">SFA</h3>
                     <p class="team-role">Managing Director</p>
-                    <div class="team-socials">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-
-                <!-- Team Member 6 -->
-                <div class="team-card">
-                    <div class="team-image">
-                        <img src="{{ asset('images/sanvi-02.jpg') }}" alt="Tom Cruise">
-                    </div>
-                    <h3 class="team-name">Tom Cruise</h3>
-                    <p class="team-role">Founder & Chairman</p>
-                    <div class="team-socials">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                     <div class="team-socials">
+                        <a href="https://www.facebook.com/SFAShanto"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/message/ABMBRACOIP5WL1"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/sheikh-forid-ahmed-shanto-03919424a/"><i
+                            class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
