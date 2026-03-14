@@ -65,7 +65,14 @@
                 @endphp
                 <div class="invoice-table-row">
                     <div class="td sl">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</div>
-                    <div class="td title">{{ $item->product_title }}</div>
+                    <div class="td title">
+                        <div>
+                            <div>{{ $item->product_title }}</div>
+                            @if(!empty($item->size))
+                                <div style="font-size: 12px; color: rgba(0,0,0,0.65); margin-top: 4px;">Size: {{ $item->size }}</div>
+                            @endif
+                        </div>
+                    </div>
                     <div class="td price">${{ number_format($linePrice, 0) }}</div>
                     <div class="td paid">${{ number_format($linePaid, 0) }}</div>
                     <div class="td due">${{ number_format($lineDue, 0) }}</div>

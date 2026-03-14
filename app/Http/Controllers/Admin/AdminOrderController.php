@@ -13,7 +13,7 @@ class AdminOrderController extends Controller
     {
         $q = trim((string) $request->query('q', ''));
 
-        $orders = Order::with('user')
+        $orders = Order::with(['user', 'items'])
             ->when($q !== '', function ($query) use ($q) {
                 $query->where(function ($q1) use ($q) {
                     $q1->where('order_number', 'like', '%'.$q.'%')

@@ -33,18 +33,39 @@ class CartController extends Controller
         $data = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
             'quantity' => ['nullable', 'integer', 'min:1'],
+            'selected_size' => ['nullable', 'string', 'max:20'],
             'buy_now' => ['nullable'],
         ]);
 
         $product = Product::where('is_active', true)->findOrFail($data['product_id']);
+        $product->load('detail');
         $cart = $this->resolveCart();
         $quantity = $data['quantity'] ?? 1;
+        $selectedSize = isset($data['selected_size']) ? strtoupper(trim((string) $data['selected_size'])) : null;
+
+        $allowedSizes = (array) data_get($product->detail, 'sizes', []);
+        $allowedSizes = array_values(array_filter(array_map('strval', $allowedSizes)));
+
+        if (! empty($allowedSizes)) {
+            if (! $selectedSize) {
+                $selectedSize = strtoupper((string) ($allowedSizes[0] ?? ''));
+            }
+
+            if (! in_array($selectedSize, $allowedSizes, true)) {
+                return back()->with('error', 'Please select a valid size.');
+            }
+        } else {
+            $selectedSize = null;
+        }
 
         if ($product->stock_qty < $quantity) {
             return back()->with('error', 'Requested quantity is not available in stock.');
         }
 
-        $item = $cart->items()->where('product_id', $product->id)->first();
+        $item = $cart->items()
+            ->where('product_id', $product->id)
+            ->where('size', $selectedSize)
+            ->first();
 
         if ($item) {
             $newQty = $item->quantity + $quantity;
@@ -59,6 +80,7 @@ class CartController extends Controller
         } else {
             $item = $cart->items()->create([
                 'product_id' => $product->id,
+                'size' => $selectedSize,
                 'quantity' => $quantity,
                 'unit_price' => $product->price,
                 'subtotal' => $product->price * $quantity,
@@ -280,7 +302,10 @@ class CartController extends Controller
 
             if ($guestCart && $userCart && $guestCart->id !== $userCart->id) {
                 foreach ($guestCart->items as $guestItem) {
-                    $existing = $userCart->items()->where('product_id', $guestItem->product_id)->first();
+                    $existing = $userCart->items()
+                        ->where('product_id', $guestItem->product_id)
+                        ->where('size', $guestItem->size)
+                        ->first();
 
                     if ($existing) {
                         $existing->quantity += $guestItem->quantity;

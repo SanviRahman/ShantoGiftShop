@@ -144,6 +144,7 @@ class OrderController extends Controller
                 $order->items()->create([
                     'product_id' => $item->product_id,
                     'product_title' => $item->product->title,
+                    'size' => $item->size,
                     'unit_price' => $item->unit_price,
                     'quantity' => $item->quantity,
                     'subtotal' => $item->subtotal,
@@ -226,7 +227,10 @@ class OrderController extends Controller
 
             if ($guestCart && $userCart && $guestCart->id !== $userCart->id) {
                 foreach ($guestCart->items as $guestItem) {
-                    $existing = $userCart->items()->where('product_id', $guestItem->product_id)->first();
+                    $existing = $userCart->items()
+                        ->where('product_id', $guestItem->product_id)
+                        ->where('size', $guestItem->size)
+                        ->first();
 
                     if ($existing) {
                         $existing->quantity += $guestItem->quantity;

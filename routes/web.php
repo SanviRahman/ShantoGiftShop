@@ -16,6 +16,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,9 @@ Route::post('/register', [AuthController::class, 'storeRegister'])->name('regist
 Route::get('/login', [AuthController::class, 'createLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'storeLogin'])->name('login.store');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 Route::get('/forgot-password', [AuthController::class, 'createForgotPassword'])
     ->middleware('guest')

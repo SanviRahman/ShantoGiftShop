@@ -39,6 +39,13 @@
                 <button type="submit" class="btn-primary">Create Account</button>
             </div>
 
+            <div style="margin-top: 18px;">
+                <a href="{{ route('auth.google.redirect') }}" class="btn-outline" style="width: 100%;">
+                    <span style="font-weight: 700;">G</span>
+                    <span>Continue with Google</span>
+                </a>
+            </div>
+
             <div class="auth-footer">
                 <span>Already have account?</span>
                 <a href="{{ route('login') }}">Log in</a>

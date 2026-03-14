@@ -210,6 +210,13 @@ class AuthController extends Controller
     {
         $request->fulfill();
 
+        if (! empty($request->user()->temp_password)) {
+            $request->user()->forceFill([
+                'temp_password' => null,
+                'temp_password_created_at' => null,
+            ])->save();
+        }
+
         if ($request->user()->usertype === 'admin') {
             return redirect()->route('admin.dashboard')->with('success', 'Email verified successfully.');
         }

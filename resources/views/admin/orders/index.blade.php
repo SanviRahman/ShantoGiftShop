@@ -28,6 +28,7 @@
                 <tr style="background: #f8f9fa; text-align: left;">
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Order #</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Customer</th>
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Sizes</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Date</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Amount</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Payment</th>
@@ -43,6 +44,20 @@
                     <td style="padding: 12px 20px;">
                         <div style="font-weight: 500;">{{ $order->customer_name }}</div>
                         <div style="font-size: 0.85rem; color: #888;">{{ $order->phone }}</div>
+                    </td>
+                    <td style="padding: 12px 20px;">
+                        @php
+                            $sizes = collect($order->items ?? [])
+                                ->pluck('size')
+                                ->filter()
+                                ->unique()
+                                ->values();
+                        @endphp
+                        @if($sizes->isNotEmpty())
+                            <span style="font-size: 0.9rem; font-weight: 600;">{{ $sizes->implode(', ') }}</span>
+                        @else
+                            <span style="color:#888;">—</span>
+                        @endif
                     </td>
                     <td style="padding: 12px 20px;">{{ $order->created_at->format('M d, Y') }}</td>
                     <td style="padding: 12px 20px;">${{ number_format($order->total) }}</td>

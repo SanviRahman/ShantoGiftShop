@@ -27,6 +27,13 @@
                 <button type="submit" class="btn-primary" style="padding: 16px 48px;">Log In</button>
                 <a href="{{ route('password.request') }}" class="forgot-password">Forget Password?</a>
             </div>
+
+            <div style="margin-top: 18px;">
+                <a href="{{ route('auth.google.redirect') }}" class="btn-outline" style="width: 100%;">
+                    <span style="font-weight: 700;">G</span>
+                    <span>Continue with Google</span>
+                </a>
+            </div>
         </form>
     </div>
 </div>

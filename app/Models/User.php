@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\VerifyEmailWithTempPassword;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -16,9 +17,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'google_id',
+        'auth_provider',
         'phone',
         'usertype',
         'password',
+        'temp_password',
+        'temp_password_created_at',
     ];
 
     protected $hidden = [
@@ -52,5 +57,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function wishlistItems(): HasMany
     {
         return $this->hasMany(Wishlist::class);
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailWithTempPassword());
     }
 }
