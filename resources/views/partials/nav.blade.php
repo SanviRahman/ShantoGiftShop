@@ -61,6 +61,10 @@
 
             <a href="{{ route('cart.index') }}"><i class="fas fa-shopping-cart"></i></a>
 
+            <button type="button" class="theme-toggle" id="userThemeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+
             <!-- Profile Dropdown -->
             <div class="profile-dropdown">
                 <a href="#" class="profile-toggle"><i class="fas fa-user"></i></a>
@@ -360,6 +364,29 @@ ul {
 
 .icons a:hover {
     color: #DB4444;
+}
+
+.theme-toggle {
+    border: 1px solid rgba(0,0,0,0.12);
+    background: #F5F5F5;
+    color: #000;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle:hover {
+    border-color: rgba(0,0,0,0.2);
+    color: #DB4444;
+}
+
+.theme-toggle i {
+    font-size: 18px;
 }
 
 .wishlist-count {

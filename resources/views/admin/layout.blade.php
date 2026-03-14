@@ -298,12 +298,6 @@
                 </a>
             </li>
             <pre></pre>
-            <li>
-                <a href="{{ route('admin.contacts.index') }}" class="{{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
-                    <i class="fas fa-address-book"></i> Contacts
-                </a>
-            </li>
-            <pre></pre>
              <li>
                 <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <i class="fas fa-list"></i> Categories
