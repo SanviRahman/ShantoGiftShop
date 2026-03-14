@@ -47,6 +47,11 @@ class AdminTest extends TestCase
         ]);
 
         $this->actingAs($admin)
+            ->get('/admin/users')
+            ->assertStatus(200)
+            ->assertViewIs('admin.users.index');
+
+        $this->actingAs($admin)
             ->get('/admin/products')
             ->assertStatus(200)
             ->assertViewIs('admin.products.index');
@@ -55,6 +60,11 @@ class AdminTest extends TestCase
             ->get('/admin/categories')
             ->assertStatus(200)
             ->assertViewIs('admin.categories.index');
+
+        $this->actingAs($admin)
+            ->get('/admin/contacts')
+            ->assertStatus(200)
+            ->assertViewIs('admin.contacts.index');
 
         $this->actingAs($admin)
             ->get('/admin/coupons')
@@ -78,8 +88,10 @@ class AdminTest extends TestCase
             'usertype' => 'user',
         ]);
 
+        $this->actingAs($user)->get('/admin/users')->assertRedirect('/');
         $this->actingAs($user)->get('/admin/products')->assertRedirect('/');
         $this->actingAs($user)->get('/admin/categories')->assertRedirect('/');
+        $this->actingAs($user)->get('/admin/contacts')->assertRedirect('/');
         $this->actingAs($user)->get('/admin/coupons')->assertRedirect('/');
         $this->actingAs($user)->get('/admin/subscribes')->assertRedirect('/');
         $this->actingAs($user)->get('/admin/reports')->assertRedirect('/');

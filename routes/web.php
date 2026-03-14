@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminContactMessageController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Admin\AdminOrderController;
@@ -86,7 +87,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     
     // Users Management
-    Route::resource('users', AdminUserController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('users', AdminUserController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
+
+    // Contact Messages
+    Route::resource('contacts', AdminContactMessageController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
     
     // Orders Management
     Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update', 'destroy']);

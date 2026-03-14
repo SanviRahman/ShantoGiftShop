@@ -65,6 +65,12 @@
                         @endif
                     </td>
                     <td style="padding: 12px 20px;">
+                        <a href="{{ route('admin.users.show', $user) }}" style="color: #1aa6d9; margin-right: 10px; font-size: 1.05rem;">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ route('admin.users.edit', $user) }}" style="color: #ffc107; margin-right: 10px; font-size: 1.05rem;">
+                            <i class="fas fa-edit"></i>
+                        </a>
                         <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display: inline;">
                             @csrf
                             @method('DELETE')

@@ -46,11 +46,11 @@
                 <div class="form-row">
                     <input type="text" name="name" placeholder="Your Name *" required value="{{ old('name') }}">
                     <input type="email" name="email" placeholder="Your Email *" required value="{{ old('email') }}">
-                    <input type="tel" name="phone" placeholder="Your Phone *" value="{{ old('phone') }}">
+                    <input type="tel" name="phone" placeholder="Your Phone *" required value="{{ old('phone') }}">
                 </div>
 
                 <div class="form-row">
-                    <input type="text" name="subject" placeholder="Subject" value="{{ old('subject') }}">
+                    <input type="text" name="subject" placeholder="Subject *" value="{{ old('subject') }}" required>
                 </div>
 
                 <div class="form-row">

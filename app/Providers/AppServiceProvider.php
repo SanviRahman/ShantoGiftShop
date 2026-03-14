@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('partials.nav', function ($view) {
+            $wishlistCount = 0;
+
+            if (Auth::check()) {
+                $wishlistCount = Auth::user()->wishlistItems()->count();
+            }
+
+            $view->with('wishlistCount', $wishlistCount);
+        });
     }
 }

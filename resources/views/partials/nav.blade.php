@@ -49,7 +49,12 @@
 
         <div class="icons">
             @auth
-                <a href="{{ route('wishlist.index') }}"><i class="far fa-heart"></i></a>
+                <a href="{{ route('wishlist.index') }}">
+                    <i class="far fa-heart"></i>
+                    @if(!empty($wishlistCount))
+                        <span class="wishlist-count">{{ $wishlistCount }}</span>
+                    @endif
+                </a>
             @else
                 <a href="{{ route('login') }}"><i class="far fa-heart"></i></a>
             @endauth
@@ -345,6 +350,34 @@ ul {
     gap: 16px;
     font-size: 20px;
     /* Icon size */
+}
+
+.icons a {
+    position: relative;
+    color: #000;
+    display: inline-flex;
+}
+
+.icons a:hover {
+    color: #DB4444;
+}
+
+.wishlist-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background-color: #DB4444;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 
