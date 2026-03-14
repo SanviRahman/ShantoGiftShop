@@ -33,6 +33,7 @@
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Category</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Price</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Stock</th>
+                    <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Discount</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Status</th>
                     <th style="padding: 12px 20px; border-bottom: 2px solid #dee2e6;">Actions</th>
                 </tr>
@@ -62,6 +63,13 @@
                             <span style="color: #dc3545; font-weight: bold;">{{ $product->stock_qty }} (Low)</span>
                         @else
                             {{ $product->stock_qty }}
+                        @endif
+                    </td>
+                    <td style="padding: 12px 20px;">
+                        @if($product->discount_percent)
+                            <span style="color: #28a745; font-size: 0.85rem;">{{ $product->discount_percent }}% Off</span>
+                        @else
+                            <span style="color: #888; font-size: 0.85rem;">No Discount</span>
                         @endif
                     </td>
                     <td style="padding: 12px 20px;">

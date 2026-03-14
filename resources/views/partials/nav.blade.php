@@ -552,7 +552,15 @@ ul {
 
 
 
+
+/* Icons Equal level */
+.icons {
+    display: flex;
+    align-items: center;
+}
+
 /* Responsive Navbar & Header */
+
 /* Tablet & Smaller Desktop (max-width: 1024px) */
 @media screen and (max-width: 1024px) {
     .container {
