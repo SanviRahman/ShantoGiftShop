@@ -717,6 +717,99 @@
     html[data-theme="dark"] .wishlist-link:hover i {
         color: #ffffff !important;
     }
+
+    /* sign up */
+    html[data-theme="dark"] .auth-form-wrapper .btn-outline {
+        background-color: var(--app-surface-2) !important;
+        border: 1px solid var(--app-border) !important;
+        color: var(--app-text) !important;
+    }
+
+    html[data-theme="dark"] .auth-form-wrapper .btn-outline span {
+        color: var(--app-text) !important;
+        opacity: 1 !important;
+    }
+
+    html[data-theme="dark"] .auth-form-wrapper .btn-outline:hover {
+        background-color: #DB4444 !important;
+        border-color: #DB4444 !important;
+        color: #ffffff !important;
+    }
+
+    html[data-theme="dark"] .auth-form-wrapper .btn-outline:hover span {
+        color: #ffffff !important;
+    }
+
+    html[data-theme="dark"] .auth-form-wrapper .auth-footer {
+        color: var(--app-text) !important;
+        opacity: 1 !important;
+    }
+
+    html[data-theme="dark"] .auth-form-wrapper .auth-footer span {
+        color: var(--app-text) !important;
+        opacity: 1 !important;
+    }
+
+    html[data-theme="dark"] .auth-form-wrapper .auth-footer a {
+        color: var(--app-text) !important;
+        border-bottom: 1px solid var(--app-text) !important;
+        opacity: 1 !important;
+    }
+
+    html[data-theme="dark"] .auth-form-wrapper .auth-footer a:hover {
+        color: #DB4444 !important;
+        border-bottom-color: #DB4444 !important;
+    }
+
+    html[data-theme="dark"] .verify-card {
+        background-color: var(--app-surface) !important;
+        color: var(--app-text) !important;
+        box-shadow: none !important;
+        border: 1px solid var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] .verify-title {
+        color: var(--app-text) !important;
+    }
+
+    html[data-theme="dark"] .verify-text,
+    html[data-theme="dark"] .verify-text strong {
+        color: var(--app-text) !important;
+        opacity: 1 !important;
+    }
+
+    html[data-theme="dark"] .btn-primary {
+        background-color: #DB4444 !important;
+        color: #ffffff !important;
+        border: 1px solid #DB4444 !important;
+    }
+
+    html[data-theme="dark"] .btn-primary:hover {
+        background-color: #E07575 !important;
+        border-color: #E07575 !important;
+        color: #ffffff !important;
+    }
+
+    html[data-theme="dark"] .btn-secondary {
+        background-color: var(--app-surface-2) !important;
+        color: var(--app-text) !important;
+        border: 1px solid var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] .btn-secondary:hover {
+        background-color: #DB4444 !important;
+        color: #ffffff !important;
+        border-color: #DB4444 !important;
+    }
+
+    html[data-theme="dark"] .btn-link {
+        color: var(--app-text) !important;
+        opacity: 1 !important;
+    }
+
+    html[data-theme="dark"] .btn-link:hover {
+        color: #DB4444 !important;
+    }
     </style>
 </body>
 
