@@ -679,6 +679,44 @@
         border-top-color: var(--app-border) !important;
         opacity: 1 !important;
     }
+
+
+    html[data-theme="dark"] .buy-now-btn {
+        background-color: var(--app-surface-2) !important;
+        color: var(--app-text) !important;
+        border: 1px solid var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] .buy-now-btn:hover {
+        background-color: #DB4444 !important;
+        color: #ffffff !important;
+        border-color: #DB4444 !important;
+    }
+
+    html[data-theme="dark"] .wishlist-btn,
+    html[data-theme="dark"] .wishlist-link {
+        background-color: var(--app-surface-2) !important;
+        color: var(--app-text) !important;
+        border: 1px solid var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] .wishlist-btn i,
+    html[data-theme="dark"] .wishlist-link i {
+        color: var(--app-text) !important;
+        opacity: 1 !important;
+    }
+
+    html[data-theme="dark"] .wishlist-btn:hover,
+    html[data-theme="dark"] .wishlist-link:hover {
+        background-color: #DB4444 !important;
+        color: #ffffff !important;
+        border-color: #DB4444 !important;
+    }
+
+    html[data-theme="dark"] .wishlist-btn:hover i,
+    html[data-theme="dark"] .wishlist-link:hover i {
+        color: #ffffff !important;
+    }
     </style>
 </body>
 
