@@ -11,7 +11,7 @@
     </div>
 </div>
 
-<section class="payment-section container">
+<section class="payment-section container" style="margin-top: 50px;">
     <div class="payment-card">
         <h2 class="payment-title">Complete Payment</h2>
 
@@ -151,7 +151,6 @@
         </div>
     </div>
 </section>
-@endsection
 
 @push('styles')
 <style>
@@ -161,28 +160,40 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary-red: #DB4444;
+    --text-black: #000000;
+    --bg-gray: #F5F5F5;
+    --border-light: rgba(0, 0, 0, 0.12);
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     color: #000;
     line-height: 1.6;
     background-color: #fff;
-}
-
-:root {
-    --primary-red: #DB4444;
-    --text-black: #000000;
-    --bg-gray: #F5F5F5;
+    overflow-x: hidden;
 }
 
 .container {
+    width: 100%;
     max-width: 1170px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .breadcrumb-container {
-    margin-top: 80px;
-    margin-bottom: 80px;
+    margin-top: 90px !important;
+    margin-bottom: 30px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 14px;
 }
 
 .breadcrumb a {
@@ -192,7 +203,7 @@ body {
 }
 
 .breadcrumb .separator {
-    margin: 0 10px;
+    margin: 0 4px;
     opacity: 0.5;
 }
 
@@ -201,22 +212,24 @@ body {
 }
 
 .payment-section {
-    margin-bottom: 140px;
+    margin-bottom: 100px;
 }
 
 .payment-card {
+    width: 100%;
     max-width: 620px;
     margin: 0 auto;
-    padding: 40px;
+    padding: 36px;
     background: #fff;
     box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 .payment-title {
-    font-size: 28px;
+    font-size: clamp(24px, 3vw, 28px);
     font-weight: 500;
     margin-bottom: 22px;
+    line-height: 1.3;
 }
 
 .payment-meta {
@@ -226,15 +239,20 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 26px;
+    margin-bottom: 22px;
 }
 
 .meta-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-size: 16px;
+}
+
+.meta-row span:last-child {
+    text-align: right;
+    word-break: break-word;
 }
 
 .method-pill {
@@ -244,15 +262,22 @@ body {
     padding: 6px 10px;
     border-radius: 999px;
     background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--border-light);
     font-size: 12px;
     font-weight: 600;
+    max-width: 100%;
+    word-break: break-word;
+    text-align: center;
 }
 
 .payment-actions {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+}
+
+.payment-actions form {
+    width: 100%;
 }
 
 .invoice-link {
@@ -263,6 +288,7 @@ body {
     color: var(--primary-red);
     text-decoration: none;
     font-weight: 500;
+    word-break: break-word;
 }
 
 .gateway-box {
@@ -279,6 +305,7 @@ body {
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 14px;
+    flex-wrap: wrap;
 }
 
 .gateway-badge {
@@ -290,6 +317,7 @@ body {
     font-size: 12px;
     font-weight: 700;
     color: #fff;
+    white-space: nowrap;
 }
 
 .gateway-badge.bkash {
@@ -315,24 +343,27 @@ body {
 .gateway-sub {
     color: rgba(0, 0, 0, 0.6);
     font-weight: 500;
+    font-size: 14px;
 }
 
 .gateway-form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
 }
 
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+    width: 100%;
 }
 
 .form-group label {
@@ -341,6 +372,7 @@ body {
 }
 
 .gateway-form input {
+    width: 100%;
     padding: 12px 14px;
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 8px;
@@ -348,6 +380,11 @@ body {
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
     background: var(--bg-gray);
+}
+
+.gateway-form input:focus {
+    border-color: var(--primary-red);
+    background: #fff;
 }
 
 .btn-full {
@@ -358,6 +395,7 @@ body {
 .gateway-note {
     color: rgba(0, 0, 0, 0.7);
     font-size: 14px;
+    line-height: 1.6;
 }
 
 .btn-primary {
@@ -371,6 +409,7 @@ body {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-align: center;
 }
 
 .btn-primary:hover {
@@ -378,6 +417,7 @@ body {
 }
 
 .btn-secondary {
+    width: 100%;
     padding: 14px 22px;
     border: 1px solid rgba(0, 0, 0, 0.5);
     background-color: transparent;
@@ -387,6 +427,7 @@ body {
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s;
+    text-align: center;
 }
 
 .btn-secondary:hover {
@@ -395,10 +436,148 @@ body {
     border-color: #000;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 991px) {
+    .breadcrumb-container {
+        margin-top: 80px !important;
+        margin-bottom: 24px;
+    }
+
+    .payment-section {
+        margin-bottom: 70px;
+    }
+
+    .payment-card {
+        max-width: 720px;
+        padding: 30px;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .breadcrumb-container {
+        margin-top: 72px !important;
+        margin-bottom: 20px;
+    }
+
+    .payment-section {
+        margin-bottom: 56px;
+    }
+
+    .payment-card {
+        padding: 22px;
+        border-radius: 8px;
+    }
+
+    .payment-title {
+        margin-bottom: 18px;
+    }
+
+    .payment-meta {
+        padding: 16px;
+        margin-bottom: 18px;
+    }
+
+    .meta-row {
+        font-size: 15px;
+    }
+
+    .gateway-box {
+        padding: 16px;
+    }
+
+    .gateway-head {
+        align-items: flex-start;
+    }
+
     .form-row {
         grid-template-columns: 1fr;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 15px;
+        padding: 13px 18px;
+    }
+}
+
+@media (max-width: 575px) {
+    .payment-card {
+        padding: 18px 16px;
+    }
+
+    .payment-title {
+        font-size: 22px;
+    }
+
+    .payment-meta {
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .meta-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        font-size: 14px;
+    }
+
+    .meta-row span:last-child {
+        text-align: left;
+    }
+
+    .gateway-box {
+        padding: 14px;
+    }
+
+    .gateway-sub,
+    .gateway-note,
+    .form-group label,
+    .gateway-form input {
+        font-size: 14px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    .breadcrumb-container {
+        margin-top: 68px !important;
+    }
+
+    .payment-card {
+        padding: 16px 14px;
+    }
+
+    .payment-title {
+        font-size: 20px;
+    }
+
+    .payment-meta,
+    .gateway-box {
+        padding: 12px;
+    }
+
+    .gateway-head {
+        gap: 8px;
+    }
+
+    .gateway-badge {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .method-pill {
+        font-size: 11px;
     }
 }
 </style>
 @endpush
+@endsection

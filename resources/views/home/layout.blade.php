@@ -811,6 +811,107 @@
         color: #DB4444 !important;
     }
     </style>
+    <style>
+    /* Checkout page dark mode only */
+    html[data-theme="dark"] .checkout-section,
+    html[data-theme="dark"] .billing-card,
+    html[data-theme="dark"] .summary-card {
+        background: transparent !important;
+        color: var(--app-text) !important;
+    }
+
+    html[data-theme="dark"] .section-title,
+    html[data-theme="dark"] .billing-card label,
+    html[data-theme="dark"] .notes-area label,
+    html[data-theme="dark"] .item-title,
+    html[data-theme="dark"] .item-price,
+    html[data-theme="dark"] .total-row,
+    html[data-theme="dark"] .total-strong,
+    html[data-theme="dark"] .radio-line span,
+    html[data-theme="dark"] .payment-option span,
+    html[data-theme="dark"] .save-info label {
+        color: var(--app-text) !important;
+    }
+
+    html[data-theme="dark"] .summary-card {
+        background: var(--app-surface) !important;
+        border: 1px solid var(--app-border) !important;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28) !important;
+    }
+
+    html[data-theme="dark"] .summary-totals {
+        border-top: 1px solid var(--app-border) !important;
+        border-bottom: 1px solid var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] .item-left img {
+        background: var(--app-surface-2) !important;
+    }
+
+    html[data-theme="dark"] .badge,
+    html[data-theme="dark"] .badge-card {
+        background: var(--app-surface-2) !important;
+        color: var(--app-text) !important;
+        border-color: var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] input[type="text"],
+    html[data-theme="dark"] input[type="email"],
+    html[data-theme="dark"] textarea {
+        background-color: var(--app-surface-2) !important;
+        color: var(--app-text) !important;
+        border: 1px solid var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] input[type="text"]::placeholder,
+    html[data-theme="dark"] input[type="email"]::placeholder,
+    html[data-theme="dark"] textarea::placeholder {
+        color: var(--app-muted) !important;
+    }
+
+    html[data-theme="dark"] input[type="text"]:focus,
+    html[data-theme="dark"] input[type="email"]:focus,
+    html[data-theme="dark"] textarea:focus {
+        background-color: var(--app-surface) !important;
+        border-color: #DB4444 !important;
+    }
+
+    html[data-theme="dark"] .coupon-form input {
+        background-color: var(--app-surface-2) !important;
+        color: var(--app-text) !important;
+        border: 1px solid var(--app-border) !important;
+    }
+
+    html[data-theme="dark"] .btn-link {
+        color: #ff6b6b !important;
+    }
+
+    html[data-theme="dark"] .btn-link:hover {
+        color: #ff8585 !important;
+    }
+
+    html[data-theme="dark"] .breadcrumb a {
+        color: var(--app-muted) !important;
+    }
+
+    html[data-theme="dark"] .breadcrumb .separator {
+        color: var(--app-muted) !important;
+    }
+
+    html[data-theme="dark"] .breadcrumb .current {
+        color: var(--app-text) !important;
+    }
+
+    html[data-theme="dark"] .breadcrumb a:hover {
+        color: #DB4444 !important;
+    }
+
+    html[data-theme="dark"] .save-info input,
+    html[data-theme="dark"] .radio-line input {
+        accent-color: #DB4444;
+    }
+    </style>
 </body>
 
 </html>

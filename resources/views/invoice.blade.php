@@ -3,7 +3,7 @@
 @section('title', 'Invoice - ShantoGiftShop')
 
 @section('content')
-<div class="container breadcrumb-container" style="margin-top: 90px;">
+<div class="container breadcrumb-container" style="margin-top: 100px;">
     <div class="breadcrumb">
         <a href="{{ route('home') }}">Home</a>
         <span class="separator">/</span>
@@ -501,9 +501,30 @@ body {
     border-color: #000;
 }
 
-@media (max-width: 768px) {
-    .invoice-actions-bar {
-        justify-content: flex-start;
+
+@media (max-width: 1199px) {
+    .invoice-header,
+    .invoice-meta-row,
+    .invoice-bottom {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .invoice-table {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+}
+
+@media (max-width: 991px) {
+    .breadcrumb-container {
+        margin-top: 82px !important;
+        margin-bottom: 24px;
+    }
+
+    .invoice-section {
+        margin-top: 24px !important;
+        margin-bottom: 72px;
     }
 
     .invoice-header {
@@ -517,11 +538,7 @@ body {
 
     .invoice-meta-row {
         flex-direction: column;
-    }
-
-    .invoice-table-head,
-    .invoice-table-row {
-        grid-template-columns: 60px 1fr 110px 110px 110px;
+        gap: 14px;
     }
 
     .invoice-bottom {
@@ -534,10 +551,200 @@ body {
         max-width: 340px;
         margin-left: auto;
     }
+
+    .invoice-actions-bar {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .breadcrumb-container {
+        margin-top: 74px !important;
+        margin-bottom: 20px;
+    }
+
+    .invoice-section {
+        margin-top: 18px !important;
+        margin-bottom: 56px;
+    }
+
+    .invoice-header,
+    .invoice-meta-row,
+    .invoice-bottom {
+        padding: 16px;
+    }
+
+    .invoice-table {
+        padding: 0 16px 14px;
+    }
+
+    .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .brand-name {
+        font-size: 15px;
+    }
+
+    .invoice-banner {
+        height: 50px;
+    }
+
+    .invoice-banner .banner-title {
+        font-size: 18px;
+        letter-spacing: 0.12em;
+    }
+
+    .invoice-table-head,
+    .invoice-table-row {
+        min-width: 680px;
+        grid-template-columns: 60px minmax(220px, 1fr) 130px 130px 130px;
+    }
+
+    .invoice-table-head .th,
+    .invoice-table-row .td {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .invoice-actions-bar {
+        gap: 10px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 15px;
+        padding: 13px 18px;
+    }
+}
+
+@media (max-width: 575px) {
+    .breadcrumb {
+        font-size: 13px;
+    }
+
+    .invoice-card {
+        border-radius: 8px;
+    }
+
+    .invoice-header,
+    .invoice-meta-row,
+    .invoice-bottom {
+        padding: 14px;
+    }
+
+    .invoice-table {
+        padding: 0 14px 12px;
+    }
+
+    .brand-area {
+        gap: 10px;
+    }
+
+    .brand-mark {
+        width: 38px;
+        height: 38px;
+    }
+
+    .brand-name {
+        font-size: 14px;
+    }
+
+    .brand-sub {
+        font-size: 11px;
+    }
+
+    .invoice-banner {
+        height: 46px;
+        border-radius: 5px;
+    }
+
+    .invoice-banner .banner-title {
+        font-size: 16px;
+        letter-spacing: 0.1em;
+    }
+
+    .invoice-table-head,
+    .invoice-table-row {
+        min-width: 620px;
+        grid-template-columns: 54px minmax(180px, 1fr) 128px 128px 128px;
+    }
+
+    .msg-text,
+    .msg-notes-title,
+    .msg-notes-body {
+        font-size: 11px;
+    }
+
+    .invoice-totals {
+        max-width: 100%;
+        font-size: 13px;
+    }
+
+    .invoice-actions-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .invoice-actions-bar .btn-primary,
+    .invoice-actions-bar .btn-secondary,
+    .invoice-actions-bar button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .breadcrumb-container {
+        margin-top: 68px !important;
+    }
+
+    .invoice-header,
+    .invoice-meta-row,
+    .invoice-bottom {
+        padding: 12px;
+    }
+
+    .invoice-table {
+        padding: 0 12px 12px;
+    }
+
+    .invoice-banner {
+        height: 42px;
+    }
+
+    .invoice-banner .banner-title {
+        font-size: 15px;
+        letter-spacing: 0.08em;
+    }
+
+    .invoice-table-head,
+    .invoice-table-row {
+        min-width: 580px;
+        grid-template-columns: 50px minmax(170px, 1fr) 120px 120px 120px;
+    }
+
+    .invoice-table-head .th,
+    .invoice-table-row .td {
+        padding: 9px 8px;
+        font-size: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
 }
 
 @media print {
-
     .top-header,
     .navbar,
     .footer,
@@ -548,12 +755,23 @@ body {
     }
 
     .invoice-section {
-        margin-bottom: 0;
+        margin: 0 !important;
     }
 
     .invoice-card {
         box-shadow: none;
         padding: 0;
+        border-radius: 0;
+    }
+
+    .invoice-table {
+        overflow: visible !important;
+    }
+
+    .invoice-table-head,
+    .invoice-table-row {
+        min-width: 0 !important;
+        width: 100% !important;
     }
 }
 </style>
